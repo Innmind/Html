@@ -15,7 +15,8 @@
         "issues": "http://github.com/Innmind/Html/issues"
     },
     "require": {
-        "php": "~7.0"
+        "php": "~7.0",
+        "innmind/xml": "dev-develop"
     },
     "autoload": {
         "psr-4": {
