@@ -5,7 +5,8 @@ namespace Tests\Innmind\Html\Translator;
 
 use Innmind\Html\Translator\{
     NodeTranslators,
-    NodeTranslator\DocumentTranslator
+    NodeTranslator\DocumentTranslator,
+    NodeTranslator\ElementTranslator
 };
 use Innmind\Xml\Translator\NodeTranslatorInterface;
 use Innmind\Immutable\MapInterface;
@@ -22,10 +23,14 @@ class NodeTranslatorsTest extends \PHPUnit_Framework_TestCase
             NodeTranslatorInterface::class,
             (string) $defaults->valueType()
         );
-        $this->assertCount(1, $defaults);
+        $this->assertCount(2, $defaults);
         $this->assertInstanceOf(
             DocumentTranslator::class,
             $defaults->get(XML_HTML_DOCUMENT_NODE)
+        );
+        $this->assertInstanceOf(
+            ElementTranslator::class,
+            $defaults->get(XML_ELEMENT_NODE)
         );
         $this->assertSame($defaults, NodeTranslators::defaults());
     }
