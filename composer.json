@@ -17,7 +17,8 @@
     "require": {
         "php": "~7.0",
         "innmind/xml": "dev-develop",
-        "symfony/dom-crawler": "^3.1"
+        "symfony/dom-crawler": "^3.1",
+        "innmind/url": "^1.0"
     },
     "autoload": {
         "psr-4": {
