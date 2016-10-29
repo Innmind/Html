@@ -5,13 +5,13 @@ namespace Tests\Innmind\Html\Reader;
 
 use Innmind\Html\{
     Reader\Reader,
-    Translator\NodeTranslators as HtmlTranslators
+    Translator\NodeTranslators as HtmlTranslators,
+    Node\Document
 };
 use Innmind\Xml\{
     ReaderInterface,
     Translator\NodeTranslator,
-    Translator\NodeTranslators,
-    NodeInterface
+    Translator\NodeTranslators
 };
 use Innmind\Filesystem\Stream\StringStream;
 
@@ -59,7 +59,18 @@ HTML
     </body></html>
 HTML;
 
-        $this->assertInstanceOf(NodeInterface::class, $node);
+        $this->assertInstanceOf(Document::class, $node);
         $this->assertSame($expected, (string) $node);
+    }
+
+    public function testReadFullPage()
+    {
+        $node = $this->reader->read(
+            new StringStream(
+                file_get_contents('fixtures/lemonde.html')
+            )
+        );
+
+        $this->assertInstanceOf(Document::class, $node);
     }
 }
