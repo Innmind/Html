@@ -9,7 +9,8 @@ use Innmind\Html\Translator\NodeTranslator\{
     ATranslator,
     BaseTranslator,
     ImgTranslator,
-    LinkTranslator
+    LinkTranslator,
+    ScriptTranslator
 };
 use Innmind\Xml\Translator\{
     NodeTranslatorInterface,
@@ -41,6 +42,7 @@ final class NodeTranslators
                             ->put('base', new BaseTranslator)
                             ->put('img', new ImgTranslator)
                             ->put('link', new LinkTranslator)
+                            ->put('script', new ScriptTranslator)
                     )
                 );
         }
