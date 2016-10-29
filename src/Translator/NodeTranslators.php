@@ -5,7 +5,11 @@ namespace Innmind\Html\Translator;
 
 use Innmind\Html\Translator\NodeTranslator\{
     DocumentTranslator,
-    ElementTranslator
+    ElementTranslator,
+    ATranslator,
+    BaseTranslator,
+    ImgTranslator,
+    LinkTranslator
 };
 use Innmind\Xml\Translator\{
     NodeTranslatorInterface,
@@ -32,7 +36,11 @@ final class NodeTranslators
                     XML_ELEMENT_NODE,
                     new ElementTranslator(
                         new GenericTranslator,
-                        new Map('string', NodeTranslatorInterface::class)
+                        (new Map('string', NodeTranslatorInterface::class))
+                            ->put('a', new ATranslator)
+                            ->put('base', new BaseTranslator)
+                            ->put('img', new ImgTranslator)
+                            ->put('link', new LinkTranslator)
                     )
                 );
         }
