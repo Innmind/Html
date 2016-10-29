@@ -6,6 +6,7 @@ namespace Innmind\Html\Translator\NodeTranslator;
 use Innmind\Html\{
     Exception\InvalidArgumentException,
     Exception\MissingHrefAttributeException,
+    Exception\InvalidLinkException,
     Element\Link
 };
 use Innmind\Xml\{
@@ -14,7 +15,10 @@ use Innmind\Xml\{
     NodeInterface,
     Translator\NodeTranslator\Visitor\Attributes
 };
-use Innmind\Url\Url;
+use Innmind\Url\{
+    Url,
+    Exception\ExceptionInterface
+};
 
 final class LinkTranslator implements NodeTranslatorInterface
 {
@@ -35,11 +39,15 @@ final class LinkTranslator implements NodeTranslatorInterface
             throw new MissingHrefAttributeException;
         }
 
-        return new Link(
-            Url::fromString($attributes->get('href')->value()),
-            $attributes->contains('rel') ?
-                $attributes->get('rel')->value() : 'related',
-            $attributes
-        );
+        try {
+            return new Link(
+                Url::fromString($attributes->get('href')->value()),
+                $attributes->contains('rel') ?
+                    $attributes->get('rel')->value() : 'related',
+                $attributes
+            );
+        } catch (ExceptionInterface $e) {
+            throw new InvalidLinkException;
+        }
     }
 }
