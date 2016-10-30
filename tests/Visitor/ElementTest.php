@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Html\Visitor;
 
 use Innmind\Html\{
-    Visitor\Head,
+    Visitor\Element as ElementFinder,
     Reader\Reader,
     Translator\NodeTranslators as HtmlTranslators
 };
@@ -16,7 +16,7 @@ use Innmind\Xml\{
 };
 use Innmind\Filesystem\Stream\Stream;
 
-class HeadTest extends \PHPUnit_Framework_TestCase
+class ElementTest extends \PHPUnit_Framework_TestCase
 {
     private $reader;
 
@@ -31,25 +31,33 @@ class HeadTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testExtractHead()
+    /**
+     * @expectedException Innmind\Html\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyTagName()
+    {
+        new ElementFinder('');
+    }
+
+    public function testExtractElement()
     {
         $node = $this->reader->read(
             Stream::fromPath('fixtures/lemonde.html')
         );
 
-        $head = (new Head)($node);
+        $h1 = (new ElementFinder('h1'))($node);
 
-        $this->assertInstanceOf(ElementInterface::class, $head);
-        $this->assertSame('head', $head->name());
-        $this->assertTrue($head->hasChildren());
-        $this->assertFalse($head->hasAttributes());
+        $this->assertInstanceOf(ElementInterface::class, $h1);
+        $this->assertSame('h1', $h1->name());
+        $this->assertTrue($h1->hasChildren());
+        $this->assertTrue($h1->hasAttributes());
     }
 
     /**
      * @expectedException Innmind\Html\Exception\ElementNotFoundException
      */
-    public function testThrowWhenHeadNotFound()
+    public function testThrowWhenElementNotFound()
     {
-        (new Head)(new Element('body'));
+        (new ElementFinder('foo'))(new Element('whatever'));
     }
 }

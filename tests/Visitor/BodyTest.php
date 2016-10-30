@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Html\Visitor;
 
 use Innmind\Html\{
-    Visitor\Head,
+    Visitor\Body,
     Reader\Reader,
     Translator\NodeTranslators as HtmlTranslators
 };
@@ -16,7 +16,7 @@ use Innmind\Xml\{
 };
 use Innmind\Filesystem\Stream\Stream;
 
-class HeadTest extends \PHPUnit_Framework_TestCase
+class BodyTest extends \PHPUnit_Framework_TestCase
 {
     private $reader;
 
@@ -31,25 +31,25 @@ class HeadTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testExtractHead()
+    public function testExtractBody()
     {
         $node = $this->reader->read(
             Stream::fromPath('fixtures/lemonde.html')
         );
 
-        $head = (new Head)($node);
+        $body = (new Body)($node);
 
-        $this->assertInstanceOf(ElementInterface::class, $head);
-        $this->assertSame('head', $head->name());
-        $this->assertTrue($head->hasChildren());
-        $this->assertFalse($head->hasAttributes());
+        $this->assertInstanceOf(ElementInterface::class, $body);
+        $this->assertSame('body', $body->name());
+        $this->assertTrue($body->hasChildren());
+        $this->assertTrue($body->hasAttributes());
     }
 
     /**
      * @expectedException Innmind\Html\Exception\ElementNotFoundException
      */
-    public function testThrowWhenHeadNotFound()
+    public function testThrowWhenBodyNotFound()
     {
-        (new Head)(new Element('body'));
+        (new Body)(new Element('head'));
     }
 }

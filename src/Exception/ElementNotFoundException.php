@@ -5,6 +5,6 @@ namespace Innmind\Html\Exception;
 
 use Innmind\Xml\Exception\NodeNotFoundException;
 
-final class HeadNotFoundException extends NodeNotFoundException implements ExceptionInterface
+final class ElementNotFoundException extends NodeNotFoundException implements ExceptionInterface
 {
 }
