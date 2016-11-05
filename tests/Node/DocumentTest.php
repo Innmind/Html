@@ -111,4 +111,173 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
             (string) $document
         );
     }
+
+    public function testRemoveChild()
+    {
+        $document = new Document(
+            new Type('html'),
+            (new Map('int', NodeInterface::class))
+                ->put(0, new Element('foo'))
+                ->put(1, new Element('bar'))
+                ->put(2, new Element('baz'))
+        );
+
+        $document2 = $document->removeChild(1);
+
+        $this->assertNotSame($document, $document2);
+        $this->assertInstanceOf(Document::class, $document2);
+        $this->assertSame($document->type(), $document2->type());
+        $this->assertCount(3, $document->children());
+        $this->assertCount(2, $document2->children());
+        $this->assertSame(
+            $document->children()->get(0),
+            $document2->children()->get(0)
+        );
+        $this->assertSame(
+            $document->children()->get(2),
+            $document2->children()->get(1)
+        );
+    }
+
+    /**
+     * @expectedException Innmind\Html\Exception\OutOfBoundsException
+     */
+    public function testThrowWhenRemovingUnknownChild()
+    {
+        (new Document(
+            new Type('html'),
+            (new Map('int', NodeInterface::class))
+                ->put(0, new Element('foo'))
+                ->put(1, new Element('bar'))
+                ->put(2, new Element('baz'))
+        ))->removeChild(3);
+    }
+
+    public function testReplaceChild()
+    {
+        $document = new Document(
+            new Type('html'),
+            (new Map('int', NodeInterface::class))
+                ->put(0, new Element('foo'))
+                ->put(1, new Element('bar'))
+                ->put(2, new Element('baz'))
+        );
+
+        $document2 = $document->replaceChild(
+            1,
+            $node = $this->createMock(NodeInterface::class)
+        );
+
+        $this->assertNotSame($document, $document2);
+        $this->assertInstanceOf(Document::class, $document2);
+        $this->assertSame($document->type(), $document2->type());
+        $this->assertCount(3, $document->children());
+        $this->assertCount(3, $document2->children());
+        $this->assertSame(
+            $document->children()->get(0),
+            $document2->children()->get(0)
+        );
+        $this->assertNotSame(
+            $document->children()->get(1),
+            $document2->children()->get(1)
+        );
+        $this->assertSame($node, $document2->children()->get(1));
+        $this->assertSame(
+            $document->children()->get(2),
+            $document2->children()->get(2)
+        );
+    }
+
+    /**
+     * @expectedException Innmind\Html\Exception\OutOfBoundsException
+     */
+    public function testThrowWhenReplacingUnknownChild()
+    {
+        (new Document(
+            new Type('html'),
+            (new Map('int', NodeInterface::class))
+                ->put(0, new Element('foo'))
+                ->put(1, new Element('bar'))
+                ->put(2, new Element('baz'))
+        ))->replaceChild(
+            3,
+            $this->createMock(NodeInterface::class)
+        );
+    }
+
+    public function testPrependChild()
+    {
+        $document = new Document(
+            new Type('html'),
+            (new Map('int', NodeInterface::class))
+                ->put(0, new Element('foo'))
+                ->put(1, new Element('bar'))
+                ->put(2, new Element('baz'))
+        );
+
+        $document2 = $document->prependChild(
+            $node = $this->createMock(NodeInterface::class)
+        );
+
+        $this->assertNotSame($document, $document2);
+        $this->assertInstanceOf(Document::class, $document2);
+        $this->assertSame($document->type(), $document2->type());
+        $this->assertNotSame($document->children(), $document2->children());
+        $this->assertCount(3, $document->children());
+        $this->assertCount(4, $document2->children());
+        $this->assertSame(
+            $node,
+            $document2->children()->get(0)
+        );
+        $this->assertSame(
+            $document->children()->get(0),
+            $document2->children()->get(1)
+        );
+        $this->assertSame(
+            $document->children()->get(1),
+            $document2->children()->get(2)
+        );
+        $this->assertSame(
+            $document->children()->get(2),
+            $document2->children()->get(3)
+        );
+    }
+
+    public function testAopendChild()
+    {
+        $document = new Document(
+            new Type('html'),
+            (new Map('int', NodeInterface::class))
+                ->put(0, new Element('foo'))
+                ->put(1, new Element('bar'))
+                ->put(2, new Element('baz'))
+        );
+
+        $document2 = $document->appendChild(
+            $node = $this->createMock(NodeInterface::class)
+        );
+
+        $this->assertNotSame($document, $document2);
+        $this->assertInstanceOf(Document::class, $document2);
+        $this->assertSame($document->type(), $document2->type());
+        $this->assertNotSame($document->children(), $document2->children());
+        $this->assertCount(3, $document->children());
+        $this->assertCount(4, $document2->children());
+        $this->assertSame(
+            $document->children()->get(0),
+            $document2->children()->get(0)
+        );
+        $this->assertSame(
+            $document->children()->get(1),
+            $document2->children()->get(1)
+        );
+        $this->assertSame(
+            $document->children()->get(2),
+            $document2->children()->get(2)
+        );
+        $this->assertSame(
+            $node,
+            $document2->children()->get(3)
+        );
+    }
 }
