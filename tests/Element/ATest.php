@@ -11,8 +11,9 @@ use Innmind\Xml\{
 };
 use Innmind\Url\UrlInterface;
 use Innmind\Immutable\Map;
+use PHPUnit\Framework\TestCase;
 
-class ATest extends \PHPUnit_Framework_TestCase
+class ATest extends TestCase
 {
     public function testInterface()
     {

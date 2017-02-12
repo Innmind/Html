@@ -12,8 +12,9 @@ use Innmind\Xml\Translator\{
     NodeTranslators,
     NodeTranslatorInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class LinkTranslatorTest extends \PHPUnit_Framework_TestCase
+class LinkTranslatorTest extends TestCase
 {
     public function testInterface()
     {
