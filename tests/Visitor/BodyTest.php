@@ -15,8 +15,9 @@ use Innmind\Xml\{
     Translator\NodeTranslators
 };
 use Innmind\Filesystem\Stream\Stream;
+use PHPUnit\Framework\TestCase;
 
-class BodyTest extends \PHPUnit_Framework_TestCase
+class BodyTest extends TestCase
 {
     private $reader;
 

@@ -10,8 +10,9 @@ use Innmind\Xml\{
     AttributeInterface
 };
 use Innmind\Immutable\Map;
+use PHPUnit\Framework\TestCase;
 
-class ScriptTest extends \PHPUnit_Framework_TestCase
+class ScriptTest extends TestCase
 {
     public function testInterface()
     {

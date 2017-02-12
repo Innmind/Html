@@ -10,8 +10,9 @@ use Innmind\Xml\{
 };
 use Innmind\Url\UrlInterface;
 use Innmind\Immutable\Map;
+use PHPUnit\Framework\TestCase;
 
-class BaseTest extends \PHPUnit_Framework_TestCase
+class BaseTest extends TestCase
 {
     public function testInterface()
     {

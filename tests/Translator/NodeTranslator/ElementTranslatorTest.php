@@ -16,8 +16,9 @@ use Innmind\Xml\{
     NodeInterface
 };
 use Innmind\Immutable\Map;
+use PHPUnit\Framework\TestCase;
 
-class ElementTranslatorTest extends \PHPUnit_Framework_TestCase
+class ElementTranslatorTest extends TestCase
 {
     private $translator;
     private $bar;

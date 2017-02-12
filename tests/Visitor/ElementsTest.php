@@ -16,8 +16,9 @@ use Innmind\Xml\{
 };
 use Innmind\Filesystem\Stream\Stream;
 use Innmind\Immutable\SetInterface;
+use PHPUnit\Framework\TestCase;
 
-class ElementsTest extends \PHPUnit_Framework_TestCase
+class ElementsTest extends TestCase
 {
     private $reader;
 
