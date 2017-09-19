@@ -25,7 +25,7 @@ use Innmind\Xml\Translator\{
     NodeTranslator,
     NodeTranslators
 };
-use Innmind\Filesystem\Stream\Stream;
+use Innmind\Stream\Readable\Stream;
 
 $reader = new Reader(
     new NodeTranslator(
@@ -36,7 +36,7 @@ $reader = new Reader(
 );
 
 $html = $reader->read(
-    Stream::fromPath('https://github.com/')
+    new Stream(fopen('https://github.com/', 'r'))
 );
 ```
 

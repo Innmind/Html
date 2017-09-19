@@ -8,7 +8,7 @@ use Innmind\Xml\{
     NodeInterface,
     Translator\NodeTranslator
 };
-use Innmind\Filesystem\StreamInterface;
+use Innmind\Stream\Readable;
 use Symfony\Component\DomCrawler\Crawler;
 
 final class Reader implements ReaderInterface
@@ -20,7 +20,7 @@ final class Reader implements ReaderInterface
         $this->translator = $translator;
     }
 
-    public function read(StreamInterface $html): NodeInterface
+    public function read(Readable $html): NodeInterface
     {
         $firstNode = (new Crawler((string) $html))->getNode(0);
 

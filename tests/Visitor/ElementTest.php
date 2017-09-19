@@ -14,7 +14,7 @@ use Innmind\Xml\{
     Translator\NodeTranslator,
     Translator\NodeTranslators
 };
-use Innmind\Filesystem\Stream\Stream;
+use Innmind\Stream\Readable\Stream;
 use PHPUnit\Framework\TestCase;
 
 class ElementTest extends TestCase
@@ -43,7 +43,7 @@ class ElementTest extends TestCase
     public function testExtractElement()
     {
         $node = $this->reader->read(
-            Stream::fromPath('fixtures/lemonde.html')
+            new Stream(fopen('fixtures/lemonde.html', 'r'))
         );
 
         $h1 = (new ElementFinder('h1'))($node);
