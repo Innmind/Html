@@ -14,7 +14,7 @@ use Innmind\Xml\{
     Translator\NodeTranslator,
     Translator\NodeTranslators
 };
-use Innmind\Filesystem\Stream\Stream;
+use Innmind\Stream\Readable\Stream;
 use PHPUnit\Framework\TestCase;
 
 class BodyTest extends TestCase
@@ -35,7 +35,7 @@ class BodyTest extends TestCase
     public function testExtractBody()
     {
         $node = $this->reader->read(
-            Stream::fromPath('fixtures/lemonde.html')
+            new Stream(fopen('fixtures/lemonde.html', 'r'))
         );
 
         $body = (new Body)($node);

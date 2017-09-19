@@ -13,7 +13,7 @@ use Innmind\Xml\{
     Translator\NodeTranslator,
     Translator\NodeTranslators
 };
-use Innmind\Filesystem\Stream\StringStream;
+use Innmind\Stream\Readable\Stream;
 use PHPUnit\Framework\TestCase;
 
 class ReaderTest extends TestCase
@@ -41,8 +41,7 @@ class ReaderTest extends TestCase
 
     public function testReadSimple()
     {
-        $node = $this->reader->read(
-            new StringStream($html = <<<HTML
+        $html = <<<HTML
 <!DOCTYPE html>
 <html>
     <head></head>
@@ -50,8 +49,11 @@ class ReaderTest extends TestCase
         foo
     </body>
 </html>
-HTML
-            )
+HTML;
+        $res = fopen('php://temp', 'r+');
+        fwrite($res, $html);
+        $node = $this->reader->read(
+            new Stream($res)
         );
         $expected = <<<HTML
 <!DOCTYPE html>
@@ -67,8 +69,8 @@ HTML;
     public function testReadFullPage()
     {
         $node = $this->reader->read(
-            new StringStream(
-                file_get_contents('fixtures/lemonde.html')
+            new Stream(
+                fopen('fixtures/lemonde.html', 'r')
             )
         );
 
