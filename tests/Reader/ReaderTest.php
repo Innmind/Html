@@ -11,7 +11,8 @@ use Innmind\Html\{
 use Innmind\Xml\{
     ReaderInterface,
     Translator\NodeTranslator,
-    Translator\NodeTranslators
+    Translator\NodeTranslators,
+    Node\Document as XmlDocument
 };
 use Innmind\Stream\Readable\Stream;
 use PHPUnit\Framework\TestCase;
@@ -75,5 +76,15 @@ HTML;
         );
 
         $this->assertInstanceOf(Document::class, $node);
+    }
+
+    public function testReadScreenOnline()
+    {
+        $node = $this->reader->read(new Stream(fopen(
+            'fixtures/www.screenonline.org.uk_tv_id_560180_.html',
+            'r'
+        )));
+
+        $this->assertInstanceOf(XmlDocument::class, $node);
     }
 }
