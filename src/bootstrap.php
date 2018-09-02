@@ -8,6 +8,7 @@ use Innmind\Xml\{
     Translator\NodeTranslator,
     Translator\NodeTranslators,
 };
+use Innmind\Immutable\MapInterface;
 
 /**
  * @param MapInterface<int, NodeTranslatorInterface>|null $translators
