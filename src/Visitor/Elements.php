@@ -11,6 +11,7 @@ use Innmind\Xml\{
 use Innmind\Immutable\{
     SetInterface,
     Set,
+    Str,
 };
 
 class Elements
@@ -19,7 +20,7 @@ class Elements
 
     public function __construct(string $name)
     {
-        if (empty($name)) {
+        if (Str::of($name)->empty()) {
             throw new InvalidArgumentException;
         }
 

@@ -6,7 +6,10 @@ namespace Innmind\Html\Element;
 use Innmind\Html\Exception\InvalidArgumentException;
 use Innmind\Xml\Element\SelfClosingElement;
 use Innmind\Url\UrlInterface;
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\{
+    MapInterface,
+    Str,
+};
 
 final class Link extends SelfClosingElement
 {
@@ -18,7 +21,7 @@ final class Link extends SelfClosingElement
         string $relationship,
         MapInterface $attributes = null
     ) {
-        if (empty($relationship)) {
+        if (Str::of($relationship)->empty()) {
             throw new InvalidArgumentException;
         }
 
