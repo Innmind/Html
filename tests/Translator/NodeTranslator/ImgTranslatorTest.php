@@ -59,7 +59,7 @@ class ImgTranslatorTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Html\Exception\MissingSrcAttributeException
+     * @expectedException Innmind\Html\Exception\MissingSrcAttribute
      */
     public function testThrowWhenMissingHrefAttribute()
     {

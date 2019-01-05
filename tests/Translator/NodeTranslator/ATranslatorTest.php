@@ -60,7 +60,7 @@ class ATranslatorTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Html\Exception\MissingHrefAttributeException
+     * @expectedException Innmind\Html\Exception\MissingHrefAttribute
      */
     public function testThrowWhenMissingHrefAttribute()
     {

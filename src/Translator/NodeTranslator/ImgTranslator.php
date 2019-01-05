@@ -5,7 +5,7 @@ namespace Innmind\Html\Translator\NodeTranslator;
 
 use Innmind\Html\{
     Exception\InvalidArgumentException,
-    Exception\MissingSrcAttributeException,
+    Exception\MissingSrcAttribute,
     Element\Img
 };
 use Innmind\Xml\{
@@ -32,7 +32,7 @@ final class ImgTranslator implements NodeTranslator
         $attributes = (new Attributes)($node);
 
         if (!$attributes->contains('src')) {
-            throw new MissingSrcAttributeException;
+            throw new MissingSrcAttribute;
         }
 
         return new Img(

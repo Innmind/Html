@@ -3,6 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Html\Exception;
 
-final class InvalidLinkException extends RuntimeException
+final class InvalidLink extends RuntimeException
 {
 }

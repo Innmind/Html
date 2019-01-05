@@ -5,7 +5,7 @@ namespace Innmind\Html\Translator\NodeTranslator;
 
 use Innmind\Html\{
     Exception\InvalidArgumentException,
-    Exception\MissingHrefAttributeException,
+    Exception\MissingHrefAttribute,
     Element\A
 };
 use Innmind\Xml\{
@@ -33,7 +33,7 @@ final class ATranslator implements NodeTranslator
         $attributes = (new Attributes)($node);
 
         if (!$attributes->contains('href')) {
-            throw new MissingHrefAttributeException;
+            throw new MissingHrefAttribute;
         }
 
         return new A(

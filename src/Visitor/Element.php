@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Html\Visitor;
 
 use Innmind\Html\Exception\{
-    ElementNotFoundException,
+    ElementNotFound,
     InvalidArgumentException
 };
 use Innmind\Xml\{
@@ -38,12 +38,12 @@ class Element
             foreach ($node->children() as $child) {
                 try {
                     return $this($child);
-                } catch (ElementNotFoundException $e) {
+                } catch (ElementNotFound $e) {
                     //pass
                 }
             }
         }
 
-        throw new ElementNotFoundException;
+        throw new ElementNotFound;
     }
 }

@@ -47,7 +47,7 @@ class BodyTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Html\Exception\ElementNotFoundException
+     * @expectedException Innmind\Html\Exception\ElementNotFound
      */
     public function testThrowWhenBodyNotFound()
     {
