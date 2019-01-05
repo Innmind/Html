@@ -5,23 +5,23 @@ namespace Innmind\Html\Translator\NodeTranslator;
 
 use Innmind\Html\{
     Exception\InvalidArgumentException,
-    Exception\MissingSrcAttributeException,
-    Element\Img
+    Exception\MissingSrcAttribute,
+    Element\Img,
 };
 use Innmind\Xml\{
-    Translator\NodeTranslatorInterface,
     Translator\NodeTranslator,
-    NodeInterface,
-    Translator\NodeTranslator\Visitor\Attributes
+    Translator\Translator,
+    Node,
+    Translator\NodeTranslator\Visitor\Attributes,
 };
 use Innmind\Url\Url;
 
-final class ImgTranslator implements NodeTranslatorInterface
+final class ImgTranslator implements NodeTranslator
 {
-    public function translate(
+    public function __invoke(
         \DOMNode $node,
-        NodeTranslator $translator
-    ): NodeInterface {
+        Translator $translate
+    ): Node {
         if (
             !$node instanceof \DOMElement ||
             $node->tagName !== 'img'
@@ -32,7 +32,7 @@ final class ImgTranslator implements NodeTranslatorInterface
         $attributes = (new Attributes)($node);
 
         if (!$attributes->contains('src')) {
-            throw new MissingSrcAttributeException;
+            throw new MissingSrcAttribute;
         }
 
         return new Img(

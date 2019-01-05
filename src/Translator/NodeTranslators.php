@@ -10,15 +10,15 @@ use Innmind\Html\Translator\NodeTranslator\{
     BaseTranslator,
     ImgTranslator,
     LinkTranslator,
-    ScriptTranslator
+    ScriptTranslator,
 };
 use Innmind\Xml\Translator\{
-    NodeTranslatorInterface,
-    NodeTranslator\ElementTranslator as GenericTranslator
+    NodeTranslator,
+    NodeTranslator\ElementTranslator as GenericTranslator,
 };
 use Innmind\Immutable\{
+    MapInterface,
     Map,
-    MapInterface
 };
 
 final class NodeTranslators
@@ -26,27 +26,23 @@ final class NodeTranslators
     private static $defaults;
 
     /**
-     * @return MapInterface<int, NodeTranslatorInterface>
+     * @return MapInterface<int, NodeTranslator>
      */
     public static function defaults(): MapInterface
     {
-        if (!self::$defaults) {
-            self::$defaults = (new Map('int', NodeTranslatorInterface::class))
-                ->put(XML_HTML_DOCUMENT_NODE, new DocumentTranslator)
-                ->put(
-                    XML_ELEMENT_NODE,
-                    new ElementTranslator(
-                        new GenericTranslator,
-                        (new Map('string', NodeTranslatorInterface::class))
-                            ->put('a', new ATranslator)
-                            ->put('base', new BaseTranslator)
-                            ->put('img', new ImgTranslator)
-                            ->put('link', new LinkTranslator)
-                            ->put('script', new ScriptTranslator)
-                    )
-                );
-        }
-
-        return self::$defaults;
+        return self::$defaults ?? self::$defaults = Map::of('int', NodeTranslator::class)
+            (XML_HTML_DOCUMENT_NODE, new DocumentTranslator)
+            (
+                XML_ELEMENT_NODE,
+                new ElementTranslator(
+                    new GenericTranslator,
+                    Map::of('string', NodeTranslator::class)
+                        ('a', new ATranslator)
+                        ('base', new BaseTranslator)
+                        ('img', new ImgTranslator)
+                        ('link', new LinkTranslator)
+                        ('script', new ScriptTranslator)
+                )
+            );
     }
 }

@@ -5,12 +5,14 @@ namespace Tests\Innmind\Html\Translator\NodeTranslator;
 
 use Innmind\Html\{
     Translator\NodeTranslator\ATranslator,
-    Element\A
+    Element\A,
+    Exception\InvalidArgumentException,
+    Exception\MissingHrefAttribute,
 };
 use Innmind\Xml\Translator\{
-    NodeTranslator,
+    Translator,
     NodeTranslators,
-    NodeTranslatorInterface
+    NodeTranslator,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -19,22 +21,21 @@ class ATranslatorTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            NodeTranslatorInterface::class,
+            NodeTranslator::class,
             new ATranslator
         );
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\InvalidArgumentException
-     */
     public function testThrowWhenNotExpectedElement()
     {
         $dom = new \DOMDocument;
         $dom->loadHTML('<body></body>');
 
-        (new ATranslator)->translate(
+        $this->expectException(InvalidArgumentException::class);
+
+        (new ATranslator)(
             $dom->childNodes->item(1),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );
@@ -45,9 +46,9 @@ class ATranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<a href="/" class="whatever">foo</a>');
 
-        $a = (new ATranslator)->translate(
+        $a = (new ATranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );
@@ -59,17 +60,16 @@ class ATranslatorTest extends TestCase
         $this->assertCount(1, $a->children());
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\MissingHrefAttributeException
-     */
     public function testThrowWhenMissingHrefAttribute()
     {
         $dom = new \DOMDocument;
         $dom->loadHTML('<a class="whatever">foo</a>');
 
-        (new ATranslator)->translate(
+        $this->expectException(MissingHrefAttribute::class);
+
+        (new ATranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );

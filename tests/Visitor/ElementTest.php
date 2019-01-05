@@ -6,25 +6,27 @@ namespace Tests\Innmind\Html\Visitor;
 use Innmind\Html\{
     Visitor\Element as ElementFinder,
     Reader\Reader,
-    Translator\NodeTranslators as HtmlTranslators
+    Translator\NodeTranslators as HtmlTranslators,
+    Exception\DomainException,
+    Exception\ElementNotFound,
 };
 use Innmind\Xml\{
-    ElementInterface,
+    Element as ElementInterface,
     Element\Element,
-    Translator\NodeTranslator,
-    Translator\NodeTranslators
+    Translator\Translator,
+    Translator\NodeTranslators,
 };
 use Innmind\Stream\Readable\Stream;
 use PHPUnit\Framework\TestCase;
 
 class ElementTest extends TestCase
 {
-    private $reader;
+    private $read;
 
     public function setUp()
     {
-        $this->reader = new Reader(
-            new NodeTranslator(
+        $this->read = new Reader(
+            new Translator(
                 NodeTranslators::defaults()->merge(
                     HtmlTranslators::defaults()
                 )
@@ -32,17 +34,16 @@ class ElementTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\InvalidArgumentException
-     */
     public function testThrowWhenEmptyTagName()
     {
+        $this->expectException(DomainException::class);
+
         new ElementFinder('');
     }
 
     public function testExtractElement()
     {
-        $node = $this->reader->read(
+        $node = ($this->read)(
             new Stream(fopen('fixtures/lemonde.html', 'r'))
         );
 
@@ -54,11 +55,10 @@ class ElementTest extends TestCase
         $this->assertTrue($h1->hasAttributes());
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\ElementNotFoundException
-     */
     public function testThrowWhenElementNotFound()
     {
+        $this->expectException(ElementNotFound::class);
+
         (new ElementFinder('foo'))(new Element('whatever'));
     }
 }

@@ -3,6 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Html\Exception;
 
-final class MissingHrefAttributeException extends RuntimeException
+class DomainException extends \DomainException implements Exception
 {
 }

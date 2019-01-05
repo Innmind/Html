@@ -5,12 +5,14 @@ namespace Tests\Innmind\Html\Translator\NodeTranslator;
 
 use Innmind\Html\{
     Translator\NodeTranslator\BaseTranslator,
-    Element\Base
+    Element\Base,
+    Exception\InvalidArgumentException,
+    Exception\MissingHrefAttribute,
 };
 use Innmind\Xml\Translator\{
-    NodeTranslator,
+    Translator,
     NodeTranslators,
-    NodeTranslatorInterface
+    NodeTranslator,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -19,22 +21,21 @@ class BaseTranslatorTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            NodeTranslatorInterface::class,
+            NodeTranslator::class,
             new BaseTranslator
         );
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\InvalidArgumentException
-     */
     public function testThrowWhenNotExpectedElement()
     {
         $dom = new \DOMDocument;
         $dom->loadHTML('<body></body>');
 
-        (new BaseTranslator)->translate(
+        $this->expectException(InvalidArgumentException::class);
+
+        (new BaseTranslator)(
             $dom->childNodes->item(1),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );
@@ -45,9 +46,9 @@ class BaseTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<base href="/" target="_blank"/>');
 
-        $base = (new BaseTranslator)->translate(
+        $base = (new BaseTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );
@@ -58,17 +59,16 @@ class BaseTranslatorTest extends TestCase
         $this->assertSame('_blank', $base->attributes()->get('target')->value());
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\MissingHrefAttributeException
-     */
     public function testThrowWhenMissingHrefAttribute()
     {
         $dom = new \DOMDocument;
         $dom->loadHTML('<base/>');
 
-        (new BaseTranslator)->translate(
+        $this->expectException(MissingHrefAttribute::class);
+
+        (new BaseTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );

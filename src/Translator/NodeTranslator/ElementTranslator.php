@@ -5,20 +5,20 @@ namespace Innmind\Html\Translator\NodeTranslator;
 
 use Innmind\Html\Exception\{
     InvalidArgumentException,
-    ExceptionInterface
+    Exception,
 };
 use Innmind\Xml\{
-    Translator\NodeTranslatorInterface,
     Translator\NodeTranslator,
+    Translator\Translator,
     Translator\NodeTranslator\ElementTranslator as GenericTranslator,
-    NodeInterface
+    Node,
 };
 use Innmind\Immutable\{
     MapInterface,
-    Exception\ElementNotFoundException
+    Exception\ElementNotFoundException,
 };
 
-final class ElementTranslator implements NodeTranslatorInterface
+final class ElementTranslator implements NodeTranslator
 {
     private $genericTranslator;
     private $translators;
@@ -29,19 +29,22 @@ final class ElementTranslator implements NodeTranslatorInterface
     ) {
         if (
             (string) $translators->keyType() !== 'string' ||
-            (string) $translators->valueType() !== NodeTranslatorInterface::class
+            (string) $translators->valueType() !== NodeTranslator::class
         ) {
-            throw new InvalidArgumentException;
+            throw new \TypeError(sprintf(
+                'Argument 2 must be of type MapInterface<string, %s>',
+                NodeTranslator::class
+            ));
         }
 
         $this->genericTranslator = $genericTranslator;
         $this->translators = $translators;
     }
 
-    public function translate(
+    public function __invoke(
         \DOMNode $node,
-        NodeTranslator $translator
-    ): NodeInterface {
+        Translator $translate
+    ): Node {
         if (!$node instanceof \DOMElement) {
             throw new InvalidArgumentException;
         }
@@ -49,14 +52,13 @@ final class ElementTranslator implements NodeTranslatorInterface
         try {
             return $this
                 ->translators
-                ->get($node->tagName)
-                ->translate($node, $translator);
+                ->get($node->tagName)($node, $translate);
         } catch (ElementNotFoundException $e) {
             //pass
-        } catch (ExceptionInterface $e) {
+        } catch (Exception $e) {
             //pass
         }
 
-        return $this->genericTranslator->translate($node, $translator);
+        return ($this->genericTranslator)($node, $translate);
     }
 }

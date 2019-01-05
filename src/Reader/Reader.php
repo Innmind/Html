@@ -4,23 +4,23 @@ declare(strict_types = 1);
 namespace Innmind\Html\Reader;
 
 use Innmind\Xml\{
-    ReaderInterface,
-    NodeInterface,
-    Translator\NodeTranslator
+    Reader as ReaderInterface,
+    Node,
+    Translator\Translator,
 };
 use Innmind\Stream\Readable;
 use Symfony\Component\DomCrawler\Crawler;
 
 final class Reader implements ReaderInterface
 {
-    private $translator;
+    private $translate;
 
-    public function __construct(NodeTranslator $translator)
+    public function __construct(Translator $translate)
     {
-        $this->translator = $translator;
+        $this->translate = $translate;
     }
 
-    public function read(Readable $html): NodeInterface
+    public function __invoke(Readable $html): Node
     {
         $firstNode = (new Crawler((string) $html))->getNode(0);
 
@@ -28,6 +28,6 @@ final class Reader implements ReaderInterface
             $firstNode = $firstNode->parentNode;
         }
 
-        return $this->translator->translate($firstNode);
+        return ($this->translate)($firstNode);
     }
 }

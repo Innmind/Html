@@ -6,7 +6,7 @@ namespace Tests\Innmind\Html\Element;
 use Innmind\Html\Element\Img;
 use Innmind\Xml\{
     Element\SelfClosingElement,
-    AttributeInterface
+    Attribute,
 };
 use Innmind\Url\UrlInterface;
 use Innmind\Immutable\Map;
@@ -20,7 +20,7 @@ class ImgTest extends TestCase
             SelfClosingElement::class,
             $img = new Img(
                 $src = $this->createMock(UrlInterface::class),
-                $attributes = new Map('string', AttributeInterface::class)
+                $attributes = new Map('string', Attribute::class)
             )
         );
         $this->assertSame('img', $img->name());

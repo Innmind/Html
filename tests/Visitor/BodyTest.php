@@ -6,25 +6,26 @@ namespace Tests\Innmind\Html\Visitor;
 use Innmind\Html\{
     Visitor\Body,
     Reader\Reader,
-    Translator\NodeTranslators as HtmlTranslators
+    Translator\NodeTranslators as HtmlTranslators,
+    Exception\ElementNotFound,
 };
 use Innmind\Xml\{
-    ElementInterface,
+    Element as ElementInterface,
     Element\Element,
-    Translator\NodeTranslator,
-    Translator\NodeTranslators
+    Translator\Translator,
+    Translator\NodeTranslators,
 };
 use Innmind\Stream\Readable\Stream;
 use PHPUnit\Framework\TestCase;
 
 class BodyTest extends TestCase
 {
-    private $reader;
+    private $read;
 
     public function setUp()
     {
-        $this->reader = new Reader(
-            new NodeTranslator(
+        $this->read = new Reader(
+            new Translator(
                 NodeTranslators::defaults()->merge(
                     HtmlTranslators::defaults()
                 )
@@ -34,7 +35,7 @@ class BodyTest extends TestCase
 
     public function testExtractBody()
     {
-        $node = $this->reader->read(
+        $node = ($this->read)(
             new Stream(fopen('fixtures/lemonde.html', 'r'))
         );
 
@@ -46,11 +47,10 @@ class BodyTest extends TestCase
         $this->assertTrue($body->hasAttributes());
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\ElementNotFoundException
-     */
     public function testThrowWhenBodyNotFound()
     {
+        $this->expectException(ElementNotFound::class);
+
         (new Body)(new Element('head'));
     }
 }

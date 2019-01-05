@@ -17,25 +17,12 @@ composer require innmind/html
 ## Usage
 
 ```php
-use Innmind\Html\{
-    Reader\Reader,
-    Translator\NodeTranslators as HtmlTranslators
-};
-use Innmind\Xml\Translator\{
-    NodeTranslator,
-    NodeTranslators
-};
+use function Innmind\Html\bootstrap;
 use Innmind\Stream\Readable\Stream;
 
-$reader = new Reader(
-    new NodeTranslator(
-        NodeTranslators::defaults()->merge(
-            HtmlTranslators::defaults()
-        )
-    )
-);
+$read = bootstrap();
 
-$html = $reader->read(
+$html = $read(
     new Stream(fopen('https://github.com/', 'r'))
 );
 ```
@@ -52,7 +39,7 @@ use Innmind\Html\Visitor\Elements;
 $h1s = (new Elements('h1'))($html);
 ```
 
-Here `$h1s` is a set of `ElementInterface` which are all `h1` elements.
+Here `$h1s` is a set of `Element` which are all `h1` elements.
 
 Here's the full list of visitors you have access to:
 

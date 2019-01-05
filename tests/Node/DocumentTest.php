@@ -3,16 +3,20 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Html\Node;
 
-use Innmind\Html\Node\Document;
+use Innmind\Html\{
+    Node\Document,
+    Exception\InvalidArgumentException,
+    Exception\OutOfBoundsException,
+};
 use Innmind\Xml\{
-    NodeInterface,
+    Node,
     Node\Document\Type,
     Node\Text,
-    Element\Element
+    Element\Element,
 };
 use Innmind\Immutable\{
+    MapInterface,
     Map,
-    MapInterface
 };
 use PHPUnit\Framework\TestCase;
 
@@ -21,7 +25,7 @@ class DocumentTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            NodeInterface::class,
+            Node::class,
             new Document(new Type('html'))
         );
     }
@@ -43,7 +47,7 @@ class DocumentTest extends TestCase
         $this->assertInstanceOf(MapInterface::class, $document->children());
         $this->assertSame('int', (string) $document->children()->keyType());
         $this->assertSame(
-            NodeInterface::class,
+            Node::class,
             (string) $document->children()->valueType()
         );
         $this->assertFalse($document->hasChildren());
@@ -53,19 +57,19 @@ class DocumentTest extends TestCase
     {
         $document = new Document(
             new Type('html'),
-            $children = (new Map('int', NodeInterface::class))
-                ->put(0, $this->createMock(NodeInterface::class))
+            $children = Map::of('int', Node::class)
+                (0, $this->createMock(Node::class))
         );
 
         $this->assertSame($children, $document->children());
         $this->assertTrue($document->hasChildren());
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\InvalidArgumentException
-     */
     public function testThrowWhenInvalidChildren()
     {
+        $this->expectException(\TypeError::class);
+        $this->expectExceptionMessage('Argument 2 must be of type MapInterface<int, Innmind\Xml\Node>');
+
         new Document(
             new Type('html'),
             new Map('int', 'string')
@@ -76,14 +80,14 @@ class DocumentTest extends TestCase
     {
         $document = new Document(
             new Type('html'),
-            (new Map('int', NodeInterface::class))
-                ->put(
+            Map::of('int', Node::class)
+                (
                     0,
                     new Element(
                         'html',
                         null,
-                        (new Map('int', NodeInterface::class))
-                            ->put(0, new Text('wat'))
+                        Map::of('int', Node::class)
+                            (0, new Text('wat'))
                     )
                 )
         );
@@ -95,14 +99,14 @@ class DocumentTest extends TestCase
     {
         $document = new Document(
             new Type('html'),
-            (new Map('int', NodeInterface::class))
-                ->put(
+            Map::of('int', Node::class)
+                (
                     0,
                     new Element(
                         'html',
                         null,
-                        (new Map('int', NodeInterface::class))
-                            ->put(0, new Text('wat'))
+                        Map::of('int', Node::class)
+                            (0, new Text('wat'))
                     )
                 )
         );
@@ -117,10 +121,10 @@ class DocumentTest extends TestCase
     {
         $document = new Document(
             new Type('html'),
-            (new Map('int', NodeInterface::class))
-                ->put(0, new Element('foo'))
-                ->put(1, new Element('bar'))
-                ->put(2, new Element('baz'))
+            Map::of('int', Node::class)
+                (0, new Element('foo'))
+                (1, new Element('bar'))
+                (2, new Element('baz'))
         );
 
         $document2 = $document->removeChild(1);
@@ -140,17 +144,16 @@ class DocumentTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\OutOfBoundsException
-     */
     public function testThrowWhenRemovingUnknownChild()
     {
+        $this->expectException(OutOfBoundsException::class);
+
         (new Document(
             new Type('html'),
-            (new Map('int', NodeInterface::class))
-                ->put(0, new Element('foo'))
-                ->put(1, new Element('bar'))
-                ->put(2, new Element('baz'))
+            Map::of('int', Node::class)
+                (0, new Element('foo'))
+                (1, new Element('bar'))
+                (2, new Element('baz'))
         ))->removeChild(3);
     }
 
@@ -158,15 +161,15 @@ class DocumentTest extends TestCase
     {
         $document = new Document(
             new Type('html'),
-            (new Map('int', NodeInterface::class))
-                ->put(0, new Element('foo'))
-                ->put(1, new Element('bar'))
-                ->put(2, new Element('baz'))
+            Map::of('int', Node::class)
+                (0, new Element('foo'))
+                (1, new Element('bar'))
+                (2, new Element('baz'))
         );
 
         $document2 = $document->replaceChild(
             1,
-            $node = $this->createMock(NodeInterface::class)
+            $node = $this->createMock(Node::class)
         );
 
         $this->assertNotSame($document, $document2);
@@ -189,20 +192,19 @@ class DocumentTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\OutOfBoundsException
-     */
     public function testThrowWhenReplacingUnknownChild()
     {
+        $this->expectException(OutOfBoundsException::class);
+
         (new Document(
             new Type('html'),
-            (new Map('int', NodeInterface::class))
-                ->put(0, new Element('foo'))
-                ->put(1, new Element('bar'))
-                ->put(2, new Element('baz'))
+            Map::of('int', Node::class)
+                (0, new Element('foo'))
+                (1, new Element('bar'))
+                (2, new Element('baz'))
         ))->replaceChild(
             3,
-            $this->createMock(NodeInterface::class)
+            $this->createMock(Node::class)
         );
     }
 
@@ -210,14 +212,14 @@ class DocumentTest extends TestCase
     {
         $document = new Document(
             new Type('html'),
-            (new Map('int', NodeInterface::class))
-                ->put(0, new Element('foo'))
-                ->put(1, new Element('bar'))
-                ->put(2, new Element('baz'))
+            Map::of('int', Node::class)
+                (0, new Element('foo'))
+                (1, new Element('bar'))
+                (2, new Element('baz'))
         );
 
         $document2 = $document->prependChild(
-            $node = $this->createMock(NodeInterface::class)
+            $node = $this->createMock(Node::class)
         );
 
         $this->assertNotSame($document, $document2);
@@ -248,14 +250,14 @@ class DocumentTest extends TestCase
     {
         $document = new Document(
             new Type('html'),
-            (new Map('int', NodeInterface::class))
-                ->put(0, new Element('foo'))
-                ->put(1, new Element('bar'))
-                ->put(2, new Element('baz'))
+            Map::of('int', Node::class)
+                (0, new Element('foo'))
+                (1, new Element('bar'))
+                (2, new Element('baz'))
         );
 
         $document2 = $document->appendChild(
-            $node = $this->createMock(NodeInterface::class)
+            $node = $this->createMock(Node::class)
         );
 
         $this->assertNotSame($document, $document2);

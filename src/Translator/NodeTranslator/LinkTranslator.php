@@ -5,27 +5,27 @@ namespace Innmind\Html\Translator\NodeTranslator;
 
 use Innmind\Html\{
     Exception\InvalidArgumentException,
-    Exception\MissingHrefAttributeException,
-    Exception\InvalidLinkException,
-    Element\Link
+    Exception\MissingHrefAttribute,
+    Exception\InvalidLink,
+    Element\Link,
 };
 use Innmind\Xml\{
-    Translator\NodeTranslatorInterface,
     Translator\NodeTranslator,
-    NodeInterface,
-    Translator\NodeTranslator\Visitor\Attributes
+    Translator\Translator,
+    Node,
+    Translator\NodeTranslator\Visitor\Attributes,
 };
 use Innmind\Url\{
     Url,
-    Exception\ExceptionInterface
+    Exception\ExceptionInterface,
 };
 
-final class LinkTranslator implements NodeTranslatorInterface
+final class LinkTranslator implements NodeTranslator
 {
-    public function translate(
+    public function __invoke(
         \DOMNode $node,
-        NodeTranslator $translator
-    ): NodeInterface {
+        Translator $translate
+    ): Node {
         if (
             !$node instanceof \DOMElement ||
             $node->tagName !== 'link'
@@ -36,7 +36,7 @@ final class LinkTranslator implements NodeTranslatorInterface
         $attributes = (new Attributes)($node);
 
         if (!$attributes->contains('href')) {
-            throw new MissingHrefAttributeException;
+            throw new MissingHrefAttribute;
         }
 
         try {
@@ -47,7 +47,7 @@ final class LinkTranslator implements NodeTranslatorInterface
                 $attributes
             );
         } catch (ExceptionInterface $e) {
-            throw new InvalidLinkException;
+            throw new InvalidLink;
         }
     }
 }

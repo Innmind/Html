@@ -3,6 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Html\Exception;
 
-interface ExceptionInterface
+final class MissingSrcAttribute extends RuntimeException
 {
 }

@@ -5,12 +5,14 @@ namespace Tests\Innmind\Html\Translator\NodeTranslator;
 
 use Innmind\Html\{
     Translator\NodeTranslator\ImgTranslator,
-    Element\Img
+    Element\Img,
+    Exception\InvalidArgumentException,
+    Exception\MissingSrcAttribute,
 };
 use Innmind\Xml\Translator\{
-    NodeTranslator,
+    Translator,
     NodeTranslators,
-    NodeTranslatorInterface
+    NodeTranslator,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -19,22 +21,21 @@ class ImgTranslatorTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            NodeTranslatorInterface::class,
+            NodeTranslator::class,
             new ImgTranslator
         );
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\InvalidArgumentException
-     */
     public function testThrowWhenNotExpectedElement()
     {
         $dom = new \DOMDocument;
         $dom->loadHTML('<body></body>');
 
-        (new ImgTranslator)->translate(
+        $this->expectException(InvalidArgumentException::class);
+
+        (new ImgTranslator)(
             $dom->childNodes->item(1),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );
@@ -45,9 +46,9 @@ class ImgTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<img src="foo.png" alt="bar"/>');
 
-        $img = (new ImgTranslator)->translate(
+        $img = (new ImgTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );
@@ -58,17 +59,16 @@ class ImgTranslatorTest extends TestCase
         $this->assertSame('bar', $img->attributes()->get('alt')->value());
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\MissingSrcAttributeException
-     */
     public function testThrowWhenMissingHrefAttribute()
     {
         $dom = new \DOMDocument;
         $dom->loadHTML('<img/>');
 
-        (new ImgTranslator)->translate(
+        $this->expectException(MissingSrcAttribute::class);
+
+        (new ImgTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );

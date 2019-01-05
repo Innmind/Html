@@ -5,23 +5,23 @@ namespace Innmind\Html\Translator\NodeTranslator;
 
 use Innmind\Html\{
     Exception\InvalidArgumentException,
-    Exception\MissingHrefAttributeException,
-    Element\Base
+    Exception\MissingHrefAttribute,
+    Element\Base,
 };
 use Innmind\Xml\{
-    Translator\NodeTranslatorInterface,
     Translator\NodeTranslator,
-    NodeInterface,
-    Translator\NodeTranslator\Visitor\Attributes
+    Translator\Translator,
+    Node,
+    Translator\NodeTranslator\Visitor\Attributes,
 };
 use Innmind\Url\Url;
 
-final class BaseTranslator implements NodeTranslatorInterface
+final class BaseTranslator implements NodeTranslator
 {
-    public function translate(
+    public function __invoke(
         \DOMNode $node,
-        NodeTranslator $translator
-    ): NodeInterface {
+        Translator $translate
+    ): Node {
         if (
             !$node instanceof \DOMElement ||
             $node->tagName !== 'base'
@@ -32,7 +32,7 @@ final class BaseTranslator implements NodeTranslatorInterface
         $attributes = (new Attributes)($node);
 
         if (!$attributes->contains('href')) {
-            throw new MissingHrefAttributeException;
+            throw new MissingHrefAttribute;
         }
 
         return new Base(

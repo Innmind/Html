@@ -4,13 +4,13 @@ declare(strict_types = 1);
 namespace Innmind\Html\Element;
 
 use Innmind\Xml\{
-    NodeInterface,
+    Node,
     Element\Element,
-    Node\Text
+    Node\Text,
 };
 use Innmind\Immutable\{
+    MapInterface,
     Map,
-    MapInterface
 };
 
 final class Script extends Element
@@ -20,8 +20,8 @@ final class Script extends Element
         parent::__construct(
             'script',
             $attributes,
-            (new Map('int', NodeInterface::class))
-                ->put(0, $text)
+            Map::of('int', Node::class)
+                (0, $text)
         );
     }
 }

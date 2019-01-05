@@ -3,14 +3,15 @@ declare(strict_types = 1);
 
 namespace Innmind\Html\Visitor;
 
-use Innmind\Html\Exception\InvalidArgumentException;
+use Innmind\Html\Exception\DomainException;
 use Innmind\Xml\{
-    NodeInterface,
-    ElementInterface
+    Node,
+    Element,
 };
 use Innmind\Immutable\{
+    SetInterface,
     Set,
-    SetInterface
+    Str,
 };
 
 class Elements
@@ -19,22 +20,22 @@ class Elements
 
     public function __construct(string $name)
     {
-        if (empty($name)) {
-            throw new InvalidArgumentException;
+        if (Str::of($name)->empty()) {
+            throw new DomainException;
         }
 
         $this->name = $name;
     }
 
     /**
-     * @return SetInterface<ElementInterface>
+     * @return SetInterface<Element>
      */
-    public function __invoke(NodeInterface $node): SetInterface
+    public function __invoke(Node $node): SetInterface
     {
-        $elements = new Set(ElementInterface::class);
+        $elements = new Set(Element::class);
 
         if (
-            $node instanceof ElementInterface &&
+            $node instanceof Element &&
             $node->name() === $this->name
         ) {
             $elements = $elements->add($node);

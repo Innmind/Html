@@ -4,13 +4,14 @@ declare(strict_types = 1);
 namespace Innmind\Html\Visitor;
 
 use Innmind\Html\Exception\{
-    ElementNotFoundException,
-    InvalidArgumentException
+    ElementNotFound,
+    DomainException,
 };
 use Innmind\Xml\{
-    NodeInterface,
-    ElementInterface
+    Node,
+    Element as ElementInterface,
 };
+use Innmind\Immutable\Str;
 
 class Element
 {
@@ -18,14 +19,14 @@ class Element
 
     public function __construct(string $name)
     {
-        if (empty($name)) {
-            throw new InvalidArgumentException;
+        if (Str::of($name)->empty()) {
+            throw new DomainException;
         }
 
         $this->name = $name;
     }
 
-    public function __invoke(NodeInterface $node): ElementInterface
+    public function __invoke(Node $node): ElementInterface
     {
         if (
             $node instanceof ElementInterface &&
@@ -38,12 +39,12 @@ class Element
             foreach ($node->children() as $child) {
                 try {
                     return $this($child);
-                } catch (ElementNotFoundException $e) {
+                } catch (ElementNotFound $e) {
                     //pass
                 }
             }
         }
 
-        throw new ElementNotFoundException;
+        throw new ElementNotFound;
     }
 }

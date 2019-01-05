@@ -6,7 +6,7 @@ namespace Tests\Innmind\Html\Element;
 use Innmind\Html\Element\Base;
 use Innmind\Xml\{
     Element\SelfClosingElement,
-    AttributeInterface
+    Attribute,
 };
 use Innmind\Url\UrlInterface;
 use Innmind\Immutable\Map;
@@ -20,7 +20,7 @@ class BaseTest extends TestCase
             SelfClosingElement::class,
             $base = new Base(
                 $href = $this->createMock(UrlInterface::class),
-                $attributes = new Map('string', AttributeInterface::class)
+                $attributes = new Map('string', Attribute::class)
             )
         );
         $this->assertSame('base', $base->name());

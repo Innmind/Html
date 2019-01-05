@@ -5,22 +5,22 @@ namespace Innmind\Html\Translator\NodeTranslator;
 
 use Innmind\Html\{
     Node\Document,
-    Exception\InvalidArgumentException
+    Exception\InvalidArgumentException,
 };
 use Innmind\Xml\{
-    NodeInterface,
-    Translator\NodeTranslatorInterface,
+    Node,
     Translator\NodeTranslator,
-    Node\Document\Type
+    Translator\Translator,
+    Node\Document\Type,
 };
 use Innmind\Immutable\Map;
 
-final class DocumentTranslator implements NodeTranslatorInterface
+final class DocumentTranslator implements NodeTranslator
 {
-    public function translate(
+    public function __invoke(
         \DOMNode $node,
-        NodeTranslator $translator
-    ): NodeInterface {
+        Translator $translate
+    ): Node {
         if ($node->nodeType !== XML_HTML_DOCUMENT_NODE) {
             throw new InvalidArgumentException;
         }
@@ -28,7 +28,7 @@ final class DocumentTranslator implements NodeTranslatorInterface
         return new Document(
             $node->doctype ? $this->buildDoctype($node->doctype) : new Type('html'),
             $node->childNodes ?
-                $this->buildChildren($node->childNodes, $translator) : null
+                $this->buildChildren($node->childNodes, $translate) : null
         );
     }
 
@@ -43,9 +43,9 @@ final class DocumentTranslator implements NodeTranslatorInterface
 
     private function buildChildren(
         \DOMNodeList $nodes,
-        NodeTranslator $translator
+        Translator $translate
     ): Map {
-        $children = new Map('int', NodeInterface::class);
+        $children = new Map('int', Node::class);
 
         foreach ($nodes as $child) {
             if ($child->nodeType === XML_DOCUMENT_TYPE_NODE) {
@@ -54,7 +54,7 @@ final class DocumentTranslator implements NodeTranslatorInterface
 
             $children = $children->put(
                 $children->size(),
-                $translator->translate($child)
+                $translate($child)
             );
         }
 
