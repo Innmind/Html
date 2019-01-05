@@ -7,7 +7,7 @@ use Innmind\Html\{
     Visitor\Element as ElementFinder,
     Reader\Reader,
     Translator\NodeTranslators as HtmlTranslators,
-    Exception\InvalidArgumentException,
+    Exception\DomainException,
     Exception\ElementNotFound,
 };
 use Innmind\Xml\{
@@ -36,7 +36,7 @@ class ElementTest extends TestCase
 
     public function testThrowWhenEmptyTagName()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(DomainException::class);
 
         new ElementFinder('');
     }

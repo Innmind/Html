@@ -45,7 +45,8 @@ class ElementTranslatorTest extends TestCase
 
     public function testThrowWhenInvalidTranslators()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\TypeError::class);
+        $this->expectExceptionMessage('Argument 2 must be of type MapInterface<string, Innmind\Xml\Translator\NodeTranslator>');
 
         new ElementTranslator(
             new GenericTranslator,

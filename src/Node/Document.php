@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Html\Node;
 
-use Innmind\Html\Exception\{
-    InvalidArgumentException,
-    OutOfBoundsException,
-};
+use Innmind\Html\Exception\OutOfBoundsException;
 use Innmind\Xml\{
     Node,
     Node\Document\Type,
@@ -29,7 +26,10 @@ final class Document implements Node
             (string) $children->keyType() !== 'int' ||
             (string) $children->valueType() !== Node::class
         ) {
-            throw new InvalidArgumentException;
+            throw new \TypeError(sprintf(
+                'Argument 2 must be of type MapInterface<int, %s>',
+                Node::class
+            ));
         }
 
         $this->type = $type;

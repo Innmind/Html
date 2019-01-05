@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Html\Visitor;
 
-use Innmind\Html\Exception\InvalidArgumentException;
+use Innmind\Html\Exception\DomainException;
 use Innmind\Xml\{
     Node,
     Element,
@@ -21,7 +21,7 @@ class Elements
     public function __construct(string $name)
     {
         if (Str::of($name)->empty()) {
-            throw new InvalidArgumentException;
+            throw new DomainException;
         }
 
         $this->name = $name;

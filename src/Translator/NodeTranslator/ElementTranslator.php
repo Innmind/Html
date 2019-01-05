@@ -31,7 +31,10 @@ final class ElementTranslator implements NodeTranslator
             (string) $translators->keyType() !== 'string' ||
             (string) $translators->valueType() !== NodeTranslator::class
         ) {
-            throw new InvalidArgumentException;
+            throw new \TypeError(sprintf(
+                'Argument 2 must be of type MapInterface<string, %s>',
+                NodeTranslator::class
+            ));
         }
 
         $this->genericTranslator = $genericTranslator;

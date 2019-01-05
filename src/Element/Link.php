@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Html\Element;
 
-use Innmind\Html\Exception\InvalidArgumentException;
+use Innmind\Html\Exception\DomainException;
 use Innmind\Xml\Element\SelfClosingElement;
 use Innmind\Url\UrlInterface;
 use Innmind\Immutable\{
@@ -22,7 +22,7 @@ final class Link extends SelfClosingElement
         MapInterface $attributes = null
     ) {
         if (Str::of($relationship)->empty()) {
-            throw new InvalidArgumentException;
+            throw new DomainException;
         }
 
         parent::__construct('link', $attributes);

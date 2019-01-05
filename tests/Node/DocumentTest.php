@@ -67,7 +67,8 @@ class DocumentTest extends TestCase
 
     public function testThrowWhenInvalidChildren()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\TypeError::class);
+        $this->expectExceptionMessage('Argument 2 must be of type MapInterface<int, Innmind\Xml\Node>');
 
         new Document(
             new Type('html'),
