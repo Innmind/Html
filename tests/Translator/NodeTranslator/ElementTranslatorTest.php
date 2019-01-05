@@ -29,15 +29,9 @@ class ElementTranslatorTest extends TestCase
     {
         $this->translate = new ElementTranslator(
             new GenericTranslator,
-            (new Map('string', NodeTranslator::class))
-                ->put(
-                    'bar',
-                    $this->bar = $this->createMock(NodeTranslator::class)
-                )
-                ->put(
-                    'baz',
-                    $this->baz = $this->createMock(NodeTranslator::class)
-                )
+            Map::of('string', NodeTranslator::class)
+                ('bar', $this->bar = $this->createMock(NodeTranslator::class))
+                ('baz', $this->baz = $this->createMock(NodeTranslator::class))
         );
     }
 

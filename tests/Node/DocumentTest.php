@@ -57,8 +57,8 @@ class DocumentTest extends TestCase
     {
         $document = new Document(
             new Type('html'),
-            $children = (new Map('int', Node::class))
-                ->put(0, $this->createMock(Node::class))
+            $children = Map::of('int', Node::class)
+                (0, $this->createMock(Node::class))
         );
 
         $this->assertSame($children, $document->children());
@@ -79,14 +79,14 @@ class DocumentTest extends TestCase
     {
         $document = new Document(
             new Type('html'),
-            (new Map('int', Node::class))
-                ->put(
+            Map::of('int', Node::class)
+                (
                     0,
                     new Element(
                         'html',
                         null,
-                        (new Map('int', Node::class))
-                            ->put(0, new Text('wat'))
+                        Map::of('int', Node::class)
+                            (0, new Text('wat'))
                     )
                 )
         );
@@ -98,14 +98,14 @@ class DocumentTest extends TestCase
     {
         $document = new Document(
             new Type('html'),
-            (new Map('int', Node::class))
-                ->put(
+            Map::of('int', Node::class)
+                (
                     0,
                     new Element(
                         'html',
                         null,
-                        (new Map('int', Node::class))
-                            ->put(0, new Text('wat'))
+                        Map::of('int', Node::class)
+                            (0, new Text('wat'))
                     )
                 )
         );
@@ -120,10 +120,10 @@ class DocumentTest extends TestCase
     {
         $document = new Document(
             new Type('html'),
-            (new Map('int', Node::class))
-                ->put(0, new Element('foo'))
-                ->put(1, new Element('bar'))
-                ->put(2, new Element('baz'))
+            Map::of('int', Node::class)
+                (0, new Element('foo'))
+                (1, new Element('bar'))
+                (2, new Element('baz'))
         );
 
         $document2 = $document->removeChild(1);
@@ -149,10 +149,10 @@ class DocumentTest extends TestCase
 
         (new Document(
             new Type('html'),
-            (new Map('int', Node::class))
-                ->put(0, new Element('foo'))
-                ->put(1, new Element('bar'))
-                ->put(2, new Element('baz'))
+            Map::of('int', Node::class)
+                (0, new Element('foo'))
+                (1, new Element('bar'))
+                (2, new Element('baz'))
         ))->removeChild(3);
     }
 
@@ -160,10 +160,10 @@ class DocumentTest extends TestCase
     {
         $document = new Document(
             new Type('html'),
-            (new Map('int', Node::class))
-                ->put(0, new Element('foo'))
-                ->put(1, new Element('bar'))
-                ->put(2, new Element('baz'))
+            Map::of('int', Node::class)
+                (0, new Element('foo'))
+                (1, new Element('bar'))
+                (2, new Element('baz'))
         );
 
         $document2 = $document->replaceChild(
@@ -197,10 +197,10 @@ class DocumentTest extends TestCase
 
         (new Document(
             new Type('html'),
-            (new Map('int', Node::class))
-                ->put(0, new Element('foo'))
-                ->put(1, new Element('bar'))
-                ->put(2, new Element('baz'))
+            Map::of('int', Node::class)
+                (0, new Element('foo'))
+                (1, new Element('bar'))
+                (2, new Element('baz'))
         ))->replaceChild(
             3,
             $this->createMock(Node::class)
@@ -211,10 +211,10 @@ class DocumentTest extends TestCase
     {
         $document = new Document(
             new Type('html'),
-            (new Map('int', Node::class))
-                ->put(0, new Element('foo'))
-                ->put(1, new Element('bar'))
-                ->put(2, new Element('baz'))
+            Map::of('int', Node::class)
+                (0, new Element('foo'))
+                (1, new Element('bar'))
+                (2, new Element('baz'))
         );
 
         $document2 = $document->prependChild(
@@ -249,10 +249,10 @@ class DocumentTest extends TestCase
     {
         $document = new Document(
             new Type('html'),
-            (new Map('int', Node::class))
-                ->put(0, new Element('foo'))
-                ->put(1, new Element('bar'))
-                ->put(2, new Element('baz'))
+            Map::of('int', Node::class)
+                (0, new Element('foo'))
+                (1, new Element('bar'))
+                (2, new Element('baz'))
         );
 
         $document2 = $document->appendChild(

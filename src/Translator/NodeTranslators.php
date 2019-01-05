@@ -31,18 +31,18 @@ final class NodeTranslators
     public static function defaults(): MapInterface
     {
         if (!self::$defaults) {
-            self::$defaults = (new Map('int', NodeTranslator::class))
-                ->put(XML_HTML_DOCUMENT_NODE, new DocumentTranslator)
-                ->put(
+            self::$defaults = Map::of('int', NodeTranslator::class)
+                (XML_HTML_DOCUMENT_NODE, new DocumentTranslator)
+                (
                     XML_ELEMENT_NODE,
                     new ElementTranslator(
                         new GenericTranslator,
-                        (new Map('string', NodeTranslator::class))
-                            ->put('a', new ATranslator)
-                            ->put('base', new BaseTranslator)
-                            ->put('img', new ImgTranslator)
-                            ->put('link', new LinkTranslator)
-                            ->put('script', new ScriptTranslator)
+                        Map::of('string', NodeTranslator::class)
+                            ('a', new ATranslator)
+                            ('base', new BaseTranslator)
+                            ('img', new ImgTranslator)
+                            ('link', new LinkTranslator)
+                            ('script', new ScriptTranslator)
                     )
                 );
         }

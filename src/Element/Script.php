@@ -20,8 +20,8 @@ final class Script extends Element
         parent::__construct(
             'script',
             $attributes,
-            (new Map('int', Node::class))
-                ->put(0, $text)
+            Map::of('int', Node::class)
+                (0, $text)
         );
     }
 }

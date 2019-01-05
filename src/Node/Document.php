@@ -101,8 +101,8 @@ final class Document implements Node
         $document->children = $this
             ->children
             ->reduce(
-                (new Map('int', Node::class))
-                    ->put(0, $child),
+                Map::of('int', Node::class)
+                    (0, $child),
                 function(Map $children, int $position, Node $child): Map {
                     return $children->put(
                         $children->size(),
