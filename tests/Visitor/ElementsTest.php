@@ -9,9 +9,9 @@ use Innmind\Html\{
     Translator\NodeTranslators as HtmlTranslators
 };
 use Innmind\Xml\{
-    ElementInterface,
+    Element as ElementInterface,
     Element\Element,
-    Translator\NodeTranslator,
+    Translator\Translator,
     Translator\NodeTranslators
 };
 use Innmind\Stream\Readable\Stream;
@@ -20,12 +20,12 @@ use PHPUnit\Framework\TestCase;
 
 class ElementsTest extends TestCase
 {
-    private $reader;
+    private $read;
 
     public function setUp()
     {
-        $this->reader = new Reader(
-            new NodeTranslator(
+        $this->read = new Reader(
+            new Translator(
                 NodeTranslators::defaults()->merge(
                     HtmlTranslators::defaults()
                 )
@@ -43,7 +43,7 @@ class ElementsTest extends TestCase
 
     public function testExtractElement()
     {
-        $node = $this->reader->read(
+        $node = ($this->read)(
             new Stream(fopen('fixtures/lemonde.html', 'r'))
         );
 

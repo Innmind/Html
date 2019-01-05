@@ -6,7 +6,7 @@ namespace Tests\Innmind\Html\Element;
 use Innmind\Html\Element\Link;
 use Innmind\Xml\{
     Element\SelfClosingElement,
-    AttributeInterface
+    Attribute
 };
 use Innmind\Url\UrlInterface;
 use Innmind\Immutable\Map;
@@ -21,7 +21,7 @@ class LinkTest extends TestCase
             $link = new Link(
                 $href = $this->createMock(UrlInterface::class),
                 'rel',
-                $attributes = new Map('string', AttributeInterface::class)
+                $attributes = new Map('string', Attribute::class)
             )
         );
         $this->assertSame('link', $link->name());

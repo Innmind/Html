@@ -5,8 +5,8 @@ namespace Innmind\Html\Visitor;
 
 use Innmind\Html\Exception\InvalidArgumentException;
 use Innmind\Xml\{
-    NodeInterface,
-    ElementInterface
+    Node,
+    Element
 };
 use Innmind\Immutable\{
     Set,
@@ -27,14 +27,14 @@ class Elements
     }
 
     /**
-     * @return SetInterface<ElementInterface>
+     * @return SetInterface<Element>
      */
-    public function __invoke(NodeInterface $node): SetInterface
+    public function __invoke(Node $node): SetInterface
     {
-        $elements = new Set(ElementInterface::class);
+        $elements = new Set(Element::class);
 
         if (
-            $node instanceof ElementInterface &&
+            $node instanceof Element &&
             $node->name() === $this->name
         ) {
             $elements = $elements->add($node);

@@ -9,8 +9,8 @@ use Innmind\Html\{
     Node\Document
 };
 use Innmind\Xml\{
-    ReaderInterface,
-    Translator\NodeTranslator,
+    Reader as ReaderInterface,
+    Translator\Translator,
     Translator\NodeTranslators,
     Node\Document as XmlDocument
 };
@@ -19,12 +19,12 @@ use PHPUnit\Framework\TestCase;
 
 class ReaderTest extends TestCase
 {
-    private $reader;
+    private $read;
 
     public function setUp()
     {
-        $this->reader = new Reader(
-            new NodeTranslator(
+        $this->read = new Reader(
+            new Translator(
                 NodeTranslators::defaults()->merge(
                     HtmlTranslators::defaults()
                 )
@@ -36,7 +36,7 @@ class ReaderTest extends TestCase
     {
         $this->assertInstanceOf(
             ReaderInterface::class,
-            $this->reader
+            $this->read
         );
     }
 
@@ -53,7 +53,7 @@ class ReaderTest extends TestCase
 HTML;
         $res = fopen('php://temp', 'r+');
         fwrite($res, $html);
-        $node = $this->reader->read(
+        $node = ($this->read)(
             new Stream($res)
         );
         $expected = <<<HTML
@@ -69,7 +69,7 @@ HTML;
 
     public function testReadFullPage()
     {
-        $node = $this->reader->read(
+        $node = ($this->read)(
             new Stream(
                 fopen('fixtures/lemonde.html', 'r')
             )
@@ -80,7 +80,7 @@ HTML;
 
     public function testReadScreenOnline()
     {
-        $node = $this->reader->read(new Stream(fopen(
+        $node = ($this->read)(new Stream(fopen(
             'fixtures/www.screenonline.org.uk_tv_id_560180_.html',
             'r'
         )));

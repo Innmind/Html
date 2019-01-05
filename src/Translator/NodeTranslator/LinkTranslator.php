@@ -10,9 +10,9 @@ use Innmind\Html\{
     Element\Link
 };
 use Innmind\Xml\{
-    Translator\NodeTranslatorInterface,
     Translator\NodeTranslator,
-    NodeInterface,
+    Translator\Translator,
+    Node,
     Translator\NodeTranslator\Visitor\Attributes
 };
 use Innmind\Url\{
@@ -20,12 +20,12 @@ use Innmind\Url\{
     Exception\ExceptionInterface
 };
 
-final class LinkTranslator implements NodeTranslatorInterface
+final class LinkTranslator implements NodeTranslator
 {
-    public function translate(
+    public function __invoke(
         \DOMNode $node,
-        NodeTranslator $translator
-    ): NodeInterface {
+        Translator $translate
+    ): Node {
         if (
             !$node instanceof \DOMElement ||
             $node->tagName !== 'link'

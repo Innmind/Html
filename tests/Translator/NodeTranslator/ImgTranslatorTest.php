@@ -8,9 +8,9 @@ use Innmind\Html\{
     Element\Img
 };
 use Innmind\Xml\Translator\{
-    NodeTranslator,
+    Translator,
     NodeTranslators,
-    NodeTranslatorInterface
+    NodeTranslator
 };
 use PHPUnit\Framework\TestCase;
 
@@ -19,7 +19,7 @@ class ImgTranslatorTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            NodeTranslatorInterface::class,
+            NodeTranslator::class,
             new ImgTranslator
         );
     }
@@ -32,9 +32,9 @@ class ImgTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<body></body>');
 
-        (new ImgTranslator)->translate(
+        (new ImgTranslator)(
             $dom->childNodes->item(1),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );
@@ -45,9 +45,9 @@ class ImgTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<img src="foo.png" alt="bar"/>');
 
-        $img = (new ImgTranslator)->translate(
+        $img = (new ImgTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );
@@ -66,9 +66,9 @@ class ImgTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<img/>');
 
-        (new ImgTranslator)->translate(
+        (new ImgTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );

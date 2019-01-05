@@ -9,33 +9,33 @@ use Innmind\Html\{
 };
 use Innmind\Xml\{
     Element\SelfClosingElement,
-    Translator\NodeTranslator,
+    Translator\Translator,
     Translator\NodeTranslators,
     Translator\NodeTranslator\ElementTranslator as GenericTranslator,
-    Translator\NodeTranslatorInterface,
-    NodeInterface
+    Translator\NodeTranslator,
+    Node
 };
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
 class ElementTranslatorTest extends TestCase
 {
-    private $translator;
+    private $translate;
     private $bar;
     private $baz;
 
     public function setUp()
     {
-        $this->translator = new ElementTranslator(
+        $this->translate = new ElementTranslator(
             new GenericTranslator,
-            (new Map('string', NodeTranslatorInterface::class))
+            (new Map('string', NodeTranslator::class))
                 ->put(
                     'bar',
-                    $this->bar = $this->createMock(NodeTranslatorInterface::class)
+                    $this->bar = $this->createMock(NodeTranslator::class)
                 )
                 ->put(
                     'baz',
-                    $this->baz = $this->createMock(NodeTranslatorInterface::class)
+                    $this->baz = $this->createMock(NodeTranslator::class)
                 )
         );
     }
@@ -43,8 +43,8 @@ class ElementTranslatorTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            NodeTranslatorInterface::class,
-            $this->translator
+            NodeTranslator::class,
+            $this->translate
         );
     }
 
@@ -55,7 +55,7 @@ class ElementTranslatorTest extends TestCase
     {
         new ElementTranslator(
             new GenericTranslator,
-            new Map('int', NodeTranslatorInterface::class)
+            new Map('int', NodeTranslator::class)
         );
     }
 
@@ -66,10 +66,10 @@ class ElementTranslatorTest extends TestCase
     {
         (new ElementTranslator(
             new GenericTranslator,
-            new Map('string', NodeTranslatorInterface::class)
-        ))->translate(
+            new Map('string', NodeTranslator::class)
+        ))(
             new \DOMNode,
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );
@@ -80,9 +80,9 @@ class ElementTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadXML('<foo/>');
 
-        $node = $this->translator->translate(
+        $node = ($this->translate)(
             $dom->childNodes->item(0),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );
@@ -97,7 +97,7 @@ class ElementTranslatorTest extends TestCase
 
         $this->bar
             ->expects($this->once())
-            ->method('translate')
+            ->method('__invoke')
             ->with($dom->childNodes->item(0))
             ->will(
                 $this->throwException(
@@ -105,9 +105,9 @@ class ElementTranslatorTest extends TestCase
                 )
             );
 
-        $node = $this->translator->translate(
+        $node = ($this->translate)(
             $dom->childNodes->item(0),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );
@@ -122,13 +122,13 @@ class ElementTranslatorTest extends TestCase
 
         $this->baz
             ->expects($this->once())
-            ->method('translate')
+            ->method('__invoke')
             ->with($dom->childNodes->item(0))
-            ->willReturn($expected = $this->createMock(NodeInterface::class));
+            ->willReturn($expected = $this->createMock(Node::class));
 
-        $node = $this->translator->translate(
+        $node = ($this->translate)(
             $dom->childNodes->item(0),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );

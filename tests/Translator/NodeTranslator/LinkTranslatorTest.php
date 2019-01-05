@@ -8,9 +8,9 @@ use Innmind\Html\{
     Element\Link
 };
 use Innmind\Xml\Translator\{
-    NodeTranslator,
+    Translator,
     NodeTranslators,
-    NodeTranslatorInterface
+    NodeTranslator
 };
 use PHPUnit\Framework\TestCase;
 
@@ -19,7 +19,7 @@ class LinkTranslatorTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            NodeTranslatorInterface::class,
+            NodeTranslator::class,
             new LinkTranslator
         );
     }
@@ -32,9 +32,9 @@ class LinkTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<body></body>');
 
-        (new LinkTranslator)->translate(
+        (new LinkTranslator)(
             $dom->childNodes->item(1),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );
@@ -45,9 +45,9 @@ class LinkTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<link href="/" rel="next" hreflang="fr"/>');
 
-        $link = (new LinkTranslator)->translate(
+        $link = (new LinkTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );
@@ -64,9 +64,9 @@ class LinkTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<link href="/" hreflang="fr"/>');
 
-        $link = (new LinkTranslator)->translate(
+        $link = (new LinkTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );
@@ -86,9 +86,9 @@ class LinkTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<link/>');
 
-        (new LinkTranslator)->translate(
+        (new LinkTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );

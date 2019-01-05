@@ -8,9 +8,9 @@ use Innmind\Html\{
     Element\Script
 };
 use Innmind\Xml\Translator\{
-    NodeTranslator,
+    Translator,
     NodeTranslators,
-    NodeTranslatorInterface
+    NodeTranslator
 };
 use PHPUnit\Framework\TestCase;
 
@@ -19,7 +19,7 @@ class ScriptTranslatorTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            NodeTranslatorInterface::class,
+            NodeTranslator::class,
             new ScriptTranslator
         );
     }
@@ -32,9 +32,9 @@ class ScriptTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<body></body>');
 
-        (new ScriptTranslator)->translate(
+        (new ScriptTranslator)(
             $dom->childNodes->item(1),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );
@@ -45,9 +45,9 @@ class ScriptTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<script type="text/javascript">var foo = 42;</script>');
 
-        $script = (new ScriptTranslator)->translate(
+        $script = (new ScriptTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );
@@ -67,9 +67,9 @@ class ScriptTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<script></script>');
 
-        $script = (new ScriptTranslator)->translate(
+        $script = (new ScriptTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );

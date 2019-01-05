@@ -8,9 +8,9 @@ use Innmind\Html\{
     Element\Base
 };
 use Innmind\Xml\Translator\{
-    NodeTranslator,
+    Translator,
     NodeTranslators,
-    NodeTranslatorInterface
+    NodeTranslator
 };
 use PHPUnit\Framework\TestCase;
 
@@ -19,7 +19,7 @@ class BaseTranslatorTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            NodeTranslatorInterface::class,
+            NodeTranslator::class,
             new BaseTranslator
         );
     }
@@ -32,9 +32,9 @@ class BaseTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<body></body>');
 
-        (new BaseTranslator)->translate(
+        (new BaseTranslator)(
             $dom->childNodes->item(1),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );
@@ -45,9 +45,9 @@ class BaseTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<base href="/" target="_blank"/>');
 
-        $base = (new BaseTranslator)->translate(
+        $base = (new BaseTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );
@@ -66,9 +66,9 @@ class BaseTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<base/>');
 
-        (new BaseTranslator)->translate(
+        (new BaseTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );

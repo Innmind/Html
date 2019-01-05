@@ -9,19 +9,19 @@ use Innmind\Html\{
     Element\Base
 };
 use Innmind\Xml\{
-    Translator\NodeTranslatorInterface,
     Translator\NodeTranslator,
-    NodeInterface,
+    Translator\Translator,
+    Node,
     Translator\NodeTranslator\Visitor\Attributes
 };
 use Innmind\Url\Url;
 
-final class BaseTranslator implements NodeTranslatorInterface
+final class BaseTranslator implements NodeTranslator
 {
-    public function translate(
+    public function __invoke(
         \DOMNode $node,
-        NodeTranslator $translator
-    ): NodeInterface {
+        Translator $translate
+    ): Node {
         if (
             !$node instanceof \DOMElement ||
             $node->tagName !== 'base'

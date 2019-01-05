@@ -8,8 +8,8 @@ use Innmind\Html\Exception\{
     InvalidArgumentException
 };
 use Innmind\Xml\{
-    NodeInterface,
-    ElementInterface
+    Node,
+    Element as ElementInterface
 };
 
 class Element
@@ -25,7 +25,7 @@ class Element
         $this->name = $name;
     }
 
-    public function __invoke(NodeInterface $node): ElementInterface
+    public function __invoke(Node $node): ElementInterface
     {
         if (
             $node instanceof ElementInterface &&

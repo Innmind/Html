@@ -13,7 +13,7 @@ use Innmind\Html\Translator\NodeTranslator\{
     ScriptTranslator
 };
 use Innmind\Xml\Translator\{
-    NodeTranslatorInterface,
+    NodeTranslator,
     NodeTranslator\ElementTranslator as GenericTranslator
 };
 use Innmind\Immutable\{
@@ -26,18 +26,18 @@ final class NodeTranslators
     private static $defaults;
 
     /**
-     * @return MapInterface<int, NodeTranslatorInterface>
+     * @return MapInterface<int, NodeTranslator>
      */
     public static function defaults(): MapInterface
     {
         if (!self::$defaults) {
-            self::$defaults = (new Map('int', NodeTranslatorInterface::class))
+            self::$defaults = (new Map('int', NodeTranslator::class))
                 ->put(XML_HTML_DOCUMENT_NODE, new DocumentTranslator)
                 ->put(
                     XML_ELEMENT_NODE,
                     new ElementTranslator(
                         new GenericTranslator,
-                        (new Map('string', NodeTranslatorInterface::class))
+                        (new Map('string', NodeTranslator::class))
                             ->put('a', new ATranslator)
                             ->put('base', new BaseTranslator)
                             ->put('img', new ImgTranslator)

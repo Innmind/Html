@@ -6,8 +6,8 @@ namespace Tests\Innmind\Html\Element;
 use Innmind\Html\Element\A;
 use Innmind\Xml\{
     Element\Element,
-    AttributeInterface,
-    NodeInterface
+    Attribute,
+    Node
 };
 use Innmind\Url\UrlInterface;
 use Innmind\Immutable\Map;
@@ -21,8 +21,8 @@ class ATest extends TestCase
             Element::class,
             $a = new A(
                 $href = $this->createMock(UrlInterface::class),
-                $attributes = new Map('string', AttributeInterface::class),
-                $children = new Map('int', NodeInterface::class)
+                $attributes = new Map('string', Attribute::class),
+                $children = new Map('int', Node::class)
             )
         );
         $this->assertSame('a', $a->name());

@@ -8,8 +8,8 @@ use Innmind\Html\{
     Node\Document
 };
 use Innmind\Xml\{
-    Translator\NodeTranslatorInterface,
     Translator\NodeTranslator,
+    Translator\Translator,
     Translator\NodeTranslators
 };
 use PHPUnit\Framework\TestCase;
@@ -19,7 +19,7 @@ class DocumentTranslatorTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            NodeTranslatorInterface::class,
+            NodeTranslator::class,
             new DocumentTranslator
         );
     }
@@ -29,9 +29,9 @@ class DocumentTranslatorTest extends TestCase
         $document = new \DOMDocument;
         $document->loadHtml('<!DOCTYPE html><body></body>');
 
-        $node = (new DocumentTranslator)->translate(
+        $node = (new DocumentTranslator)(
             $document,
-            new NodeTranslator(NodeTranslators::defaults())
+            new Translator(NodeTranslators::defaults())
         );
 
         $this->assertInstanceOf(Document::class, $node);
@@ -45,9 +45,9 @@ class DocumentTranslatorTest extends TestCase
         $document = new \DOMDocument;
         $document->loadHtml('<!--foo-->');
 
-        $node = (new DocumentTranslator)->translate(
+        $node = (new DocumentTranslator)(
             $document,
-            new NodeTranslator(NodeTranslators::defaults())
+            new Translator(NodeTranslators::defaults())
         );
 
         $this->assertSame(
@@ -61,9 +61,9 @@ class DocumentTranslatorTest extends TestCase
         $document = new \DOMDocument;
         $document->loadHtml('<!DOCTYPE html>');
 
-        $node = (new DocumentTranslator)->translate(
+        $node = (new DocumentTranslator)(
             $document,
-            new NodeTranslator(NodeTranslators::defaults())
+            new Translator(NodeTranslators::defaults())
         );
 
         $this->assertFalse($node->hasChildren());
@@ -77,9 +77,9 @@ class DocumentTranslatorTest extends TestCase
         $document = new \DOMDocument;
         $document->loadXML('<foo></foo>');
 
-        (new DocumentTranslator)->translate(
+        (new DocumentTranslator)(
             $document->childNodes->item(0),
-            new NodeTranslator(NodeTranslators::defaults())
+            new Translator(NodeTranslators::defaults())
         );
     }
 }

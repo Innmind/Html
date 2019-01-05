@@ -7,7 +7,7 @@ use Innmind\Html\Element\Script;
 use Innmind\Xml\{
     Element\Element,
     Node\Text,
-    AttributeInterface
+    Attribute
 };
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
@@ -29,7 +29,7 @@ class ScriptTest extends TestCase
     {
         $script = new Script(
             new Text('foo'),
-            $attributes = new Map('string', AttributeInterface::class)
+            $attributes = new Map('string', Attribute::class)
         );
 
         $this->assertSame($attributes, $script->attributes());

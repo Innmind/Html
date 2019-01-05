@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Html\Element;
 
 use Innmind\Xml\{
-    NodeInterface,
+    Node,
     Element\Element,
     Node\Text
 };
@@ -20,7 +20,7 @@ final class Script extends Element
         parent::__construct(
             'script',
             $attributes,
-            (new Map('int', NodeInterface::class))
+            (new Map('int', Node::class))
                 ->put(0, $text)
         );
     }

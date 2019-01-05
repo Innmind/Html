@@ -8,9 +8,9 @@ use Innmind\Html\{
     Element\A
 };
 use Innmind\Xml\Translator\{
-    NodeTranslator,
+    Translator,
     NodeTranslators,
-    NodeTranslatorInterface
+    NodeTranslator
 };
 use PHPUnit\Framework\TestCase;
 
@@ -19,7 +19,7 @@ class ATranslatorTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            NodeTranslatorInterface::class,
+            NodeTranslator::class,
             new ATranslator
         );
     }
@@ -32,9 +32,9 @@ class ATranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<body></body>');
 
-        (new ATranslator)->translate(
+        (new ATranslator)(
             $dom->childNodes->item(1),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );
@@ -45,9 +45,9 @@ class ATranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<a href="/" class="whatever">foo</a>');
 
-        $a = (new ATranslator)->translate(
+        $a = (new ATranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );
@@ -67,9 +67,9 @@ class ATranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<a class="whatever">foo</a>');
 
-        (new ATranslator)->translate(
+        (new ATranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new NodeTranslator(
+            new Translator(
                 NodeTranslators::defaults()
             )
         );

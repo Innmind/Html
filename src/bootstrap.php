@@ -4,14 +4,14 @@ declare(strict_types = 1);
 namespace Innmind\Html;
 
 use Innmind\Xml\{
-    ReaderInterface,
-    Translator\NodeTranslator,
+    Reader as ReaderInterface,
+    Translator\Translator as NodeTranslator,
     Translator\NodeTranslators,
 };
 use Innmind\Immutable\MapInterface;
 
 /**
- * @param MapInterface<int, NodeTranslatorInterface>|null $translators
+ * @param MapInterface<int, NodeTranslator>|null $translators
  */
 function bootstrap(MapInterface $translators = null): ReaderInterface
 {
