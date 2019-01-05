@@ -6,6 +6,8 @@ namespace Tests\Innmind\Html\Translator\NodeTranslator;
 use Innmind\Html\{
     Translator\NodeTranslator\ATranslator,
     Element\A,
+    Exception\InvalidArgumentException,
+    Exception\MissingHrefAttribute,
 };
 use Innmind\Xml\Translator\{
     Translator,
@@ -24,13 +26,12 @@ class ATranslatorTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\InvalidArgumentException
-     */
     public function testThrowWhenNotExpectedElement()
     {
         $dom = new \DOMDocument;
         $dom->loadHTML('<body></body>');
+
+        $this->expectException(InvalidArgumentException::class);
 
         (new ATranslator)(
             $dom->childNodes->item(1),
@@ -59,13 +60,12 @@ class ATranslatorTest extends TestCase
         $this->assertCount(1, $a->children());
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\MissingHrefAttribute
-     */
     public function testThrowWhenMissingHrefAttribute()
     {
         $dom = new \DOMDocument;
         $dom->loadHTML('<a class="whatever">foo</a>');
+
+        $this->expectException(MissingHrefAttribute::class);
 
         (new ATranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),

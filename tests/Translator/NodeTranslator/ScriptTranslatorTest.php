@@ -6,6 +6,7 @@ namespace Tests\Innmind\Html\Translator\NodeTranslator;
 use Innmind\Html\{
     Translator\NodeTranslator\ScriptTranslator,
     Element\Script,
+    Exception\InvalidArgumentException,
 };
 use Innmind\Xml\Translator\{
     Translator,
@@ -24,13 +25,12 @@ class ScriptTranslatorTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\InvalidArgumentException
-     */
     public function testThrowWhenNotExpectedElement()
     {
         $dom = new \DOMDocument;
         $dom->loadHTML('<body></body>');
+
+        $this->expectException(InvalidArgumentException::class);
 
         (new ScriptTranslator)(
             $dom->childNodes->item(1),

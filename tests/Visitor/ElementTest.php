@@ -7,6 +7,8 @@ use Innmind\Html\{
     Visitor\Element as ElementFinder,
     Reader\Reader,
     Translator\NodeTranslators as HtmlTranslators,
+    Exception\InvalidArgumentException,
+    Exception\ElementNotFound,
 };
 use Innmind\Xml\{
     Element as ElementInterface,
@@ -32,11 +34,10 @@ class ElementTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\InvalidArgumentException
-     */
     public function testThrowWhenEmptyTagName()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         new ElementFinder('');
     }
 
@@ -54,11 +55,10 @@ class ElementTest extends TestCase
         $this->assertTrue($h1->hasAttributes());
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\ElementNotFound
-     */
     public function testThrowWhenElementNotFound()
     {
+        $this->expectException(ElementNotFound::class);
+
         (new ElementFinder('foo'))(new Element('whatever'));
     }
 }

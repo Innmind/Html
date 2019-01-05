@@ -7,6 +7,7 @@ use Innmind\Html\{
     Visitor\Head,
     Reader\Reader,
     Translator\NodeTranslators as HtmlTranslators,
+    Exception\ElementNotFound,
 };
 use Innmind\Xml\{
     Element as ElementInterface,
@@ -46,11 +47,10 @@ class HeadTest extends TestCase
         $this->assertFalse($head->hasAttributes());
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\ElementNotFound
-     */
     public function testThrowWhenHeadNotFound()
     {
+        $this->expectException(ElementNotFound::class);
+
         (new Head)(new Element('body'));
     }
 }

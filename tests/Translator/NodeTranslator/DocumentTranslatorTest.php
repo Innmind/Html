@@ -6,6 +6,7 @@ namespace Tests\Innmind\Html\Translator\NodeTranslator;
 use Innmind\Html\{
     Translator\NodeTranslator\DocumentTranslator,
     Node\Document,
+    Exception\InvalidArgumentException,
 };
 use Innmind\Xml\{
     Translator\NodeTranslator,
@@ -69,13 +70,12 @@ class DocumentTranslatorTest extends TestCase
         $this->assertFalse($node->hasChildren());
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\InvalidArgumentException
-     */
     public function testThrowWhenInvalidNode()
     {
         $document = new \DOMDocument;
         $document->loadXML('<foo></foo>');
+
+        $this->expectException(InvalidArgumentException::class);
 
         (new DocumentTranslator)(
             $document->childNodes->item(0),

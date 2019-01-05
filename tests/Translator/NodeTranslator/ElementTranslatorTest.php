@@ -6,6 +6,7 @@ namespace Tests\Innmind\Html\Translator\NodeTranslator;
 use Innmind\Html\{
     Translator\NodeTranslator\ElementTranslator,
     Exception\Exception,
+    Exception\InvalidArgumentException,
 };
 use Innmind\Xml\{
     Element\SelfClosingElement,
@@ -48,22 +49,20 @@ class ElementTranslatorTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\InvalidArgumentException
-     */
     public function testThrowWhenInvalidTranslators()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         new ElementTranslator(
             new GenericTranslator,
             new Map('int', NodeTranslator::class)
         );
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\InvalidArgumentException
-     */
     public function testThrowWhenInvalidNode()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         (new ElementTranslator(
             new GenericTranslator,
             new Map('string', NodeTranslator::class)

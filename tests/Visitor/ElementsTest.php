@@ -7,6 +7,7 @@ use Innmind\Html\{
     Visitor\Elements,
     Reader\Reader,
     Translator\NodeTranslators as HtmlTranslators,
+    Exception\InvalidArgumentException,
 };
 use Innmind\Xml\{
     Element as ElementInterface,
@@ -33,11 +34,10 @@ class ElementsTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\InvalidArgumentException
-     */
     public function testThrowWhenEmptyTagName()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         new Elements('');
     }
 

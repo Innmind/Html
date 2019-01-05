@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Html\Element;
 
-use Innmind\Html\Element\Link;
+use Innmind\Html\{
+    Element\Link,
+    Exception\InvalidArgumentException,
+};
 use Innmind\Xml\{
     Element\SelfClosingElement,
     Attribute,
@@ -40,11 +43,10 @@ class LinkTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\InvalidArgumentException
-     */
     public function testThrowWhenEmptyRelationship()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         new Link(
             $this->createMock(UrlInterface::class),
             ''

@@ -3,7 +3,11 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Html\Node;
 
-use Innmind\Html\Node\Document;
+use Innmind\Html\{
+    Node\Document,
+    Exception\InvalidArgumentException,
+    Exception\OutOfBoundsException,
+};
 use Innmind\Xml\{
     Node,
     Node\Document\Type,
@@ -61,11 +65,10 @@ class DocumentTest extends TestCase
         $this->assertTrue($document->hasChildren());
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\InvalidArgumentException
-     */
     public function testThrowWhenInvalidChildren()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         new Document(
             new Type('html'),
             new Map('int', 'string')
@@ -140,11 +143,10 @@ class DocumentTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\OutOfBoundsException
-     */
     public function testThrowWhenRemovingUnknownChild()
     {
+        $this->expectException(OutOfBoundsException::class);
+
         (new Document(
             new Type('html'),
             (new Map('int', Node::class))
@@ -189,11 +191,10 @@ class DocumentTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\OutOfBoundsException
-     */
     public function testThrowWhenReplacingUnknownChild()
     {
+        $this->expectException(OutOfBoundsException::class);
+
         (new Document(
             new Type('html'),
             (new Map('int', Node::class))

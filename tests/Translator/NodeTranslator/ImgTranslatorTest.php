@@ -6,6 +6,8 @@ namespace Tests\Innmind\Html\Translator\NodeTranslator;
 use Innmind\Html\{
     Translator\NodeTranslator\ImgTranslator,
     Element\Img,
+    Exception\InvalidArgumentException,
+    Exception\MissingSrcAttribute,
 };
 use Innmind\Xml\Translator\{
     Translator,
@@ -24,13 +26,12 @@ class ImgTranslatorTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\InvalidArgumentException
-     */
     public function testThrowWhenNotExpectedElement()
     {
         $dom = new \DOMDocument;
         $dom->loadHTML('<body></body>');
+
+        $this->expectException(InvalidArgumentException::class);
 
         (new ImgTranslator)(
             $dom->childNodes->item(1),
@@ -58,13 +59,12 @@ class ImgTranslatorTest extends TestCase
         $this->assertSame('bar', $img->attributes()->get('alt')->value());
     }
 
-    /**
-     * @expectedException Innmind\Html\Exception\MissingSrcAttribute
-     */
     public function testThrowWhenMissingHrefAttribute()
     {
         $dom = new \DOMDocument;
         $dom->loadHTML('<img/>');
+
+        $this->expectException(MissingSrcAttribute::class);
 
         (new ImgTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
