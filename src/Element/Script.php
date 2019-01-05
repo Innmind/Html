@@ -6,11 +6,11 @@ namespace Innmind\Html\Element;
 use Innmind\Xml\{
     Node,
     Element\Element,
-    Node\Text
+    Node\Text,
 };
 use Innmind\Immutable\{
+    MapInterface,
     Map,
-    MapInterface
 };
 
 final class Script extends Element

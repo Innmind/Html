@@ -6,13 +6,13 @@ namespace Tests\Innmind\Html\Visitor;
 use Innmind\Html\{
     Visitor\Body,
     Reader\Reader,
-    Translator\NodeTranslators as HtmlTranslators
+    Translator\NodeTranslators as HtmlTranslators,
 };
 use Innmind\Xml\{
     Element as ElementInterface,
     Element\Element,
     Translator\Translator,
-    Translator\NodeTranslators
+    Translator\NodeTranslators,
 };
 use Innmind\Stream\Readable\Stream;
 use PHPUnit\Framework\TestCase;

@@ -6,11 +6,11 @@ namespace Innmind\Html\Visitor;
 use Innmind\Html\Exception\InvalidArgumentException;
 use Innmind\Xml\{
     Node,
-    Element
+    Element,
 };
 use Innmind\Immutable\{
+    SetInterface,
     Set,
-    SetInterface
 };
 
 class Elements

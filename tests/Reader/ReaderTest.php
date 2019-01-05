@@ -6,13 +6,13 @@ namespace Tests\Innmind\Html\Reader;
 use Innmind\Html\{
     Reader\Reader,
     Translator\NodeTranslators as HtmlTranslators,
-    Node\Document
+    Node\Document,
 };
 use Innmind\Xml\{
     Reader as ReaderInterface,
     Translator\Translator,
     Translator\NodeTranslators,
-    Node\Document as XmlDocument
+    Node\Document as XmlDocument,
 };
 use Innmind\Stream\Readable\Stream;
 use PHPUnit\Framework\TestCase;

@@ -6,14 +6,14 @@ namespace Innmind\Html\Translator\NodeTranslator;
 use Innmind\Html\{
     Exception\InvalidArgumentException,
     Exception\MissingHrefAttribute,
-    Element\A
+    Element\A,
 };
 use Innmind\Xml\{
     Translator\NodeTranslator,
     Translator\Translator,
     Node,
     Translator\NodeTranslator\Visitor\Attributes,
-    Translator\NodeTranslator\Visitor\Children
+    Translator\NodeTranslator\Visitor\Children,
 };
 use Innmind\Url\Url;
 

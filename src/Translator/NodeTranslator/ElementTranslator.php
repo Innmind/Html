@@ -5,17 +5,17 @@ namespace Innmind\Html\Translator\NodeTranslator;
 
 use Innmind\Html\Exception\{
     InvalidArgumentException,
-    Exception
+    Exception,
 };
 use Innmind\Xml\{
     Translator\NodeTranslator,
     Translator\Translator,
     Translator\NodeTranslator\ElementTranslator as GenericTranslator,
-    Node
+    Node,
 };
 use Innmind\Immutable\{
     MapInterface,
-    Exception\ElementNotFoundException
+    Exception\ElementNotFoundException,
 };
 
 final class ElementTranslator implements NodeTranslator

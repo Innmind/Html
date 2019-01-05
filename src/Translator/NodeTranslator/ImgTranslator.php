@@ -6,13 +6,13 @@ namespace Innmind\Html\Translator\NodeTranslator;
 use Innmind\Html\{
     Exception\InvalidArgumentException,
     Exception\MissingSrcAttribute,
-    Element\Img
+    Element\Img,
 };
 use Innmind\Xml\{
     Translator\NodeTranslator,
     Translator\Translator,
     Node,
-    Translator\NodeTranslator\Visitor\Attributes
+    Translator\NodeTranslator\Visitor\Attributes,
 };
 use Innmind\Url\Url;
 

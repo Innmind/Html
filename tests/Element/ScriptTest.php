@@ -7,7 +7,7 @@ use Innmind\Html\Element\Script;
 use Innmind\Xml\{
     Element\Element,
     Node\Text,
-    Attribute
+    Attribute,
 };
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;

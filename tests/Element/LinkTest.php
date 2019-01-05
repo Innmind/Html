@@ -6,7 +6,7 @@ namespace Tests\Innmind\Html\Element;
 use Innmind\Html\Element\Link;
 use Innmind\Xml\{
     Element\SelfClosingElement,
-    Attribute
+    Attribute,
 };
 use Innmind\Url\UrlInterface;
 use Innmind\Immutable\Map;

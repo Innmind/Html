@@ -5,12 +5,12 @@ namespace Tests\Innmind\Html\Translator\NodeTranslator;
 
 use Innmind\Html\{
     Translator\NodeTranslator\ImgTranslator,
-    Element\Img
+    Element\Img,
 };
 use Innmind\Xml\Translator\{
     Translator,
     NodeTranslators,
-    NodeTranslator
+    NodeTranslator,
 };
 use PHPUnit\Framework\TestCase;
 

@@ -5,13 +5,13 @@ namespace Innmind\Html\Translator\NodeTranslator;
 
 use Innmind\Html\{
     Node\Document,
-    Exception\InvalidArgumentException
+    Exception\InvalidArgumentException,
 };
 use Innmind\Xml\{
     Node,
     Translator\NodeTranslator,
     Translator\Translator,
-    Node\Document\Type
+    Node\Document\Type,
 };
 use Innmind\Immutable\Map;
 

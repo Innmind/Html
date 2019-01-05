@@ -7,17 +7,17 @@ use Innmind\Html\{
     Exception\InvalidArgumentException,
     Exception\MissingHrefAttribute,
     Exception\InvalidLink,
-    Element\Link
+    Element\Link,
 };
 use Innmind\Xml\{
     Translator\NodeTranslator,
     Translator\Translator,
     Node,
-    Translator\NodeTranslator\Visitor\Attributes
+    Translator\NodeTranslator\Visitor\Attributes,
 };
 use Innmind\Url\{
     Url,
-    Exception\ExceptionInterface
+    Exception\ExceptionInterface,
 };
 
 final class LinkTranslator implements NodeTranslator

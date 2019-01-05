@@ -5,15 +5,15 @@ namespace Innmind\Html\Node;
 
 use Innmind\Html\Exception\{
     InvalidArgumentException,
-    OutOfBoundsException
+    OutOfBoundsException,
 };
 use Innmind\Xml\{
     Node,
-    Node\Document\Type
+    Node\Document\Type,
 };
 use Innmind\Immutable\{
+    MapInterface,
     Map,
-    MapInterface
 };
 
 final class Document implements Node

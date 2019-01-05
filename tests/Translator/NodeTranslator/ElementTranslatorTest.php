@@ -5,7 +5,7 @@ namespace Tests\Innmind\Html\Translator\NodeTranslator;
 
 use Innmind\Html\{
     Translator\NodeTranslator\ElementTranslator,
-    Exception\Exception
+    Exception\Exception,
 };
 use Innmind\Xml\{
     Element\SelfClosingElement,
@@ -13,7 +13,7 @@ use Innmind\Xml\{
     Translator\NodeTranslators,
     Translator\NodeTranslator\ElementTranslator as GenericTranslator,
     Translator\NodeTranslator,
-    Node
+    Node,
 };
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;

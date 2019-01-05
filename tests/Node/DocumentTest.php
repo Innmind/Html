@@ -8,11 +8,11 @@ use Innmind\Xml\{
     Node,
     Node\Document\Type,
     Node\Text,
-    Element\Element
+    Element\Element,
 };
 use Innmind\Immutable\{
+    MapInterface,
     Map,
-    MapInterface
 };
 use PHPUnit\Framework\TestCase;
 

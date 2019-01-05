@@ -5,7 +5,7 @@ namespace Innmind\Html\Translator\NodeTranslator;
 
 use Innmind\Html\{
     Exception\InvalidArgumentException,
-    Element\Script
+    Element\Script,
 };
 use Innmind\Xml\{
     Translator\NodeTranslator,
@@ -13,7 +13,7 @@ use Innmind\Xml\{
     Node,
     Translator\NodeTranslator\Visitor\Attributes,
     Translator\NodeTranslator\Visitor\Children,
-    Node\Text
+    Node\Text,
 };
 use Innmind\Url\Url;
 

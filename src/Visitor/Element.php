@@ -5,11 +5,11 @@ namespace Innmind\Html\Visitor;
 
 use Innmind\Html\Exception\{
     ElementNotFound,
-    InvalidArgumentException
+    InvalidArgumentException,
 };
 use Innmind\Xml\{
     Node,
-    Element as ElementInterface
+    Element as ElementInterface,
 };
 
 class Element

@@ -6,7 +6,7 @@ namespace Tests\Innmind\Html\Translator;
 use Innmind\Html\Translator\{
     NodeTranslators,
     NodeTranslator\DocumentTranslator,
-    NodeTranslator\ElementTranslator
+    NodeTranslator\ElementTranslator,
 };
 use Innmind\Xml\Translator\NodeTranslator;
 use Innmind\Immutable\MapInterface;

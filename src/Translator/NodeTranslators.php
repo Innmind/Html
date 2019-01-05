@@ -10,15 +10,15 @@ use Innmind\Html\Translator\NodeTranslator\{
     BaseTranslator,
     ImgTranslator,
     LinkTranslator,
-    ScriptTranslator
+    ScriptTranslator,
 };
 use Innmind\Xml\Translator\{
     NodeTranslator,
-    NodeTranslator\ElementTranslator as GenericTranslator
+    NodeTranslator\ElementTranslator as GenericTranslator,
 };
 use Innmind\Immutable\{
+    MapInterface,
     Map,
-    MapInterface
 };
 
 final class NodeTranslators

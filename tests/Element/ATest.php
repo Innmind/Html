@@ -7,7 +7,7 @@ use Innmind\Html\Element\A;
 use Innmind\Xml\{
     Element\Element,
     Attribute,
-    Node
+    Node,
 };
 use Innmind\Url\UrlInterface;
 use Innmind\Immutable\Map;
