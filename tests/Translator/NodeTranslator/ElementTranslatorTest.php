@@ -5,7 +5,7 @@ namespace Tests\Innmind\Html\Translator\NodeTranslator;
 
 use Innmind\Html\{
     Translator\NodeTranslator\ElementTranslator,
-    Exception\ExceptionInterface
+    Exception\Exception
 };
 use Innmind\Xml\{
     Element\SelfClosingElement,
@@ -101,7 +101,7 @@ class ElementTranslatorTest extends TestCase
             ->with($dom->childNodes->item(0))
             ->will(
                 $this->throwException(
-                    new class extends \Exception implements ExceptionInterface{}
+                    new class extends \Exception implements Exception {}
                 )
             );
 

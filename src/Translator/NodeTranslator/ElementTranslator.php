@@ -5,7 +5,7 @@ namespace Innmind\Html\Translator\NodeTranslator;
 
 use Innmind\Html\Exception\{
     InvalidArgumentException,
-    ExceptionInterface
+    Exception
 };
 use Innmind\Xml\{
     Translator\NodeTranslator,
@@ -52,7 +52,7 @@ final class ElementTranslator implements NodeTranslator
                 ->get($node->tagName)($node, $translate);
         } catch (ElementNotFoundException $e) {
             //pass
-        } catch (ExceptionInterface $e) {
+        } catch (Exception $e) {
             //pass
         }
 
