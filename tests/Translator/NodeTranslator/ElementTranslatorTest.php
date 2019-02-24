@@ -25,7 +25,7 @@ class ElementTranslatorTest extends TestCase
     private $bar;
     private $baz;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->translate = new ElementTranslator(
             new GenericTranslator,
