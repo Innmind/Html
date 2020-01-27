@@ -15,7 +15,6 @@ use Innmind\Xml\{
     Translator\NodeTranslator\Visitor\Children,
     Node\Text,
 };
-use Innmind\Url\Url;
 
 final class ScriptTranslator implements NodeTranslator
 {
@@ -38,7 +37,7 @@ final class ScriptTranslator implements NodeTranslator
 
         return new Script(
             new Text($text),
-            (new Attributes)($node)
+            (new Attributes)($node),
         );
     }
 }

@@ -54,7 +54,7 @@ class ImgTranslatorTest extends TestCase
         );
 
         $this->assertInstanceOf(Img::class, $img);
-        $this->assertSame('foo.png', (string) $img->src());
+        $this->assertSame('foo.png', $img->src()->toString());
         $this->assertCount(2, $img->attributes());
         $this->assertSame('bar', $img->attributes()->get('alt')->value());
     }

@@ -13,9 +13,9 @@ use Innmind\Xml\{
 };
 use Innmind\Immutable\Str;
 
-class Element
+final class Element
 {
-    private $name;
+    private string $name;
 
     public function __construct(string $name)
     {
@@ -24,6 +24,16 @@ class Element
         }
 
         $this->name = $name;
+    }
+
+    public static function head(): self
+    {
+        return new self('head');
+    }
+
+    public static function body(): self
+    {
+        return new self('body');
     }
 
     public function __invoke(Node $node): ElementInterface
@@ -35,14 +45,23 @@ class Element
             return $node;
         }
 
-        if ($node->hasChildren()) {
-            foreach ($node->children() as $child) {
+        $element = $node->children()->reduce(
+            null,
+            function(?ElementInterface $element, Node $child): ?ElementInterface {
+                if ($element instanceof ElementInterface) {
+                    return $element;
+                }
+
                 try {
                     return $this($child);
                 } catch (ElementNotFound $e) {
-                    //pass
+                    return null;
                 }
-            }
+            },
+        );
+
+        if ($element instanceof ElementInterface) {
+            return $element;
         }
 
         throw new ElementNotFound;

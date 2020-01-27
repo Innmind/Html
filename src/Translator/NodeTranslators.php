@@ -16,24 +16,26 @@ use Innmind\Xml\Translator\{
     NodeTranslator,
     NodeTranslator\ElementTranslator as GenericTranslator,
 };
-use Innmind\Immutable\{
-    MapInterface,
-    Map,
-};
+use Innmind\Immutable\Map;
 
 final class NodeTranslators
 {
-    private static $defaults;
+    /** @var Map<int, NodeTranslator>|null */
+    private static ?Map $defaults = null;
 
     /**
-     * @return MapInterface<int, NodeTranslator>
+     * @return Map<int, NodeTranslator>
      */
-    public static function defaults(): MapInterface
+    public static function defaults(): Map
     {
-        return self::$defaults ?? self::$defaults = Map::of('int', NodeTranslator::class)
-            (XML_HTML_DOCUMENT_NODE, new DocumentTranslator)
+        /**
+         * @psalm-suppress MixedArgumentTypeCoercion
+         * @var Map<int, NodeTranslator>
+         */
+        return self::$defaults ??= Map::of('int', NodeTranslator::class)
+            (\XML_HTML_DOCUMENT_NODE, new DocumentTranslator)
             (
-                XML_ELEMENT_NODE,
+                \XML_ELEMENT_NODE,
                 new ElementTranslator(
                     new GenericTranslator,
                     Map::of('string', NodeTranslator::class)
@@ -41,8 +43,8 @@ final class NodeTranslators
                         ('base', new BaseTranslator)
                         ('img', new ImgTranslator)
                         ('link', new LinkTranslator)
-                        ('script', new ScriptTranslator)
-                )
+                        ('script', new ScriptTranslator),
+                ),
             );
     }
 }

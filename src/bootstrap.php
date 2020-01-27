@@ -5,21 +5,21 @@ namespace Innmind\Html;
 
 use Innmind\Xml\{
     Reader as ReaderInterface,
-    Translator\Translator as NodeTranslator,
+    Translator as NodeTranslator,
     Translator\NodeTranslators,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
 
 /**
- * @param MapInterface<int, NodeTranslator>|null $translators
+ * @param Map<int, NodeTranslator\NodeTranslator>|null $translators
  */
-function bootstrap(MapInterface $translators = null): ReaderInterface
+function bootstrap(Map $translators = null): ReaderInterface
 {
     return new Reader\Reader(
-        new NodeTranslator(
-            $translators ?? NodeTranslators::defaults()->merge(
-                Translator\NodeTranslators::defaults()
-            )
-        )
+        new NodeTranslator\Translator(
+            $translators ??= NodeTranslators::defaults()->merge(
+                Translator\NodeTranslators::defaults(),
+            ),
+        ),
     );
 }

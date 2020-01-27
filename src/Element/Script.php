@@ -5,23 +5,19 @@ namespace Innmind\Html\Element;
 
 use Innmind\Xml\{
     Node,
+    Attribute,
     Element\Element,
     Node\Text,
 };
-use Innmind\Immutable\{
-    MapInterface,
-    Map,
-};
+use Innmind\Immutable\Set;
 
 final class Script extends Element
 {
-    public function __construct(Text $text, MapInterface $attributes = null)
+    /**
+     * @param Set<Attribute>|null $attributes
+     */
+    public function __construct(Text $text, Set $attributes = null)
     {
-        parent::__construct(
-            'script',
-            $attributes,
-            Map::of('int', Node::class)
-                (0, $text)
-        );
+        parent::__construct('script', $attributes, $text);
     }
 }

@@ -14,10 +14,7 @@ use Innmind\Xml\{
     Node\Text,
     Element\Element,
 };
-use Innmind\Immutable\{
-    MapInterface,
-    Map,
-};
+use Innmind\Immutable\Sequence;
 use PHPUnit\Framework\TestCase;
 
 class DocumentTest extends TestCase
@@ -44,12 +41,8 @@ class DocumentTest extends TestCase
     {
         $document = new Document(new Type('html'));
 
-        $this->assertInstanceOf(MapInterface::class, $document->children());
-        $this->assertSame('int', (string) $document->children()->keyType());
-        $this->assertSame(
-            Node::class,
-            (string) $document->children()->valueType()
-        );
+        $this->assertInstanceOf(Sequence::class, $document->children());
+        $this->assertSame(Node::class, $document->children()->type());
         $this->assertFalse($document->hasChildren());
     }
 
@@ -57,39 +50,22 @@ class DocumentTest extends TestCase
     {
         $document = new Document(
             new Type('html'),
-            $children = Map::of('int', Node::class)
-                (0, $this->createMock(Node::class))
+            $child = $this->createMock(Node::class),
         );
 
-        $this->assertSame($children, $document->children());
+        $this->assertSame($child, $document->children()->first());
         $this->assertTrue($document->hasChildren());
-    }
-
-    public function testThrowWhenInvalidChildren()
-    {
-        $this->expectException(\TypeError::class);
-        $this->expectExceptionMessage('Argument 2 must be of type MapInterface<int, Innmind\Xml\Node>');
-
-        new Document(
-            new Type('html'),
-            new Map('int', 'string')
-        );
     }
 
     public function testContent()
     {
         $document = new Document(
             new Type('html'),
-            Map::of('int', Node::class)
-                (
-                    0,
-                    new Element(
-                        'html',
-                        null,
-                        Map::of('int', Node::class)
-                            (0, new Text('wat'))
-                    )
-                )
+            new Element(
+                'html',
+                null,
+                new Text('wat'),
+            ),
         );
 
         $this->assertSame('<html>wat</html>', $document->content());
@@ -99,21 +75,16 @@ class DocumentTest extends TestCase
     {
         $document = new Document(
             new Type('html'),
-            Map::of('int', Node::class)
-                (
-                    0,
-                    new Element(
-                        'html',
-                        null,
-                        Map::of('int', Node::class)
-                            (0, new Text('wat'))
-                    )
-                )
+            new Element(
+                'html',
+                null,
+                new Text('wat'),
+            ),
         );
 
         $this->assertSame(
             '<!DOCTYPE html>'."\n".'<html>wat</html>',
-            (string) $document
+            $document->toString(),
         );
     }
 
@@ -121,10 +92,9 @@ class DocumentTest extends TestCase
     {
         $document = new Document(
             new Type('html'),
-            Map::of('int', Node::class)
-                (0, new Element('foo'))
-                (1, new Element('bar'))
-                (2, new Element('baz'))
+            new Element('foo'),
+            new Element('bar'),
+            new Element('baz'),
         );
 
         $document2 = $document->removeChild(1);
@@ -150,10 +120,9 @@ class DocumentTest extends TestCase
 
         (new Document(
             new Type('html'),
-            Map::of('int', Node::class)
-                (0, new Element('foo'))
-                (1, new Element('bar'))
-                (2, new Element('baz'))
+            new Element('foo'),
+            new Element('bar'),
+            new Element('baz'),
         ))->removeChild(3);
     }
 
@@ -161,10 +130,9 @@ class DocumentTest extends TestCase
     {
         $document = new Document(
             new Type('html'),
-            Map::of('int', Node::class)
-                (0, new Element('foo'))
-                (1, new Element('bar'))
-                (2, new Element('baz'))
+            new Element('foo'),
+            new Element('bar'),
+            new Element('baz'),
         );
 
         $document2 = $document->replaceChild(
@@ -198,10 +166,9 @@ class DocumentTest extends TestCase
 
         (new Document(
             new Type('html'),
-            Map::of('int', Node::class)
-                (0, new Element('foo'))
-                (1, new Element('bar'))
-                (2, new Element('baz'))
+            new Element('foo'),
+            new Element('bar'),
+            new Element('baz'),
         ))->replaceChild(
             3,
             $this->createMock(Node::class)
@@ -212,10 +179,9 @@ class DocumentTest extends TestCase
     {
         $document = new Document(
             new Type('html'),
-            Map::of('int', Node::class)
-                (0, new Element('foo'))
-                (1, new Element('bar'))
-                (2, new Element('baz'))
+            new Element('foo'),
+            new Element('bar'),
+            new Element('baz'),
         );
 
         $document2 = $document->prependChild(
@@ -250,10 +216,9 @@ class DocumentTest extends TestCase
     {
         $document = new Document(
             new Type('html'),
-            Map::of('int', Node::class)
-                (0, new Element('foo'))
-                (1, new Element('bar'))
-                (2, new Element('baz'))
+            new Element('foo'),
+            new Element('bar'),
+            new Element('baz'),
         );
 
         $document2 = $document->appendChild(

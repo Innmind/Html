@@ -4,22 +4,28 @@ declare(strict_types = 1);
 namespace Innmind\Html\Element;
 
 use Innmind\Html\Exception\DomainException;
-use Innmind\Xml\Element\SelfClosingElement;
-use Innmind\Url\UrlInterface;
+use Innmind\Xml\{
+    Element\SelfClosingElement,
+    Attribute,
+};
+use Innmind\Url\Url;
 use Innmind\Immutable\{
-    MapInterface,
+    Set,
     Str,
 };
 
 final class Link extends SelfClosingElement
 {
-    private $href;
-    private $relationship;
+    private Url $href;
+    private string $relationship;
 
+    /**
+     * @param Set<Attribute>|null $attributes
+     */
     public function __construct(
-        UrlInterface $href,
+        Url $href,
         string $relationship,
-        MapInterface $attributes = null
+        Set $attributes = null
     ) {
         if (Str::of($relationship)->empty()) {
             throw new DomainException;
@@ -30,7 +36,7 @@ final class Link extends SelfClosingElement
         $this->relationship = $relationship;
     }
 
-    public function href(): UrlInterface
+    public function href(): Url
     {
         return $this->href;
     }

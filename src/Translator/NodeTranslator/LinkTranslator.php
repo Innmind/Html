@@ -13,12 +13,14 @@ use Innmind\Xml\{
     Translator\NodeTranslator,
     Translator\Translator,
     Node,
+    Attribute,
     Translator\NodeTranslator\Visitor\Attributes,
 };
 use Innmind\Url\{
     Url,
-    Exception\ExceptionInterface,
+    Exception\Exception,
 };
+use Innmind\Immutable\Map;
 
 final class LinkTranslator implements NodeTranslator
 {
@@ -34,19 +36,27 @@ final class LinkTranslator implements NodeTranslator
         }
 
         $attributes = (new Attributes)($node);
+        /** @var Map<string, Attribute> */
+        $map = $attributes->toMapOf(
+            'string',
+            Attribute::class,
+            static function(Attribute $attribute): \Generator {
+                yield $attribute->name() => $attribute;
+            },
+        );
 
-        if (!$attributes->contains('href')) {
+        if (!$map->contains('href')) {
             throw new MissingHrefAttribute;
         }
 
         try {
             return new Link(
-                Url::fromString($attributes->get('href')->value()),
-                $attributes->contains('rel') ?
-                    $attributes->get('rel')->value() : 'related',
-                $attributes
+                Url::of($map->get('href')->value()),
+                $map->contains('rel') ?
+                    $map->get('rel')->value() : 'related',
+                $attributes,
             );
-        } catch (ExceptionInterface $e) {
+        } catch (Exception $e) {
             throw new InvalidLink;
         }
     }

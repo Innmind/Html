@@ -54,7 +54,7 @@ class LinkTranslatorTest extends TestCase
         );
 
         $this->assertInstanceOf(Link::class, $link);
-        $this->assertSame('/', (string) $link->href());
+        $this->assertSame('/', $link->href()->toString());
         $this->assertSame('next', $link->relationship());
         $this->assertCount(3, $link->attributes());
         $this->assertSame('fr', $link->attributes()->get('hreflang')->value());
@@ -73,7 +73,7 @@ class LinkTranslatorTest extends TestCase
         );
 
         $this->assertInstanceOf(Link::class, $link);
-        $this->assertSame('/', (string) $link->href());
+        $this->assertSame('/', $link->href()->toString());
         $this->assertSame('related', $link->relationship());
         $this->assertCount(2, $link->attributes());
         $this->assertSame('fr', $link->attributes()->get('hreflang')->value());

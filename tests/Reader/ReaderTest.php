@@ -7,6 +7,7 @@ use Innmind\Html\{
     Reader\Reader,
     Translator\NodeTranslators as HtmlTranslators,
     Node\Document,
+    Exception\RuntimeException,
 };
 use Innmind\Xml\{
     Reader as ReaderInterface,
@@ -51,10 +52,8 @@ class ReaderTest extends TestCase
     </body>
 </html>
 HTML;
-        $res = fopen('php://temp', 'r+');
-        fwrite($res, $html);
         $node = ($this->read)(
-            new Stream($res)
+            Stream::ofContent($html),
         );
         $expected = <<<HTML
 <!DOCTYPE html>
@@ -63,8 +62,21 @@ HTML;
     </body></html>
 HTML;
 
+        if (\PHP_OS === 'Darwin') {
+            // don't know why there is a difference between linux and macOS
+            $expected = <<<HTML
+            <!DOCTYPE html>
+            <html>
+                <head/>
+                <body>
+                    foo
+                </body>
+            </html>
+            HTML;
+        }
+
         $this->assertInstanceOf(Document::class, $node);
-        $this->assertSame($expected, (string) $node);
+        $this->assertSame($expected, $node->toString());
     }
 
     public function testReadFullPage()
@@ -86,5 +98,13 @@ HTML;
         )));
 
         $this->assertInstanceOf(XmlDocument::class, $node);
+    }
+
+    public function testThrowWhenEmptyStream()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('No html found');
+
+        ($this->read)(Stream::ofContent(''));
     }
 }

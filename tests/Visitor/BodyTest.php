@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Html\Visitor;
 
 use Innmind\Html\{
-    Visitor\Body,
+    Visitor,
     Reader\Reader,
     Translator\NodeTranslators as HtmlTranslators,
     Exception\ElementNotFound,
@@ -39,18 +39,18 @@ class BodyTest extends TestCase
             new Stream(fopen('fixtures/lemonde.html', 'r'))
         );
 
-        $body = (new Body)($node);
+        $body = Visitor\Element::body()($node);
 
         $this->assertInstanceOf(ElementInterface::class, $body);
         $this->assertSame('body', $body->name());
         $this->assertTrue($body->hasChildren());
-        $this->assertTrue($body->hasAttributes());
+        $this->assertFalse($body->attributes()->empty());
     }
 
     public function testThrowWhenBodyNotFound()
     {
         $this->expectException(ElementNotFound::class);
 
-        (new Body)(new Element('head'));
+        Visitor\Element::body()(new Element('head'));
     }
 }

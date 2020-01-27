@@ -11,8 +11,8 @@ use Innmind\Xml\{
     Element\SelfClosingElement,
     Attribute,
 };
-use Innmind\Url\UrlInterface;
-use Innmind\Immutable\Map;
+use Innmind\Url\Url;
+use Innmind\Immutable\Set;
 use PHPUnit\Framework\TestCase;
 
 class LinkTest extends TestCase
@@ -22,24 +22,23 @@ class LinkTest extends TestCase
         $this->assertInstanceOf(
             SelfClosingElement::class,
             $link = new Link(
-                $href = $this->createMock(UrlInterface::class),
+                $href = Url::of('http://example.com'),
                 'rel',
-                $attributes = new Map('string', Attribute::class)
+                Set::of(Attribute::class)
             )
         );
         $this->assertSame('link', $link->name());
         $this->assertSame($href, $link->href());
         $this->assertSame('rel', $link->relationship());
-        $this->assertSame($attributes, $link->attributes());
     }
 
     public function testWithoutAttributes()
     {
-        $this->assertFalse(
+        $this->assertTrue(
             (new Link(
-                $this->createMock(UrlInterface::class),
+                Url::of('http://example.com'),
                 'foo'
-            ))->hasAttributes()
+            ))->attributes()->empty(),
         );
     }
 
@@ -48,7 +47,7 @@ class LinkTest extends TestCase
         $this->expectException(DomainException::class);
 
         new Link(
-            $this->createMock(UrlInterface::class),
+            Url::of('http://example.com'),
             ''
         );
     }

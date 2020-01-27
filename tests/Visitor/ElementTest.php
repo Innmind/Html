@@ -52,7 +52,7 @@ class ElementTest extends TestCase
         $this->assertInstanceOf(ElementInterface::class, $h1);
         $this->assertSame('h1', $h1->name());
         $this->assertTrue($h1->hasChildren());
-        $this->assertTrue($h1->hasAttributes());
+        $this->assertFalse($h1->attributes()->empty());
     }
 
     public function testThrowWhenElementNotFound()

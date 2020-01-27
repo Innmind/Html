@@ -12,9 +12,11 @@ use Innmind\Xml\{
     Translator\NodeTranslator,
     Translator\Translator,
     Node,
+    Attribute,
     Translator\NodeTranslator\Visitor\Attributes,
 };
 use Innmind\Url\Url;
+use Innmind\Immutable\Map;
 
 final class ImgTranslator implements NodeTranslator
 {
@@ -30,14 +32,22 @@ final class ImgTranslator implements NodeTranslator
         }
 
         $attributes = (new Attributes)($node);
+        /** @var Map<string, Attribute> */
+        $map = $attributes->toMapOf(
+            'string',
+            Attribute::class,
+            static function(Attribute $attribute): \Generator {
+                yield $attribute->name() => $attribute;
+            },
+        );
 
-        if (!$attributes->contains('src')) {
+        if (!$map->contains('src')) {
             throw new MissingSrcAttribute;
         }
 
         return new Img(
-            Url::fromString($attributes->get('src')->value()),
-            $attributes
+            Url::of($map->get('src')->value()),
+            $attributes,
         );
     }
 }

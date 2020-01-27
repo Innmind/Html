@@ -53,7 +53,7 @@ class ScriptTranslatorTest extends TestCase
         );
 
         $this->assertInstanceOf(Script::class, $script);
-        $this->assertSame('var foo = 42;', (string) $script->content());
+        $this->assertSame('var foo = 42;', $script->content());
         $this->assertCount(1, $script->attributes());
         $this->assertSame(
             'text/javascript',
@@ -75,7 +75,7 @@ class ScriptTranslatorTest extends TestCase
         );
 
         $this->assertInstanceOf(Script::class, $script);
-        $this->assertSame('', (string) $script->content());
+        $this->assertSame('', $script->content());
         $this->assertCount(0, $script->attributes());
         $this->assertCount(1, $script->children());
     }

@@ -9,7 +9,7 @@ use Innmind\Html\Translator\{
     NodeTranslator\ElementTranslator,
 };
 use Innmind\Xml\Translator\NodeTranslator;
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
 class NodeTranslatorsTest extends TestCase
@@ -18,11 +18,11 @@ class NodeTranslatorsTest extends TestCase
     {
         $defaults = NodeTranslators::defaults();
 
-        $this->assertInstanceOf(MapInterface::class, $defaults);
-        $this->assertSame('int', (string) $defaults->keyType());
+        $this->assertInstanceOf(Map::class, $defaults);
+        $this->assertSame('int', $defaults->keyType());
         $this->assertSame(
             NodeTranslator::class,
-            (string) $defaults->valueType()
+            $defaults->valueType()
         );
         $this->assertCount(2, $defaults);
         $this->assertInstanceOf(

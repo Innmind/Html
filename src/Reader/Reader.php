@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Html\Reader;
 
+use Innmind\Html\Exception\RuntimeException;
 use Innmind\Xml\{
     Reader as ReaderInterface,
     Node,
@@ -13,7 +14,7 @@ use Symfony\Component\DomCrawler\Crawler;
 
 final class Reader implements ReaderInterface
 {
-    private $translate;
+    private Translator $translate;
 
     public function __construct(Translator $translate)
     {
@@ -22,8 +23,13 @@ final class Reader implements ReaderInterface
 
     public function __invoke(Readable $html): Node
     {
-        $firstNode = (new Crawler((string) $html))->getNode(0);
+        $firstNode = (new Crawler($html->toString()))->getNode(0);
 
+        if (!$firstNode instanceof \DOMNode) {
+            throw new RuntimeException('No html found');
+        }
+
+        /** @psalm-suppress RedundantCondition */
         while ($firstNode->parentNode instanceof \DOMNode) {
             $firstNode = $firstNode->parentNode;
         }

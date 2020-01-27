@@ -12,10 +12,13 @@ use Innmind\Xml\{
     Translator\NodeTranslator,
     Translator\Translator,
     Node,
+    Attribute,
     Translator\NodeTranslator\Visitor\Attributes,
     Translator\NodeTranslator\Visitor\Children,
 };
 use Innmind\Url\Url;
+use Innmind\Immutable\Map;
+use function Innmind\Immutable\unwrap;
 
 final class ATranslator implements NodeTranslator
 {
@@ -31,15 +34,23 @@ final class ATranslator implements NodeTranslator
         }
 
         $attributes = (new Attributes)($node);
+        /** @var Map<string, Attribute> */
+        $map = $attributes->toMapOf(
+            'string',
+            Attribute::class,
+            static function(Attribute $attribute): \Generator {
+                yield $attribute->name() => $attribute;
+            },
+        );
 
-        if (!$attributes->contains('href')) {
+        if (!$map->contains('href')) {
             throw new MissingHrefAttribute;
         }
 
         return new A(
-            Url::fromString($attributes->get('href')->value()),
+            Url::of($map->get('href')->value()),
             $attributes,
-            (new Children($translate))($node)
+            ...unwrap((new Children($translate))($node)),
         );
     }
 }
