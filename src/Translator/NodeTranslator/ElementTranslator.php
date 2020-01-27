@@ -17,6 +17,7 @@ use Innmind\Immutable\{
     Map,
     Exception\ElementNotFound,
 };
+use function Innmind\Immutable\assertMap;
 
 final class ElementTranslator implements NodeTranslator
 {
@@ -31,15 +32,7 @@ final class ElementTranslator implements NodeTranslator
         GenericTranslator $genericTranslator,
         Map $translators
     ) {
-        if (
-            (string) $translators->keyType() !== 'string' ||
-            (string) $translators->valueType() !== NodeTranslator::class
-        ) {
-            throw new \TypeError(sprintf(
-                'Argument 2 must be of type Map<string, %s>',
-                NodeTranslator::class
-            ));
-        }
+        assertMap('string', NodeTranslator::class, $translators, 2);
 
         $this->genericTranslator = $genericTranslator;
         $this->translators = $translators;

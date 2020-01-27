@@ -33,9 +33,9 @@ final class NodeTranslators
          * @var Map<int, NodeTranslator>
          */
         return self::$defaults ??= Map::of('int', NodeTranslator::class)
-            (XML_HTML_DOCUMENT_NODE, new DocumentTranslator)
+            (\XML_HTML_DOCUMENT_NODE, new DocumentTranslator)
             (
-                XML_ELEMENT_NODE,
+                \XML_ELEMENT_NODE,
                 new ElementTranslator(
                     new GenericTranslator,
                     Map::of('string', NodeTranslator::class)
@@ -43,8 +43,8 @@ final class NodeTranslators
                         ('base', new BaseTranslator)
                         ('img', new ImgTranslator)
                         ('link', new LinkTranslator)
-                        ('script', new ScriptTranslator)
-                )
+                        ('script', new ScriptTranslator),
+                ),
             );
     }
 }

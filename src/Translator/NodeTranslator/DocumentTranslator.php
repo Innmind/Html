@@ -49,7 +49,7 @@ final class DocumentTranslator implements NodeTranslator
         $children = [];
 
         foreach ($nodes as $child) {
-            if ($child->nodeType === XML_DOCUMENT_TYPE_NODE) {
+            if ($child->nodeType === \XML_DOCUMENT_TYPE_NODE) {
                 continue;
             }
 
