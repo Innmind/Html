@@ -16,7 +16,7 @@ use Innmind\Xml\{
     Translator\NodeTranslators,
 };
 use Innmind\Stream\Readable\Stream;
-use Innmind\Immutable\SetInterface;
+use Innmind\Immutable\Set;
 use PHPUnit\Framework\TestCase;
 
 class ElementsTest extends TestCase
@@ -49,8 +49,8 @@ class ElementsTest extends TestCase
 
         $h1s = (new Elements('h1'))($node);
 
-        $this->assertInstanceOf(SetInterface::class, $h1s);
-        $this->assertSame(ElementInterface::class, (string) $h1s->type());
+        $this->assertInstanceOf(Set::class, $h1s);
+        $this->assertSame(ElementInterface::class, $h1s->type());
         $this->assertCount(26, $h1s);
     }
 
@@ -58,8 +58,8 @@ class ElementsTest extends TestCase
     {
         $elements = (new Elements('foo'))(new Element('whatever'));
 
-        $this->assertInstanceOf(SetInterface::class, $elements);
-        $this->assertSame(ElementInterface::class, (string) $elements->type());
+        $this->assertInstanceOf(Set::class, $elements);
+        $this->assertSame(ElementInterface::class, $elements->type());
         $this->assertCount(0, $elements);
     }
 }

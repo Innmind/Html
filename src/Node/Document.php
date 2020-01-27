@@ -8,32 +8,22 @@ use Innmind\Xml\{
     Node,
     Node\Document\Type,
 };
-use Innmind\Immutable\{
-    MapInterface,
-    Map,
+use Innmind\Immutable\Sequence;
+use function Innmind\Immutable\{
+    unwrap,
+    join,
 };
 
 final class Document implements Node
 {
     private Type $type;
-    private MapInterface $children;
+    /** @var Sequence<Node> */
+    private Sequence $children;
 
-    public function __construct(Type $type, MapInterface $children = null)
+    public function __construct(Type $type, Node ...$children)
     {
-        $children = $children ?? new Map('int', Node::class);
-
-        if (
-            (string) $children->keyType() !== 'int' ||
-            (string) $children->valueType() !== Node::class
-        ) {
-            throw new \TypeError(sprintf(
-                'Argument 2 must be of type MapInterface<int, %s>',
-                Node::class
-            ));
-        }
-
         $this->type = $type;
-        $this->children = $children;
+        $this->children = Sequence::of(Node::class, ...$children);
     }
 
     public function type(): Type
@@ -41,56 +31,43 @@ final class Document implements Node
         return $this->type;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function children(): MapInterface
+    public function children(): Sequence
     {
         return $this->children;
     }
 
     public function hasChildren(): bool
     {
-        return $this->children->size() > 0;
+        return !$this->children->empty();
     }
 
     public function removeChild(int $position): Node
     {
-        if (!$this->children->contains($position)) {
-            throw new OutOfBoundsException;
+        if (!$this->children->indices()->contains($position)) {
+            throw new OutOfBoundsException((string) $position);
         }
 
         $document = clone $this;
         $document->children = $this
             ->children
-            ->reduce(
-                new Map('int', Node::class),
-                function(Map $children, int $pos, Node $node) use ($position): Map {
-                    if ($pos === $position) {
-                        return $children;
-                    }
-
-                    return $children->put(
-                        $children->size(),
-                        $node
-                    );
-                }
-            );
+            ->take($position)
+            ->append($this->children->drop($position + 1));
 
         return $document;
     }
 
     public function replaceChild(int $position, Node $node): Node
     {
-        if (!$this->children->contains($position)) {
-            throw new OutOfBoundsException;
+        if (!$this->children->indices()->contains($position)) {
+            throw new OutOfBoundsException((string) $position);
         }
 
         $document = clone $this;
-        $document->children = $this->children->put(
-            $position,
-            $node
-        );
+        $document->children = $this
+            ->children
+            ->take($position)
+            ->add($node)
+            ->append($this->children->drop($position + 1));
 
         return $document;
     }
@@ -98,18 +75,12 @@ final class Document implements Node
     public function prependChild(Node $child): Node
     {
         $document = clone $this;
-        $document->children = $this
-            ->children
-            ->reduce(
-                Map::of('int', Node::class)
-                    (0, $child),
-                function(Map $children, int $position, Node $child): Map {
-                    return $children->put(
-                        $children->size(),
-                        $child
-                    );
-                }
-            );
+        /** @var Sequence<Node> */
+        $document->children = Sequence::of(
+            Node::class,
+            $child,
+            ...unwrap($this->children),
+        );
 
         return $document;
     }
@@ -117,21 +88,23 @@ final class Document implements Node
     public function appendChild(Node $child): Node
     {
         $document = clone $this;
-        $document->children = $this->children->put(
-            $this->children->size(),
-            $child
-        );
+        $document->children = ($this->children)($child);
 
         return $document;
     }
 
     public function content(): string
     {
-        return (string) $this->children->join('');
+        $children = $this->children->mapTo(
+            'string',
+            static fn(Node $child): string => $child->toString(),
+        );
+
+        return join('', $children)->toString();
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
-        return (string) $this->type."\n".$this->content();
+        return $this->type->toString()."\n".$this->content();
     }
 }

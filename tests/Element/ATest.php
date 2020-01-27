@@ -9,8 +9,8 @@ use Innmind\Xml\{
     Attribute,
     Node,
 };
-use Innmind\Url\UrlInterface;
-use Innmind\Immutable\Map;
+use Innmind\Url\Url;
+use Innmind\Immutable\Set;
 use PHPUnit\Framework\TestCase;
 
 class ATest extends TestCase
@@ -20,28 +20,27 @@ class ATest extends TestCase
         $this->assertInstanceOf(
             Element::class,
             $a = new A(
-                $href = $this->createMock(UrlInterface::class),
-                $attributes = new Map('string', Attribute::class),
-                $children = new Map('int', Node::class)
+                $href = Url::of('http://example.com'),
+                Set::of(Attribute::class),
+                $child = $this->createMock(Node::class),
             )
         );
         $this->assertSame('a', $a->name());
         $this->assertSame($href, $a->href());
-        $this->assertSame($attributes, $a->attributes());
-        $this->assertSame($children, $a->children());
+        $this->assertSame($child, $a->children()->first());
     }
 
     public function testWithoutAttributes()
     {
-        $this->assertFalse(
-            (new A($this->createMock(UrlInterface::class)))->hasAttributes()
+        $this->assertTrue(
+            (new A(Url::of('http://example.com')))->attributes()->empty()
         );
     }
 
     public function testWithoutChildren()
     {
         $this->assertFalse(
-            (new A($this->createMock(UrlInterface::class)))->hasChildren()
+            (new A(Url::of('http://example.com')))->hasChildren()
         );
     }
 }

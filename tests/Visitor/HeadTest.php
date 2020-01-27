@@ -44,7 +44,7 @@ class HeadTest extends TestCase
         $this->assertInstanceOf(ElementInterface::class, $head);
         $this->assertSame('head', $head->name());
         $this->assertTrue($head->hasChildren());
-        $this->assertFalse($head->hasAttributes());
+        $this->assertTrue($head->attributes()->empty());
     }
 
     public function testThrowWhenHeadNotFound()

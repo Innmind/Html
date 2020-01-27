@@ -13,7 +13,6 @@ use Innmind\Xml\{
     Translator\Translator,
     Node\Document\Type,
 };
-use Innmind\Immutable\Map;
 
 final class DocumentTranslator implements NodeTranslator
 {
@@ -27,8 +26,7 @@ final class DocumentTranslator implements NodeTranslator
 
         return new Document(
             $node->doctype ? $this->buildDoctype($node->doctype) : new Type('html'),
-            $node->childNodes ?
-                $this->buildChildren($node->childNodes, $translate) : null
+            ...($node->childNodes ? $this->buildChildren($node->childNodes, $translate) : []),
         );
     }
 
@@ -37,25 +35,25 @@ final class DocumentTranslator implements NodeTranslator
         return new Type(
             $type->name,
             $type->publicId,
-            $type->systemId
+            $type->systemId,
         );
     }
 
+    /**
+     * @return list<Node>
+     */
     private function buildChildren(
         \DOMNodeList $nodes,
         Translator $translate
-    ): Map {
-        $children = new Map('int', Node::class);
+    ): array {
+        $children = [];
 
         foreach ($nodes as $child) {
             if ($child->nodeType === XML_DOCUMENT_TYPE_NODE) {
                 continue;
             }
 
-            $children = $children->put(
-                $children->size(),
-                $translate($child)
-            );
+            $children[] = $translate($child);
         }
 
         return $children;

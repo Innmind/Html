@@ -46,11 +46,11 @@ class ElementTranslatorTest extends TestCase
     public function testThrowWhenInvalidTranslators()
     {
         $this->expectException(\TypeError::class);
-        $this->expectExceptionMessage('Argument 2 must be of type MapInterface<string, Innmind\Xml\Translator\NodeTranslator>');
+        $this->expectExceptionMessage('Argument 2 must be of type Map<string, Innmind\Xml\Translator\NodeTranslator>');
 
         new ElementTranslator(
             new GenericTranslator,
-            new Map('int', NodeTranslator::class)
+            Map::of('int', NodeTranslator::class)
         );
     }
 
@@ -60,7 +60,7 @@ class ElementTranslatorTest extends TestCase
 
         (new ElementTranslator(
             new GenericTranslator,
-            new Map('string', NodeTranslator::class)
+            Map::of('string', NodeTranslator::class)
         ))(
             new \DOMNode,
             new Translator(

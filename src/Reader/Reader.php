@@ -22,7 +22,7 @@ final class Reader implements ReaderInterface
 
     public function __invoke(Readable $html): Node
     {
-        $firstNode = (new Crawler((string) $html))->getNode(0);
+        $firstNode = (new Crawler($html->toString()))->getNode(0);
 
         while ($firstNode->parentNode instanceof \DOMNode) {
             $firstNode = $firstNode->parentNode;

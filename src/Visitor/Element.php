@@ -35,14 +35,23 @@ class Element
             return $node;
         }
 
-        if ($node->hasChildren()) {
-            foreach ($node->children() as $child) {
+        $element = $node->children()->reduce(
+            null,
+            function(?ElementInterface $element, Node $child): ?ElementInterface {
+                if ($element instanceof ElementInterface) {
+                    return $element;
+                }
+
                 try {
                     return $this($child);
                 } catch (ElementNotFound $e) {
-                    //pass
+                    return null;
                 }
-            }
+            },
+        );
+
+        if ($element instanceof ElementInterface) {
+            return $element;
         }
 
         throw new ElementNotFound;

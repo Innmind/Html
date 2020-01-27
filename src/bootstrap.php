@@ -8,12 +8,12 @@ use Innmind\Xml\{
     Translator\Translator as NodeTranslator,
     Translator\NodeTranslators,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
 
 /**
- * @param MapInterface<int, NodeTranslator>|null $translators
+ * @param Map<int, NodeTranslator>|null $translators
  */
-function bootstrap(MapInterface $translators = null): ReaderInterface
+function bootstrap(Map $translators = null): ReaderInterface
 {
     return new Reader\Reader(
         new NodeTranslator(

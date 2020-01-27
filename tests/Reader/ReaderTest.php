@@ -51,10 +51,8 @@ class ReaderTest extends TestCase
     </body>
 </html>
 HTML;
-        $res = fopen('php://temp', 'r+');
-        fwrite($res, $html);
         $node = ($this->read)(
-            new Stream($res)
+            Stream::ofContent($html),
         );
         $expected = <<<HTML
 <!DOCTYPE html>
@@ -64,7 +62,7 @@ HTML;
 HTML;
 
         $this->assertInstanceOf(Document::class, $node);
-        $this->assertSame($expected, (string) $node);
+        $this->assertSame($expected, $node->toString());
     }
 
     public function testReadFullPage()

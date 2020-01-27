@@ -3,24 +3,27 @@ declare(strict_types = 1);
 
 namespace Innmind\Html\Element;
 
-use Innmind\Xml\Element\Element;
-use Innmind\Url\UrlInterface;
-use Innmind\Immutable\MapInterface;
+use Innmind\Xml\{
+    Element\Element,
+    Node,
+};
+use Innmind\Url\Url;
+use Innmind\Immutable\Set;
 
 final class A extends Element
 {
-    private UrlInterface $href;
+    private Url $href;
 
     public function __construct(
-        UrlInterface $href,
-        MapInterface $attributes = null,
-        MapInterface $children = null
+        Url $href,
+        Set $attributes = null,
+        Node ...$children
     ) {
-        parent::__construct('a', $attributes, $children);
+        parent::__construct('a', $attributes, ...$children);
         $this->href = $href;
     }
 
-    public function href(): UrlInterface
+    public function href(): Url
     {
         return $this->href;
     }

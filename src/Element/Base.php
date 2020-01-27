@@ -4,22 +4,22 @@ declare(strict_types = 1);
 namespace Innmind\Html\Element;
 
 use Innmind\Xml\Element\SelfClosingElement;
-use Innmind\Url\UrlInterface;
-use Innmind\Immutable\MapInterface;
+use Innmind\Url\Url;
+use Innmind\Immutable\Set;
 
 final class Base extends SelfClosingElement
 {
-    private UrlInterface $href;
+    private Url $href;
 
     public function __construct(
-        UrlInterface $href,
-        MapInterface $attributes = null
+        Url $href,
+        Set $attributes = null
     ) {
         parent::__construct('base', $attributes);
         $this->href = $href;
     }
 
-    public function href(): UrlInterface
+    public function href(): Url
     {
         return $this->href;
     }

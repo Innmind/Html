@@ -16,19 +16,16 @@ use Innmind\Xml\Translator\{
     NodeTranslator,
     NodeTranslator\ElementTranslator as GenericTranslator,
 };
-use Innmind\Immutable\{
-    MapInterface,
-    Map,
-};
+use Innmind\Immutable\Map;
 
 final class NodeTranslators
 {
     private static ?Map $defaults = null;
 
     /**
-     * @return MapInterface<int, NodeTranslator>
+     * @return Map<int, NodeTranslator>
      */
-    public static function defaults(): MapInterface
+    public static function defaults(): Map
     {
         return self::$defaults ??= Map::of('int', NodeTranslator::class)
             (XML_HTML_DOCUMENT_NODE, new DocumentTranslator)

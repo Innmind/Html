@@ -54,7 +54,7 @@ class ATranslatorTest extends TestCase
         );
 
         $this->assertInstanceOf(A::class, $a);
-        $this->assertSame('/', (string) $a->href());
+        $this->assertSame('/', $a->href()->toString());
         $this->assertCount(2, $a->attributes());
         $this->assertSame('whatever', $a->attributes()->get('class')->value());
         $this->assertCount(1, $a->children());

@@ -44,7 +44,7 @@ class BodyTest extends TestCase
         $this->assertInstanceOf(ElementInterface::class, $body);
         $this->assertSame('body', $body->name());
         $this->assertTrue($body->hasChildren());
-        $this->assertTrue($body->hasAttributes());
+        $this->assertFalse($body->attributes()->empty());
     }
 
     public function testThrowWhenBodyNotFound()

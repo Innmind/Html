@@ -9,7 +9,7 @@ use Innmind\Xml\{
     Node\Text,
     Attribute,
 };
-use Innmind\Immutable\Map;
+use Innmind\Immutable\Set;
 use PHPUnit\Framework\TestCase;
 
 class ScriptTest extends TestCase
@@ -21,7 +21,7 @@ class ScriptTest extends TestCase
         );
 
         $this->assertInstanceOf(Element::class, $script);
-        $this->assertSame('<script>foo</script>', (string) $script);
+        $this->assertSame('<script>foo</script>', $script->toString());
         $this->assertCount(1, $script->children());
     }
 
@@ -29,9 +29,12 @@ class ScriptTest extends TestCase
     {
         $script = new Script(
             new Text('foo'),
-            $attributes = new Map('string', Attribute::class)
+            Set::of(
+                Attribute::class,
+                $attribute = new Attribute('foo', 'bar'),
+            ),
         );
 
-        $this->assertSame($attributes, $script->attributes());
+        $this->assertSame($attribute, $script->attributes()->get('foo'));
     }
 }

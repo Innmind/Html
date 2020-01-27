@@ -9,7 +9,6 @@ use Innmind\Xml\{
     Element,
 };
 use Innmind\Immutable\{
-    SetInterface,
     Set,
     Str,
 };
@@ -28,27 +27,22 @@ class Elements
     }
 
     /**
-     * @return SetInterface<Element>
+     * @return Set<Element>
      */
-    public function __invoke(Node $node): SetInterface
+    public function __invoke(Node $node): Set
     {
-        $elements = new Set(Element::class);
+        $elements = Set::of(Element::class);
 
         if (
             $node instanceof Element &&
             $node->name() === $this->name
         ) {
-            $elements = $elements->add($node);
+            $elements = ($elements)($node);
         }
 
-        if ($node->hasChildren()) {
-            foreach ($node->children() as $child) {
-                $elements = $elements->merge(
-                    $this($child)
-                );
-            }
-        }
-
-        return $elements;
+        return $node->children()->reduce(
+            $elements,
+            fn(Set $elements, Node $child): Set => $elements->merge($this($child)),
+        );
     }
 }

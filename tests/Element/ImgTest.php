@@ -8,8 +8,8 @@ use Innmind\Xml\{
     Element\SelfClosingElement,
     Attribute,
 };
-use Innmind\Url\UrlInterface;
-use Innmind\Immutable\Map;
+use Innmind\Url\Url;
+use Innmind\Immutable\Set;
 use PHPUnit\Framework\TestCase;
 
 class ImgTest extends TestCase
@@ -19,19 +19,18 @@ class ImgTest extends TestCase
         $this->assertInstanceOf(
             SelfClosingElement::class,
             $img = new Img(
-                $src = $this->createMock(UrlInterface::class),
-                $attributes = new Map('string', Attribute::class)
+                $src = Url::of('http://example.com'),
+                Set::of(Attribute::class)
             )
         );
         $this->assertSame('img', $img->name());
         $this->assertSame($src, $img->src());
-        $this->assertSame($attributes, $img->attributes());
     }
 
     public function testWithoutAttributes()
     {
-        $this->assertFalse(
-            (new Img($this->createMock(UrlInterface::class)))->hasAttributes()
+        $this->assertTrue(
+            (new Img(Url::of('http://example.com')))->attributes()->empty(),
         );
     }
 }

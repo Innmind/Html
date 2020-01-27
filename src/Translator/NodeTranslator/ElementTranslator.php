@@ -14,25 +14,25 @@ use Innmind\Xml\{
     Node,
 };
 use Innmind\Immutable\{
-    MapInterface,
-    Exception\ElementNotFoundException,
+    Map,
+    Exception\ElementNotFound,
 };
 
 final class ElementTranslator implements NodeTranslator
 {
     private GenericTranslator $genericTranslator;
-    private MapInterface $translators;
+    private Map $translators;
 
     public function __construct(
         GenericTranslator $genericTranslator,
-        MapInterface $translators
+        Map $translators
     ) {
         if (
             (string) $translators->keyType() !== 'string' ||
             (string) $translators->valueType() !== NodeTranslator::class
         ) {
             throw new \TypeError(sprintf(
-                'Argument 2 must be of type MapInterface<string, %s>',
+                'Argument 2 must be of type Map<string, %s>',
                 NodeTranslator::class
             ));
         }
@@ -53,7 +53,7 @@ final class ElementTranslator implements NodeTranslator
             return $this
                 ->translators
                 ->get($node->tagName)($node, $translate);
-        } catch (ElementNotFoundException $e) {
+        } catch (ElementNotFound $e) {
             //pass
         } catch (Exception $e) {
             //pass
