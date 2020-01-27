@@ -13,7 +13,7 @@ use Symfony\Component\DomCrawler\Crawler;
 
 final class Reader implements ReaderInterface
 {
-    private $translate;
+    private Translator $translate;
 
     public function __construct(Translator $translate)
     {

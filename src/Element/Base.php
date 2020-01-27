@@ -9,7 +9,7 @@ use Innmind\Immutable\MapInterface;
 
 final class Base extends SelfClosingElement
 {
-    private $href;
+    private UrlInterface $href;
 
     public function __construct(
         UrlInterface $href,

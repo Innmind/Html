@@ -13,8 +13,8 @@ use Innmind\Immutable\{
 
 final class Link extends SelfClosingElement
 {
-    private $href;
-    private $relationship;
+    private UrlInterface $href;
+    private string $relationship;
 
     public function __construct(
         UrlInterface $href,

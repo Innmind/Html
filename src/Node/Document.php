@@ -15,8 +15,8 @@ use Innmind\Immutable\{
 
 final class Document implements Node
 {
-    private $type;
-    private $children;
+    private Type $type;
+    private MapInterface $children;
 
     public function __construct(Type $type, MapInterface $children = null)
     {

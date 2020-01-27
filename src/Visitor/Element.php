@@ -15,7 +15,7 @@ use Innmind\Immutable\Str;
 
 class Element
 {
-    private $name;
+    private string $name;
 
     public function __construct(string $name)
     {

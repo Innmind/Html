@@ -23,14 +23,14 @@ use Innmind\Immutable\{
 
 final class NodeTranslators
 {
-    private static $defaults;
+    private static ?Map $defaults = null;
 
     /**
      * @return MapInterface<int, NodeTranslator>
      */
     public static function defaults(): MapInterface
     {
-        return self::$defaults ?? self::$defaults = Map::of('int', NodeTranslator::class)
+        return self::$defaults ??= Map::of('int', NodeTranslator::class)
             (XML_HTML_DOCUMENT_NODE, new DocumentTranslator)
             (
                 XML_ELEMENT_NODE,

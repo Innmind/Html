@@ -9,7 +9,7 @@ use Innmind\Immutable\MapInterface;
 
 final class Img extends SelfClosingElement
 {
-    private $src;
+    private UrlInterface $src;
 
     public function __construct(
         UrlInterface $src,

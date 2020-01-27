@@ -9,7 +9,7 @@ use Innmind\Immutable\MapInterface;
 
 final class A extends Element
 {
-    private $href;
+    private UrlInterface $href;
 
     public function __construct(
         UrlInterface $href,

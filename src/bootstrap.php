@@ -18,8 +18,8 @@ function bootstrap(MapInterface $translators = null): ReaderInterface
     return new Reader\Reader(
         new NodeTranslator(
             $translators ?? NodeTranslators::defaults()->merge(
-                Translator\NodeTranslators::defaults()
-            )
-        )
+                Translator\NodeTranslators::defaults(),
+            ),
+        ),
     );
 }

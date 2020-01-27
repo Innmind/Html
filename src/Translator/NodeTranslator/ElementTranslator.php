@@ -20,8 +20,8 @@ use Innmind\Immutable\{
 
 final class ElementTranslator implements NodeTranslator
 {
-    private $genericTranslator;
-    private $translators;
+    private GenericTranslator $genericTranslator;
+    private MapInterface $translators;
 
     public function __construct(
         GenericTranslator $genericTranslator,
