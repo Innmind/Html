@@ -20,6 +20,7 @@ use Innmind\Url\{
     Url,
     Exception\Exception,
 };
+use Innmind\Immutable\Map;
 
 final class LinkTranslator implements NodeTranslator
 {
@@ -35,6 +36,7 @@ final class LinkTranslator implements NodeTranslator
         }
 
         $attributes = (new Attributes)($node);
+        /** @var Map<string, Attribute> */
         $map = $attributes->toMapOf(
             'string',
             Attribute::class,

@@ -21,8 +21,12 @@ use Innmind\Immutable\{
 final class ElementTranslator implements NodeTranslator
 {
     private GenericTranslator $genericTranslator;
+    /** @var Map<string, NodeTranslator> */
     private Map $translators;
 
+    /**
+     * @param Map<string, NodeTranslator> $translators
+     */
     public function __construct(
         GenericTranslator $genericTranslator,
         Map $translators

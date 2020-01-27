@@ -31,6 +31,7 @@ class Elements
      */
     public function __invoke(Node $node): Set
     {
+        /** @var Set<Element> */
         $elements = Set::of(Element::class);
 
         if (
@@ -40,6 +41,7 @@ class Elements
             $elements = ($elements)($node);
         }
 
+        /** @var Set<Element> */
         return $node->children()->reduce(
             $elements,
             fn(Set $elements, Node $child): Set => $elements->merge($this($child)),

@@ -7,6 +7,7 @@ use Innmind\Html\{
     Reader\Reader,
     Translator\NodeTranslators as HtmlTranslators,
     Node\Document,
+    Exception\RuntimeException,
 };
 use Innmind\Xml\{
     Reader as ReaderInterface,
@@ -84,5 +85,13 @@ HTML;
         )));
 
         $this->assertInstanceOf(XmlDocument::class, $node);
+    }
+
+    public function testThrowWhenEmptyStream()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('No html found');
+
+        ($this->read)(Stream::ofContent(''));
     }
 }

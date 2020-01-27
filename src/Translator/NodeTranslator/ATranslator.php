@@ -17,6 +17,7 @@ use Innmind\Xml\{
     Translator\NodeTranslator\Visitor\Children,
 };
 use Innmind\Url\Url;
+use Innmind\Immutable\Map;
 use function Innmind\Immutable\unwrap;
 
 final class ATranslator implements NodeTranslator
@@ -33,6 +34,7 @@ final class ATranslator implements NodeTranslator
         }
 
         $attributes = (new Attributes)($node);
+        /** @var Map<string, Attribute> */
         $map = $attributes->toMapOf(
             'string',
             Attribute::class,

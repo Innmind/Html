@@ -23,6 +23,7 @@ final class Document implements Node
     public function __construct(Type $type, Node ...$children)
     {
         $this->type = $type;
+        /** @var Sequence<Node> */
         $this->children = Sequence::of(Node::class, ...$children);
     }
 

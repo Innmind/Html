@@ -20,7 +20,7 @@ final class DocumentTranslator implements NodeTranslator
         \DOMNode $node,
         Translator $translate
     ): Node {
-        if ($node->nodeType !== XML_HTML_DOCUMENT_NODE) {
+        if (!$node instanceof \DOMDocument) {
             throw new InvalidArgumentException;
         }
 
