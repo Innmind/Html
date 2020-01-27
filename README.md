@@ -42,7 +42,5 @@ Here `$h1s` is a set of `Element` which are all `h1` elements.
 
 Here's the full list of visitors you have access to:
 
-* [`Body`](src/Visitor/Body.php)
-* [`Head`](src/Visitor/Head.php)
 * [`Element`](src/Visitor/Element.php)
 * [`Elements`](src/Visitor/Elements.php)
