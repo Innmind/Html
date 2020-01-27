@@ -13,7 +13,7 @@ use Innmind\Immutable\{
     Str,
 };
 
-class Elements
+final class Elements
 {
     private string $name;
 

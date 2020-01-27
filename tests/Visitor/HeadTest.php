@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Html\Visitor;
 
 use Innmind\Html\{
-    Visitor\Head,
+    Visitor,
     Reader\Reader,
     Translator\NodeTranslators as HtmlTranslators,
     Exception\ElementNotFound,
@@ -39,7 +39,7 @@ class HeadTest extends TestCase
             new Stream(fopen('fixtures/lemonde.html', 'r'))
         );
 
-        $head = (new Head)($node);
+        $head = Visitor\Element::head()($node);
 
         $this->assertInstanceOf(ElementInterface::class, $head);
         $this->assertSame('head', $head->name());
@@ -51,6 +51,6 @@ class HeadTest extends TestCase
     {
         $this->expectException(ElementNotFound::class);
 
-        (new Head)(new Element('body'));
+        Visitor\Element::head()(new Element('body'));
     }
 }
