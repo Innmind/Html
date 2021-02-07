@@ -30,6 +30,7 @@ final class NodeTranslators
     {
         /**
          * @psalm-suppress MixedArgumentTypeCoercion
+         * @psalm-suppress InvalidArgument
          * @var Map<int, NodeTranslator>
          */
         return self::$defaults ??= Map::of('int', NodeTranslator::class)
