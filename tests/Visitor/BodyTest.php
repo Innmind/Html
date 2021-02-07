@@ -36,7 +36,7 @@ class BodyTest extends TestCase
     public function testExtractBody()
     {
         $node = ($this->read)(
-            new Stream(fopen('fixtures/lemonde.html', 'r'))
+            new Stream(\fopen('fixtures/lemonde.html', 'r'))
         );
 
         $body = Visitor\Element::body()($node);
