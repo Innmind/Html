@@ -1,9 +1,8 @@
 # HTML
 
-| `develop` |
-|-----------|
-| [![codecov](https://codecov.io/gh/Innmind/Html/branch/develop/graph/badge.svg)](https://codecov.io/gh/Innmind/Html) |
-| [![Build Status](https://github.com/Innmind/Html/workflows/CI/badge.svg)](https://github.com/Innmind/Html/actions?query=workflow%3ACI) |
+[![Build Status](https://github.com/innmind/html/workflows/CI/badge.svg?branch=master)](https://github.com/innmind/html/actions?query=workflow%3ACI)
+[![codecov](https://codecov.io/gh/innmind/html/branch/develop/graph/badge.svg)](https://codecov.io/gh/innmind/html)
+[![Type Coverage](https://shepherd.dev/github/innmind/html/coverage.svg)](https://shepherd.dev/github/innmind/html)
 
 This library is an extension of [`innmind/xml`](https://packagist.org/packages/innmind/xml) to support working properly with html as a node tree.
 

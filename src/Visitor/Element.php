@@ -26,16 +26,6 @@ final class Element
         $this->name = $name;
     }
 
-    public static function head(): self
-    {
-        return new self('head');
-    }
-
-    public static function body(): self
-    {
-        return new self('body');
-    }
-
     public function __invoke(Node $node): ElementInterface
     {
         if (
@@ -65,5 +55,15 @@ final class Element
         }
 
         throw new ElementNotFound;
+    }
+
+    public static function head(): self
+    {
+        return new self('head');
+    }
+
+    public static function body(): self
+    {
+        return new self('body');
     }
 }

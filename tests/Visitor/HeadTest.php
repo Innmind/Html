@@ -36,7 +36,7 @@ class HeadTest extends TestCase
     public function testExtractHead()
     {
         $node = ($this->read)(
-            new Stream(fopen('fixtures/lemonde.html', 'r'))
+            new Stream(\fopen('fixtures/lemonde.html', 'r'))
         );
 
         $head = Visitor\Element::head()($node);

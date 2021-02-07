@@ -27,11 +27,11 @@ class NodeTranslatorsTest extends TestCase
         $this->assertCount(2, $defaults);
         $this->assertInstanceOf(
             DocumentTranslator::class,
-            $defaults->get(XML_HTML_DOCUMENT_NODE)
+            $defaults->get(\XML_HTML_DOCUMENT_NODE)
         );
         $this->assertInstanceOf(
             ElementTranslator::class,
-            $defaults->get(XML_ELEMENT_NODE)
+            $defaults->get(\XML_ELEMENT_NODE)
         );
         $this->assertSame($defaults, NodeTranslators::defaults());
     }

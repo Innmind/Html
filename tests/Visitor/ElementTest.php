@@ -44,7 +44,7 @@ class ElementTest extends TestCase
     public function testExtractElement()
     {
         $node = ($this->read)(
-            new Stream(fopen('fixtures/lemonde.html', 'r'))
+            new Stream(\fopen('fixtures/lemonde.html', 'r'))
         );
 
         $h1 = (new ElementFinder('h1'))($node);

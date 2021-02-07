@@ -95,7 +95,8 @@ class ElementTranslatorTest extends TestCase
             ->with($dom->childNodes->item(0))
             ->will(
                 $this->throwException(
-                    new class extends \Exception implements Exception {}
+                    new class extends \Exception implements Exception {
+                    }
                 )
             );
 

@@ -24,6 +24,10 @@ final class DocumentTranslator implements NodeTranslator
             throw new InvalidArgumentException;
         }
 
+        /**
+         * @psalm-suppress RedundantCondition
+         * @psalm-suppress TypeDoesNotContainType
+         */
         return new Document(
             $node->doctype ? $this->buildDoctype($node->doctype) : new Type('html'),
             ...($node->childNodes ? $this->buildChildren($node->childNodes, $translate) : []),

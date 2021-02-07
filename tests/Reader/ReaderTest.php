@@ -83,7 +83,7 @@ HTML;
     {
         $node = ($this->read)(
             new Stream(
-                fopen('fixtures/lemonde.html', 'r')
+                \fopen('fixtures/lemonde.html', 'r')
             )
         );
 
@@ -92,7 +92,7 @@ HTML;
 
     public function testReadScreenOnline()
     {
-        $node = ($this->read)(new Stream(fopen(
+        $node = ($this->read)(new Stream(\fopen(
             'fixtures/www.screenonline.org.uk_tv_id_560180_.html',
             'r'
         )));
