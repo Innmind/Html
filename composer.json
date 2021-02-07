@@ -15,7 +15,7 @@
         "issues": "http://github.com/Innmind/Html/issues"
     },
     "require": {
-        "php": "~7.4",
+        "php": "~7.4|~8.0",
         "innmind/xml": "~6.0",
         "symfony/dom-crawler": "^4.2|^5.0",
         "innmind/url": "~3.0"
