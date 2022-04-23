@@ -23,7 +23,6 @@ final class Document implements Node
     public function __construct(Type $type, Node ...$children)
     {
         $this->type = $type;
-        /** @var Sequence<Node> */
         $this->children = Sequence::of(Node::class, ...$children);
     }
 
@@ -76,7 +75,6 @@ final class Document implements Node
     public function prependChild(Node $child): Node
     {
         $document = clone $this;
-        /** @var Sequence<Node> */
         $document->children = Sequence::of(
             Node::class,
             $child,

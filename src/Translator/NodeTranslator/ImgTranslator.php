@@ -32,7 +32,6 @@ final class ImgTranslator implements NodeTranslator
         }
 
         $attributes = (new Attributes)($node);
-        /** @var Map<string, Attribute> */
         $map = $attributes->toMapOf(
             'string',
             Attribute::class,
