@@ -25,7 +25,7 @@ class ElementsTest extends TestCase
 
     public function setUp(): void
     {
-        $this->read = new Reader(
+        $this->read = Reader::of(
             new Translator(
                 NodeTranslators::defaults()->merge(
                     HtmlTranslators::defaults()

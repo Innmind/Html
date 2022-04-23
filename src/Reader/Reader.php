@@ -16,7 +16,7 @@ final class Reader implements ReaderInterface
 {
     private Translator $translate;
 
-    public function __construct(Translator $translate)
+    private function __construct(Translator $translate)
     {
         $this->translate = $translate;
     }
@@ -35,5 +35,10 @@ final class Reader implements ReaderInterface
         }
 
         return ($this->translate)($firstNode);
+    }
+
+    public static function of(Translator $translate): self
+    {
+        return new self($translate);
     }
 }

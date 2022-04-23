@@ -15,7 +15,7 @@ use Innmind\Immutable\Map;
  */
 function bootstrap(Map $translators = null): ReaderInterface
 {
-    return new Reader\Reader(
+    return Reader\Reader::of(
         new NodeTranslator\Translator(
             $translators ??= NodeTranslators::defaults()->merge(
                 Translator\NodeTranslators::defaults(),
