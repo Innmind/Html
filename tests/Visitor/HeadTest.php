@@ -6,14 +6,11 @@ namespace Tests\Innmind\Html\Visitor;
 use Innmind\Html\{
     Visitor,
     Reader\Reader,
-    Translator\NodeTranslators as HtmlTranslators,
     Exception\ElementNotFound,
 };
 use Innmind\Xml\{
     Element as ElementInterface,
     Element\Element,
-    Translator\Translator,
-    Translator\NodeTranslators,
 };
 use Innmind\Stream\Readable\Stream;
 use PHPUnit\Framework\TestCase;
@@ -24,13 +21,7 @@ class HeadTest extends TestCase
 
     public function setUp(): void
     {
-        $this->read = Reader::of(
-            new Translator(
-                NodeTranslators::defaults()->merge(
-                    HtmlTranslators::defaults()
-                )
-            )
-        );
+        $this->read = Reader::default();
     }
 
     public function testExtractHead()

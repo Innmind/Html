@@ -5,14 +5,11 @@ namespace Tests\Innmind\Html\Reader;
 
 use Innmind\Html\{
     Reader\Reader,
-    Translator\NodeTranslators as HtmlTranslators,
     Node\Document,
     Exception\RuntimeException,
 };
 use Innmind\Xml\{
     Reader as ReaderInterface,
-    Translator\Translator,
-    Translator\NodeTranslators,
     Node\Document as XmlDocument,
 };
 use Innmind\Stream\Readable\Stream;
@@ -24,13 +21,7 @@ class ReaderTest extends TestCase
 
     public function setUp(): void
     {
-        $this->read = Reader::of(
-            new Translator(
-                NodeTranslators::defaults()->merge(
-                    HtmlTranslators::defaults()
-                )
-            )
-        );
+        $this->read = Reader::default();
     }
 
     public function testInterface()

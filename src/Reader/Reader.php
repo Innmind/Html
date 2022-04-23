@@ -3,11 +3,15 @@ declare(strict_types = 1);
 
 namespace Innmind\Html\Reader;
 
-use Innmind\Html\Exception\RuntimeException;
+use Innmind\Html\{
+    Translator\NodeTranslators as HtmlNodeTranslators,
+    Exception\RuntimeException
+};
 use Innmind\Xml\{
     Reader as ReaderInterface,
     Node,
     Translator\Translator,
+    Translator\NodeTranslators,
 };
 use Innmind\Stream\Readable;
 use Symfony\Component\DomCrawler\Crawler;
@@ -40,5 +44,16 @@ final class Reader implements ReaderInterface
     public static function of(Translator $translate): self
     {
         return new self($translate);
+    }
+
+    public static function default(): self
+    {
+        return new self(
+            new Translator(
+                NodeTranslators::defaults()->merge(
+                    HtmlNodeTranslators::defaults(),
+                ),
+            ),
+        );
     }
 }
