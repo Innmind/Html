@@ -17,14 +17,13 @@ use Innmind\Xml\{
     Translator\NodeTranslator\Visitor\Children,
 };
 use Innmind\Url\Url;
-use Innmind\Immutable\Map;
 use function Innmind\Immutable\unwrap;
 
 final class ATranslator implements NodeTranslator
 {
     public function __invoke(
         \DOMNode $node,
-        Translator $translate
+        Translator $translate,
     ): Node {
         if (
             !$node instanceof \DOMElement ||

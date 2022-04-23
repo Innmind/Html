@@ -22,7 +22,7 @@ class ATranslatorTest extends TestCase
     {
         $this->assertInstanceOf(
             NodeTranslator::class,
-            new ATranslator
+            new ATranslator,
         );
     }
 
@@ -36,7 +36,7 @@ class ATranslatorTest extends TestCase
         (new ATranslator)(
             $dom->childNodes->item(1),
             new Translator(
-                NodeTranslators::defaults()
+                NodeTranslators::defaults(),
             )
         );
     }
@@ -49,7 +49,7 @@ class ATranslatorTest extends TestCase
         $a = (new ATranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
             new Translator(
-                NodeTranslators::defaults()
+                NodeTranslators::defaults(),
             )
         );
 
@@ -70,7 +70,7 @@ class ATranslatorTest extends TestCase
         (new ATranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
             new Translator(
-                NodeTranslators::defaults()
+                NodeTranslators::defaults(),
             )
         );
     }

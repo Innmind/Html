@@ -21,7 +21,7 @@ class BaseTest extends TestCase
             $base = new Base(
                 $href = Url::of('http://example.com'),
                 Set::of(Attribute::class),
-            )
+            ),
         );
         $this->assertSame('base', $base->name());
         $this->assertSame($href, $base->href());

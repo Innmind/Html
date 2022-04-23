@@ -21,7 +21,7 @@ class ScriptTranslatorTest extends TestCase
     {
         $this->assertInstanceOf(
             NodeTranslator::class,
-            new ScriptTranslator
+            new ScriptTranslator,
         );
     }
 
@@ -35,7 +35,7 @@ class ScriptTranslatorTest extends TestCase
         (new ScriptTranslator)(
             $dom->childNodes->item(1),
             new Translator(
-                NodeTranslators::defaults()
+                NodeTranslators::defaults(),
             )
         );
     }
@@ -48,7 +48,7 @@ class ScriptTranslatorTest extends TestCase
         $script = (new ScriptTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
             new Translator(
-                NodeTranslators::defaults()
+                NodeTranslators::defaults(),
             )
         );
 
@@ -57,7 +57,7 @@ class ScriptTranslatorTest extends TestCase
         $this->assertCount(1, $script->attributes());
         $this->assertSame(
             'text/javascript',
-            $script->attributes()->get('type')->value()
+            $script->attributes()->get('type')->value(),
         );
         $this->assertCount(1, $script->children());
     }
@@ -70,7 +70,7 @@ class ScriptTranslatorTest extends TestCase
         $script = (new ScriptTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
             new Translator(
-                NodeTranslators::defaults()
+                NodeTranslators::defaults(),
             )
         );
 

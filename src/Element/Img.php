@@ -19,7 +19,7 @@ final class Img extends SelfClosingElement
      */
     public function __construct(
         Url $src,
-        Set $attributes = null
+        Set $attributes = null,
     ) {
         parent::__construct('img', $attributes);
         $this->src = $src;

@@ -20,8 +20,8 @@ class ImgTest extends TestCase
             SelfClosingElement::class,
             $img = new Img(
                 $src = Url::of('http://example.com'),
-                Set::of(Attribute::class)
-            )
+                Set::of(Attribute::class),
+            ),
         );
         $this->assertSame('img', $img->name());
         $this->assertSame($src, $img->src());

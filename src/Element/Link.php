@@ -25,7 +25,7 @@ final class Link extends SelfClosingElement
     public function __construct(
         Url $href,
         string $relationship,
-        Set $attributes = null
+        Set $attributes = null,
     ) {
         if (Str::of($relationship)->empty()) {
             throw new DomainException;

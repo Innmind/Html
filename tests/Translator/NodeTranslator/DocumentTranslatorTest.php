@@ -21,7 +21,7 @@ class DocumentTranslatorTest extends TestCase
     {
         $this->assertInstanceOf(
             NodeTranslator::class,
-            new DocumentTranslator
+            new DocumentTranslator,
         );
     }
 

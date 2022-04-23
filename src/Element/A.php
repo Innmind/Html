@@ -21,7 +21,7 @@ final class A extends Element
     public function __construct(
         Url $href,
         Set $attributes = null,
-        Node ...$children
+        Node ...$children,
     ) {
         parent::__construct('a', $attributes, ...$children);
         $this->href = $href;

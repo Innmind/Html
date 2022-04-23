@@ -24,8 +24,8 @@ class LinkTest extends TestCase
             $link = new Link(
                 $href = Url::of('http://example.com'),
                 'rel',
-                Set::of(Attribute::class)
-            )
+                Set::of(Attribute::class),
+            ),
         );
         $this->assertSame('link', $link->name());
         $this->assertSame($href, $link->href());
@@ -37,7 +37,7 @@ class LinkTest extends TestCase
         $this->assertTrue(
             (new Link(
                 Url::of('http://example.com'),
-                'foo'
+                'foo',
             ))->attributes()->empty(),
         );
     }
@@ -48,7 +48,7 @@ class LinkTest extends TestCase
 
         new Link(
             Url::of('http://example.com'),
-            ''
+            '',
         );
     }
 }

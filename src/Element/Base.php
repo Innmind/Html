@@ -19,7 +19,7 @@ final class Base extends SelfClosingElement
      */
     public function __construct(
         Url $href,
-        Set $attributes = null
+        Set $attributes = null,
     ) {
         parent::__construct('base', $attributes);
         $this->href = $href;

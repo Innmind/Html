@@ -20,7 +20,7 @@ final class ScriptTranslator implements NodeTranslator
 {
     public function __invoke(
         \DOMNode $node,
-        Translator $translate
+        Translator $translate,
     ): Node {
         if (
             !$node instanceof \DOMElement ||

@@ -17,7 +17,7 @@ class ScriptTest extends TestCase
     public function testInterface()
     {
         $script = new Script(
-            new Text('foo')
+            new Text('foo'),
         );
 
         $this->assertInstanceOf(Element::class, $script);

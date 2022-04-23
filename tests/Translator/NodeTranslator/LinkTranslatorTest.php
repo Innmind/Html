@@ -22,7 +22,7 @@ class LinkTranslatorTest extends TestCase
     {
         $this->assertInstanceOf(
             NodeTranslator::class,
-            new LinkTranslator
+            new LinkTranslator,
         );
     }
 
@@ -36,7 +36,7 @@ class LinkTranslatorTest extends TestCase
         (new LinkTranslator)(
             $dom->childNodes->item(1),
             new Translator(
-                NodeTranslators::defaults()
+                NodeTranslators::defaults(),
             )
         );
     }
@@ -49,7 +49,7 @@ class LinkTranslatorTest extends TestCase
         $link = (new LinkTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
             new Translator(
-                NodeTranslators::defaults()
+                NodeTranslators::defaults(),
             )
         );
 
@@ -68,7 +68,7 @@ class LinkTranslatorTest extends TestCase
         $link = (new LinkTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
             new Translator(
-                NodeTranslators::defaults()
+                NodeTranslators::defaults(),
             )
         );
 
@@ -89,7 +89,7 @@ class LinkTranslatorTest extends TestCase
         (new LinkTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
             new Translator(
-                NodeTranslators::defaults()
+                NodeTranslators::defaults(),
             )
         );
     }

@@ -23,7 +23,7 @@ class ATest extends TestCase
                 $href = Url::of('http://example.com'),
                 Set::of(Attribute::class),
                 $child = $this->createMock(Node::class),
-            )
+            ),
         );
         $this->assertSame('a', $a->name());
         $this->assertSame($href, $a->href());
@@ -33,14 +33,14 @@ class ATest extends TestCase
     public function testWithoutAttributes()
     {
         $this->assertTrue(
-            (new A(Url::of('http://example.com')))->attributes()->empty()
+            (new A(Url::of('http://example.com')))->attributes()->empty(),
         );
     }
 
     public function testWithoutChildren()
     {
         $this->assertFalse(
-            (new A(Url::of('http://example.com')))->hasChildren()
+            (new A(Url::of('http://example.com')))->hasChildren(),
         );
     }
 }

@@ -16,13 +16,12 @@ use Innmind\Xml\{
     Translator\NodeTranslator\Visitor\Attributes,
 };
 use Innmind\Url\Url;
-use Innmind\Immutable\Map;
 
 final class ImgTranslator implements NodeTranslator
 {
     public function __invoke(
         \DOMNode $node,
-        Translator $translate
+        Translator $translate,
     ): Node {
         if (
             !$node instanceof \DOMElement ||

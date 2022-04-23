@@ -30,7 +30,7 @@ final class ElementTranslator implements NodeTranslator
      */
     public function __construct(
         GenericTranslator $genericTranslator,
-        Map $translators
+        Map $translators,
     ) {
         assertMap('string', NodeTranslator::class, $translators, 2);
 
@@ -40,7 +40,7 @@ final class ElementTranslator implements NodeTranslator
 
     public function __invoke(
         \DOMNode $node,
-        Translator $translate
+        Translator $translate,
     ): Node {
         if (!$node instanceof \DOMElement) {
             throw new InvalidArgumentException;

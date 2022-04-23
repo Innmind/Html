@@ -31,7 +31,7 @@ class ElementTranslatorTest extends TestCase
             new GenericTranslator,
             Map::of('string', NodeTranslator::class)
                 ('bar', $this->bar = $this->createMock(NodeTranslator::class))
-                ('baz', $this->baz = $this->createMock(NodeTranslator::class))
+                ('baz', $this->baz = $this->createMock(NodeTranslator::class)),
         );
     }
 
@@ -39,7 +39,7 @@ class ElementTranslatorTest extends TestCase
     {
         $this->assertInstanceOf(
             NodeTranslator::class,
-            $this->translate
+            $this->translate,
         );
     }
 
@@ -50,7 +50,7 @@ class ElementTranslatorTest extends TestCase
 
         new ElementTranslator(
             new GenericTranslator,
-            Map::of('int', NodeTranslator::class)
+            Map::of('int', NodeTranslator::class),
         );
     }
 
@@ -60,11 +60,11 @@ class ElementTranslatorTest extends TestCase
 
         (new ElementTranslator(
             new GenericTranslator,
-            Map::of('string', NodeTranslator::class)
+            Map::of('string', NodeTranslator::class),
         ))(
             new \DOMNode,
             new Translator(
-                NodeTranslators::defaults()
+                NodeTranslators::defaults(),
             )
         );
     }
@@ -77,7 +77,7 @@ class ElementTranslatorTest extends TestCase
         $node = ($this->translate)(
             $dom->childNodes->item(0),
             new Translator(
-                NodeTranslators::defaults()
+                NodeTranslators::defaults(),
             )
         );
 
@@ -96,14 +96,14 @@ class ElementTranslatorTest extends TestCase
             ->will(
                 $this->throwException(
                     new class extends \Exception implements Exception {
-                    }
-                )
+                    },
+                ),
             );
 
         $node = ($this->translate)(
             $dom->childNodes->item(0),
             new Translator(
-                NodeTranslators::defaults()
+                NodeTranslators::defaults(),
             )
         );
 
@@ -124,7 +124,7 @@ class ElementTranslatorTest extends TestCase
         $node = ($this->translate)(
             $dom->childNodes->item(0),
             new Translator(
-                NodeTranslators::defaults()
+                NodeTranslators::defaults(),
             )
         );
 

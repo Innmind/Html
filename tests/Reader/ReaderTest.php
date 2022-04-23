@@ -28,7 +28,7 @@ class ReaderTest extends TestCase
     {
         $this->assertInstanceOf(
             ReaderInterface::class,
-            $this->read
+            $this->read,
         );
     }
 
@@ -74,7 +74,7 @@ HTML;
     {
         $node = ($this->read)(
             new Stream(
-                \fopen('fixtures/lemonde.html', 'r')
+                \fopen('fixtures/lemonde.html', 'r'),
             )
         );
 
@@ -85,7 +85,7 @@ HTML;
     {
         $node = ($this->read)(new Stream(\fopen(
             'fixtures/www.screenonline.org.uk_tv_id_560180_.html',
-            'r'
+            'r',
         )));
 
         $this->assertInstanceOf(XmlDocument::class, $node);

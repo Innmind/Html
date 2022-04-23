@@ -22,7 +22,7 @@ class ImgTranslatorTest extends TestCase
     {
         $this->assertInstanceOf(
             NodeTranslator::class,
-            new ImgTranslator
+            new ImgTranslator,
         );
     }
 
@@ -36,7 +36,7 @@ class ImgTranslatorTest extends TestCase
         (new ImgTranslator)(
             $dom->childNodes->item(1),
             new Translator(
-                NodeTranslators::defaults()
+                NodeTranslators::defaults(),
             )
         );
     }
@@ -49,7 +49,7 @@ class ImgTranslatorTest extends TestCase
         $img = (new ImgTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
             new Translator(
-                NodeTranslators::defaults()
+                NodeTranslators::defaults(),
             )
         );
 
@@ -69,7 +69,7 @@ class ImgTranslatorTest extends TestCase
         (new ImgTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
             new Translator(
-                NodeTranslators::defaults()
+                NodeTranslators::defaults(),
             )
         );
     }
