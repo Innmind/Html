@@ -19,6 +19,10 @@ use Innmind\Immutable\Maybe;
  */
 final class ATranslator implements NodeTranslator
 {
+    private function __construct()
+    {
+    }
+
     public function __invoke(
         \DOMNode $node,
         Translator $translate,
@@ -37,7 +41,7 @@ final class ATranslator implements NodeTranslator
                         ->flatMap(static fn($href) => Url::maybe($href->value()))
                         ->flatMap(
                             static fn($href) => Children::of($translate)($node)->map(
-                                static fn($children) => new A(
+                                static fn($children) => A::of(
                                     $href,
                                     $attributes,
                                     $children,
@@ -46,5 +50,13 @@ final class ATranslator implements NodeTranslator
                         ),
                 ),
             );
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function of(): self
+    {
+        return new self;
     }
 }

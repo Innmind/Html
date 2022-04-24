@@ -22,6 +22,10 @@ use Innmind\Immutable\{
  */
 final class LinkTranslator implements NodeTranslator
 {
+    private function __construct()
+    {
+    }
+
     public function __invoke(
         \DOMNode $node,
         Translator $translate,
@@ -38,6 +42,14 @@ final class LinkTranslator implements NodeTranslator
                     $this->build(...),
                 ),
             );
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function of(): self
+    {
+        return new self;
     }
 
     /**
@@ -59,7 +71,7 @@ final class LinkTranslator implements NodeTranslator
         return $attributes
             ->find(static fn($attribute) => $attribute->name() === 'href')
             ->flatMap(static fn($href) => Url::maybe($href->value()))
-            ->map(static fn($href) => new Link(
+            ->map(static fn($href) => Link::of(
                 $href,
                 $rel,
                 $attributes,

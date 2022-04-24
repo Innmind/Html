@@ -26,11 +26,21 @@ final class Script implements Element
     /**
      * @param Set<Attribute>|null $attributes
      */
-    public function __construct(Text $text, Set $attributes = null)
+    private function __construct(Text $text, Set $attributes = null)
     {
         /** @var Sequence<Node> */
         $children = Sequence::of($text);
         $this->element = Element\Element::of('script', $attributes, $children);
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @param Set<Attribute>|null $attributes
+     */
+    public static function of(Text $text, Set $attributes = null): self
+    {
+        return new self($text, $attributes);
     }
 
     public function name(): string

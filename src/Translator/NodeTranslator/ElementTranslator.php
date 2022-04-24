@@ -26,7 +26,7 @@ final class ElementTranslator implements NodeTranslator
     /**
      * @param Map<string, NodeTranslator> $translators
      */
-    public function __construct(
+    private function __construct(
         GenericTranslator $genericTranslator,
         Map $translators,
     ) {
@@ -44,5 +44,17 @@ final class ElementTranslator implements NodeTranslator
             ->flatMap(fn(\DOMElement $node) => $this->translators->get($node->tagName))
             ->flatMap(static fn($translator) => $translator($node, $translate))
             ->otherwise(fn() => ($this->genericTranslator)($node, $translate));
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @param Map<string, NodeTranslator> $translators
+     */
+    public static function of(
+        GenericTranslator $genericTranslator,
+        Map $translators,
+    ): self {
+        return new self($genericTranslator, $translators);
     }
 }

@@ -30,7 +30,7 @@ class ElementsTest extends TestCase
     {
         $this->expectException(DomainException::class);
 
-        new Elements('');
+        Elements::of('');
     }
 
     public function testExtractElement()
@@ -42,7 +42,7 @@ class ElementsTest extends TestCase
             static fn() => null,
         );
 
-        $h1s = (new Elements('h1'))($node);
+        $h1s = Elements::of('h1')($node);
 
         $this->assertInstanceOf(Set::class, $h1s);
         $this->assertCount(26, $h1s);
@@ -50,7 +50,7 @@ class ElementsTest extends TestCase
 
     public function testEmptySetWhenNoElementFound()
     {
-        $elements = (new Elements('foo'))(Element::of('whatever'));
+        $elements = Elements::of('foo')(Element::of('whatever'));
 
         $this->assertInstanceOf(Set::class, $elements);
         $this->assertCount(0, $elements);

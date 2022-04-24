@@ -21,7 +21,7 @@ class LinkTest extends TestCase
     {
         $this->assertInstanceOf(
             Element::class,
-            $link = new Link(
+            $link = Link::of(
                 $href = Url::of('http://example.com'),
                 'rel',
                 Set::of(),
@@ -35,10 +35,10 @@ class LinkTest extends TestCase
     public function testWithoutAttributes()
     {
         $this->assertTrue(
-            (new Link(
+            Link::of(
                 Url::of('http://example.com'),
                 'foo',
-            ))->attributes()->empty(),
+            )->attributes()->empty(),
         );
     }
 
@@ -46,7 +46,7 @@ class LinkTest extends TestCase
     {
         $this->expectException(DomainException::class);
 
-        new Link(
+        Link::of(
             Url::of('http://example.com'),
             '',
         );

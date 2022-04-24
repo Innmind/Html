@@ -26,22 +26,21 @@ final class NodeTranslators
     public static function defaults(): Map
     {
         /**
-         * @psalm-suppress MixedArgumentTypeCoercion
          * @psalm-suppress InvalidArgument
          * @var Map<int, NodeTranslator>
          */
         return Map::of(
-            [\XML_HTML_DOCUMENT_NODE, new DocumentTranslator],
+            [\XML_HTML_DOCUMENT_NODE, DocumentTranslator::of()],
             [
                 \XML_ELEMENT_NODE,
-                new ElementTranslator(
+                ElementTranslator::of(
                     GenericTranslator::of(),
                     Map::of(
-                        ['a', new ATranslator],
-                        ['base', new BaseTranslator],
-                        ['img', new ImgTranslator],
-                        ['link', new LinkTranslator],
-                        ['script', new ScriptTranslator],
+                        ['a', ATranslator::of()],
+                        ['base', BaseTranslator::of()],
+                        ['img', ImgTranslator::of()],
+                        ['link', LinkTranslator::of()],
+                        ['script', ScriptTranslator::of()],
                     ),
                 ),
             ],

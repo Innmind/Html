@@ -18,6 +18,10 @@ use Innmind\Immutable\Maybe;
  */
 final class ScriptTranslator implements NodeTranslator
 {
+    private function __construct()
+    {
+    }
+
     public function __invoke(
         \DOMNode $node,
         Translator $translate,
@@ -30,7 +34,7 @@ final class ScriptTranslator implements NodeTranslator
             ->filter(static fn($node) => $node instanceof \DOMElement)
             ->filter(static fn(\DOMElement $node) => $node->tagName === 'script')
             ->flatMap(static fn(\DOMElement $node) => Attributes::of()($node)->map(
-                static fn($attributes) => new Script(
+                static fn($attributes) => Script::of(
                     Text::of(
                         Maybe::of($node->firstChild)
                             ->flatMap(static fn($node) => $translate($node))
@@ -43,5 +47,13 @@ final class ScriptTranslator implements NodeTranslator
                     $attributes,
                 ),
             ));
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function of(): self
+    {
+        return new self;
     }
 }

@@ -18,6 +18,10 @@ use Innmind\Immutable\Maybe;
  */
 final class ImgTranslator implements NodeTranslator
 {
+    private function __construct()
+    {
+    }
+
     public function __invoke(
         \DOMNode $node,
         Translator $translate,
@@ -34,8 +38,16 @@ final class ImgTranslator implements NodeTranslator
                     static fn($attributes) => $attributes
                         ->find(static fn($attribute) => $attribute->name() === 'src')
                         ->flatMap(static fn($src) => Url::maybe($src->value()))
-                        ->map(static fn($src) => new Img($src, $attributes)),
+                        ->map(static fn($src) => Img::of($src, $attributes)),
                 ),
             );
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function of(): self
+    {
+        return new self;
     }
 }

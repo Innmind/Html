@@ -18,7 +18,7 @@ class BaseTest extends TestCase
     {
         $this->assertInstanceOf(
             Element::class,
-            $base = new Base(
+            $base = Base::of(
                 $href = Url::of('http://example.com'),
                 Set::of(),
             ),
@@ -30,7 +30,7 @@ class BaseTest extends TestCase
     public function testWithoutAttributes()
     {
         $this->assertTrue(
-            (new Base(Url::of('http://example.com')))->attributes()->empty(),
+            Base::of(Url::of('http://example.com'))->attributes()->empty(),
         );
     }
 }

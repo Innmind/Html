@@ -30,7 +30,7 @@ class ElementTest extends TestCase
     {
         $this->expectException(DomainException::class);
 
-        new ElementFinder('');
+        ElementFinder::of('');
     }
 
     public function testExtractElement()
@@ -42,7 +42,7 @@ class ElementTest extends TestCase
             static fn() => null,
         );
 
-        $h1 = (new ElementFinder('h1'))($node);
+        $h1 = ElementFinder::of('h1')($node);
 
         $this->assertInstanceOf(ElementInterface::class, $h1);
         $this->assertSame('h1', $h1->name());
@@ -54,6 +54,6 @@ class ElementTest extends TestCase
     {
         $this->expectException(ElementNotFound::class);
 
-        (new ElementFinder('foo'))(Element::of('whatever'));
+        ElementFinder::of('foo')(Element::of('whatever'));
     }
 }

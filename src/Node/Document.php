@@ -24,10 +24,20 @@ final class Document implements Node
     /**
      * @param Sequence<Node>|null $children
      */
-    public function __construct(Type $type, Sequence $children = null)
+    private function __construct(Type $type, Sequence $children = null)
     {
         $this->type = $type;
         $this->children = $children ?? Sequence::of();
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @param Sequence<Node>|null $children
+     */
+    public static function of(Type $type, Sequence $children = null): self
+    {
+        return new self($type, $children);
     }
 
     public function type(): Type

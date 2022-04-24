@@ -20,7 +20,7 @@ class BaseTranslatorTest extends TestCase
     {
         $this->assertInstanceOf(
             NodeTranslator::class,
-            new BaseTranslator,
+            BaseTranslator::of(),
         );
     }
 
@@ -29,7 +29,7 @@ class BaseTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<body></body>');
 
-        $result = (new BaseTranslator)(
+        $result = BaseTranslator::of()(
             $dom->childNodes->item(1),
             Translator::of(
                 NodeTranslators::defaults(),
@@ -47,7 +47,7 @@ class BaseTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<base href="/" target="_blank"/>');
 
-        $base = (new BaseTranslator)(
+        $base = BaseTranslator::of()(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
             Translator::of(
                 NodeTranslators::defaults(),
@@ -71,7 +71,7 @@ class BaseTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<base/>');
 
-        $result = (new BaseTranslator)(
+        $result = BaseTranslator::of()(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
             Translator::of(
                 NodeTranslators::defaults(),

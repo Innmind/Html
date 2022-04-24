@@ -31,7 +31,7 @@ final class Link implements Element
     /**
      * @param Set<Attribute>|null $attributes
      */
-    public function __construct(
+    private function __construct(
         Url $href,
         string $relationship,
         Set $attributes = null,
@@ -43,6 +43,19 @@ final class Link implements Element
         $this->element = SelfClosingElement::of('link', $attributes);
         $this->href = $href;
         $this->relationship = $relationship;
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @param Set<Attribute>|null $attributes
+     */
+    public static function of(
+        Url $href,
+        string $relationship,
+        Set $attributes = null,
+    ): self {
+        return new self($href, $relationship, $attributes);
     }
 
     public function href(): Url

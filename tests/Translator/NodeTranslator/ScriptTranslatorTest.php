@@ -20,7 +20,7 @@ class ScriptTranslatorTest extends TestCase
     {
         $this->assertInstanceOf(
             NodeTranslator::class,
-            new ScriptTranslator,
+            ScriptTranslator::of(),
         );
     }
 
@@ -29,7 +29,7 @@ class ScriptTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<body></body>');
 
-        $result = (new ScriptTranslator)(
+        $result = ScriptTranslator::of()(
             $dom->childNodes->item(1),
             Translator::of(
                 NodeTranslators::defaults(),
@@ -47,7 +47,7 @@ class ScriptTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<script type="text/javascript">var foo = 42;</script>');
 
-        $script = (new ScriptTranslator)(
+        $script = ScriptTranslator::of()(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
             Translator::of(
                 NodeTranslators::defaults(),
@@ -75,7 +75,7 @@ class ScriptTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<script></script>');
 
-        $script = (new ScriptTranslator)(
+        $script = ScriptTranslator::of()(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
             Translator::of(
                 NodeTranslators::defaults(),

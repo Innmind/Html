@@ -13,11 +13,14 @@ use Innmind\Immutable\{
     Str,
 };
 
+/**
+ * @psalm-immutable
+ */
 final class Elements
 {
     private string $name;
 
-    public function __construct(string $name)
+    private function __construct(string $name)
     {
         if (Str::of($name)->empty()) {
             throw new DomainException;
@@ -46,5 +49,13 @@ final class Elements
             $elements,
             fn(Set $elements, Node $child): Set => $elements->merge($this($child)),
         );
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function of(string $name): self
+    {
+        return new self($name);
     }
 }

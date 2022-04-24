@@ -28,12 +28,20 @@ final class Img implements Element
     /**
      * @param Set<Attribute>|null $attributes
      */
-    public function __construct(
-        Url $src,
-        Set $attributes = null,
-    ) {
+    private function __construct(Url $src, Set $attributes = null)
+    {
         $this->element = SelfClosingElement::of('img', $attributes);
         $this->src = $src;
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @param Set<Attribute>|null $attributes
+     */
+    public static function of(Url $src, Set $attributes = null): self
+    {
+        return new self($src, $attributes);
     }
 
     public function src(): Url

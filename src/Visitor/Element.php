@@ -13,11 +13,14 @@ use Innmind\Xml\{
 };
 use Innmind\Immutable\Str;
 
+/**
+ * @psalm-immutable
+ */
 final class Element
 {
     private string $name;
 
-    public function __construct(string $name)
+    private function __construct(string $name)
     {
         if (Str::of($name)->empty()) {
             throw new DomainException;
@@ -57,11 +60,25 @@ final class Element
         throw new ElementNotFound;
     }
 
+    /**
+     * @psalm-pure
+     */
+    public static function of(string $name): self
+    {
+        return new self($name);
+    }
+
+    /**
+     * @psalm-pure
+     */
     public static function head(): self
     {
         return new self('head');
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function body(): self
     {
         return new self('body');

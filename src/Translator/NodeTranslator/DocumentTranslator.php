@@ -20,6 +20,10 @@ use Innmind\Immutable\{
  */
 final class DocumentTranslator implements NodeTranslator
 {
+    private function __construct()
+    {
+    }
+
     public function __invoke(
         \DOMNode $node,
         Translator $translate,
@@ -33,7 +37,7 @@ final class DocumentTranslator implements NodeTranslator
             ->flatMap(
                 fn(\DOMDocument $node) => $this
                     ->buildChildren($node->childNodes, $translate)
-                    ->map(fn($children) => new Document(
+                    ->map(fn($children) => Document::of(
                         Maybe::of($node->doctype)
                             ->flatMap($this->buildDoctype(...))
                             ->match(
@@ -43,6 +47,14 @@ final class DocumentTranslator implements NodeTranslator
                         $children,
                     )),
             );
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function of(): self
+    {
+        return new self;
     }
 
     /**

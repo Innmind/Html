@@ -22,7 +22,7 @@ class ATest extends TestCase
     {
         $this->assertInstanceOf(
             Element::class,
-            $a = new A(
+            $a = A::of(
                 $href = Url::of('http://example.com'),
                 Set::of(),
                 Sequence::of($child = $this->createMock(Node::class)),
@@ -39,14 +39,14 @@ class ATest extends TestCase
     public function testWithoutAttributes()
     {
         $this->assertTrue(
-            (new A(Url::of('http://example.com')))->attributes()->empty(),
+            A::of(Url::of('http://example.com'))->attributes()->empty(),
         );
     }
 
     public function testWithoutChildren()
     {
         $this->assertTrue(
-            (new A(Url::of('http://example.com')))->children()->empty(),
+            A::of(Url::of('http://example.com'))->children()->empty(),
         );
     }
 }

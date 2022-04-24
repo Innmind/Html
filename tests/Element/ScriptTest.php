@@ -16,7 +16,7 @@ class ScriptTest extends TestCase
 {
     public function testInterface()
     {
-        $script = new Script(
+        $script = Script::of(
             Text::of('foo'),
         );
 
@@ -27,7 +27,7 @@ class ScriptTest extends TestCase
 
     public function testWithAttributes()
     {
-        $script = new Script(
+        $script = Script::of(
             Text::of('foo'),
             Set::of(
                 $attribute = Attribute::of('foo', 'bar'),

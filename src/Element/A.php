@@ -28,7 +28,7 @@ final class A implements Element
      * @param Set<Attribute>|null $attributes
      * @param Sequence<Node>|null $children
      */
-    public function __construct(
+    private function __construct(
         Url $href,
         Set $attributes = null,
         Sequence $children = null,
@@ -39,6 +39,20 @@ final class A implements Element
             $children,
         );
         $this->href = $href;
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @param Set<Attribute>|null $attributes
+     * @param Sequence<Node>|null $children
+     */
+    public static function of(
+        Url $href,
+        Set $attributes = null,
+        Sequence $children = null,
+    ): self {
+        return new self($href, $attributes, $children);
     }
 
     public function href(): Url

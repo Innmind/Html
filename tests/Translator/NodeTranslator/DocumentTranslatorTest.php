@@ -20,7 +20,7 @@ class DocumentTranslatorTest extends TestCase
     {
         $this->assertInstanceOf(
             NodeTranslator::class,
-            new DocumentTranslator,
+            DocumentTranslator::of(),
         );
     }
 
@@ -29,7 +29,7 @@ class DocumentTranslatorTest extends TestCase
         $document = new \DOMDocument;
         $document->loadHtml('<!DOCTYPE html><body></body>');
 
-        $node = (new DocumentTranslator)(
+        $node = DocumentTranslator::of()(
             $document,
             Translator::of(NodeTranslators::defaults())
         )->match(
@@ -48,7 +48,7 @@ class DocumentTranslatorTest extends TestCase
         $document = new \DOMDocument;
         $document->loadHtml('<!--foo-->');
 
-        $node = (new DocumentTranslator)(
+        $node = DocumentTranslator::of()(
             $document,
             Translator::of(NodeTranslators::defaults())
         )->match(
@@ -67,7 +67,7 @@ class DocumentTranslatorTest extends TestCase
         $document = new \DOMDocument;
         $document->loadHtml('<!DOCTYPE html>');
 
-        $node = (new DocumentTranslator)(
+        $node = DocumentTranslator::of()(
             $document,
             Translator::of(NodeTranslators::defaults())
         )->match(
@@ -83,7 +83,7 @@ class DocumentTranslatorTest extends TestCase
         $document = new \DOMDocument;
         $document->loadXML('<foo></foo>');
 
-        $result = (new DocumentTranslator)(
+        $result = DocumentTranslator::of()(
             $document->childNodes->item(0),
             Translator::of(NodeTranslators::defaults())
         );

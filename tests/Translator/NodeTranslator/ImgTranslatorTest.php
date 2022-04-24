@@ -20,7 +20,7 @@ class ImgTranslatorTest extends TestCase
     {
         $this->assertInstanceOf(
             NodeTranslator::class,
-            new ImgTranslator,
+            ImgTranslator::of(),
         );
     }
 
@@ -29,7 +29,7 @@ class ImgTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<body></body>');
 
-        $result = (new ImgTranslator)(
+        $result = ImgTranslator::of()(
             $dom->childNodes->item(1),
             Translator::of(
                 NodeTranslators::defaults(),
@@ -47,7 +47,7 @@ class ImgTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<img src="foo.png" alt="bar"/>');
 
-        $img = (new ImgTranslator)(
+        $img = ImgTranslator::of()(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
             Translator::of(
                 NodeTranslators::defaults(),
@@ -71,7 +71,7 @@ class ImgTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<img/>');
 
-        $result = (new ImgTranslator)(
+        $result = ImgTranslator::of()(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
             Translator::of(
                 NodeTranslators::defaults(),

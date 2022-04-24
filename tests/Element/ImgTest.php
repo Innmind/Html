@@ -18,7 +18,7 @@ class ImgTest extends TestCase
     {
         $this->assertInstanceOf(
             Element::class,
-            $img = new Img(
+            $img = Img::of(
                 $src = Url::of('http://example.com'),
                 Set::of(),
             ),
@@ -30,7 +30,7 @@ class ImgTest extends TestCase
     public function testWithoutAttributes()
     {
         $this->assertTrue(
-            (new Img(Url::of('http://example.com')))->attributes()->empty(),
+            Img::of(Url::of('http://example.com'))->attributes()->empty(),
         );
     }
 }

@@ -26,7 +26,7 @@ class ElementTranslatorTest extends TestCase
 
     public function setUp(): void
     {
-        $this->translate = new ElementTranslator(
+        $this->translate = ElementTranslator::of(
             GenericTranslator::of(),
             Map::of(
                 ['bar', $this->bar = $this->createMock(NodeTranslator::class)],
@@ -45,10 +45,10 @@ class ElementTranslatorTest extends TestCase
 
     public function testReturnNothingWhenInvalidNode()
     {
-        $result = (new ElementTranslator(
+        $result = ElementTranslator::of(
             GenericTranslator::of(),
             Map::of(),
-        ))(
+        )(
             new \DOMNode,
             Translator::of(
                 NodeTranslators::defaults(),

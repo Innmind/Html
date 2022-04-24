@@ -19,7 +19,7 @@ class DocumentTest extends TestCase
     {
         $this->assertInstanceOf(
             Node::class,
-            new Document(Type::of('html')),
+            Document::of(Type::of('html')),
         );
     }
 
@@ -29,13 +29,13 @@ class DocumentTest extends TestCase
 
         $this->assertSame(
             $type,
-            (new Document($type))->type(),
+            (Document::of($type))->type(),
         );
     }
 
     public function testWithoutChildren()
     {
-        $document = new Document(Type::of('html'));
+        $document = Document::of(Type::of('html'));
 
         $this->assertInstanceOf(Sequence::class, $document->children());
         $this->assertTrue($document->children()->empty());
@@ -43,7 +43,7 @@ class DocumentTest extends TestCase
 
     public function testWithChildren()
     {
-        $document = new Document(
+        $document = Document::of(
             Type::of('html'),
             Sequence::of($child = $this->createMock(Node::class)),
         );
@@ -57,7 +57,7 @@ class DocumentTest extends TestCase
 
     public function testContent()
     {
-        $document = new Document(
+        $document = Document::of(
             Type::of('html'),
             Sequence::of(
                 Element::of(
@@ -73,7 +73,7 @@ class DocumentTest extends TestCase
 
     public function testCast()
     {
-        $document = new Document(
+        $document = Document::of(
             Type::of('html'),
             Sequence::of(
                 Element::of(
@@ -92,7 +92,7 @@ class DocumentTest extends TestCase
 
     public function testPrependChild()
     {
-        $document = new Document(
+        $document = Document::of(
             Type::of('html'),
             Sequence::of(
                 Element::of('foo'),
@@ -134,7 +134,7 @@ class DocumentTest extends TestCase
 
     public function testAopendChild()
     {
-        $document = new Document(
+        $document = Document::of(
             Type::of('html'),
             Sequence::of(
                 Element::of('foo'),

@@ -18,6 +18,10 @@ use Innmind\Immutable\Maybe;
  */
 final class BaseTranslator implements NodeTranslator
 {
+    private function __construct()
+    {
+    }
+
     public function __invoke(
         \DOMNode $node,
         Translator $translate,
@@ -34,11 +38,19 @@ final class BaseTranslator implements NodeTranslator
                     static fn($attributes) => $attributes
                         ->find(static fn($attribute) => $attribute->name() === 'href')
                         ->flatMap(static fn($href) => Url::maybe($href->value()))
-                        ->map(static fn($href) => new Base(
+                        ->map(static fn($href) => Base::of(
                             $href,
                             $attributes,
                         )),
                 ),
             );
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function of(): self
+    {
+        return new self;
     }
 }

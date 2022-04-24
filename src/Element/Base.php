@@ -28,12 +28,20 @@ final class Base implements Element
     /**
      * @param Set<Attribute>|null $attributes
      */
-    public function __construct(
-        Url $href,
-        Set $attributes = null,
-    ) {
+    private function __construct(Url $href, Set $attributes = null)
+    {
         $this->element = SelfClosingElement::of('base', $attributes);
         $this->href = $href;
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @param Set<Attribute>|null $attributes
+     */
+    public static function of(Url $href, Set $attributes = null): self
+    {
+        return new self($href, $attributes);
     }
 
     public function href(): Url

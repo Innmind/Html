@@ -20,7 +20,7 @@ class LinkTranslatorTest extends TestCase
     {
         $this->assertInstanceOf(
             NodeTranslator::class,
-            new LinkTranslator,
+            LinkTranslator::of(),
         );
     }
 
@@ -29,7 +29,7 @@ class LinkTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<body></body>');
 
-        $result = (new LinkTranslator)(
+        $result = LinkTranslator::of()(
             $dom->childNodes->item(1),
             Translator::of(
                 NodeTranslators::defaults(),
@@ -47,7 +47,7 @@ class LinkTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<link href="/" rel="next" hreflang="fr"/>');
 
-        $link = (new LinkTranslator)(
+        $link = LinkTranslator::of()(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
             Translator::of(
                 NodeTranslators::defaults(),
@@ -72,7 +72,7 @@ class LinkTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<link href="/" hreflang="fr"/>');
 
-        $link = (new LinkTranslator)(
+        $link = LinkTranslator::of()(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
             Translator::of(
                 NodeTranslators::defaults(),
@@ -97,7 +97,7 @@ class LinkTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<link/>');
 
-        $result = (new LinkTranslator)(
+        $result = LinkTranslator::of()(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
             Translator::of(
                 NodeTranslators::defaults(),
