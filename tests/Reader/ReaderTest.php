@@ -50,24 +50,14 @@ HTML;
             static fn() => null,
         );
         $expected = <<<HTML
-<!DOCTYPE html>
-<html><head/><body>
-        foo
-    </body></html>
-HTML;
-
-        if (\PHP_OS === 'Darwin') {
-            // don't know why there is a difference between linux and macOS
-            $expected = <<<HTML
-            <!DOCTYPE html>
-            <html>
-                <head/>
-                <body>
-                    foo
-                </body>
-            </html>
-            HTML;
-        }
+        <!DOCTYPE html>
+        <html>
+            <head/>
+            <body>
+                foo
+            </body>
+        </html>
+        HTML;
 
         $this->assertInstanceOf(Document::class, $node);
         $this->assertSame($expected, $node->toString());
