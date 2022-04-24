@@ -3,29 +3,25 @@ declare(strict_types = 1);
 
 namespace Innmind\Html\Visitor;
 
-use Innmind\Html\Exception\{
-    ElementNotFound,
-    DomainException,
-};
+use Innmind\Html\Exception\ElementNotFound;
 use Innmind\Xml\{
     Node,
     Element as ElementInterface,
 };
-use Innmind\Immutable\Str;
 
 /**
  * @psalm-immutable
  */
 final class Element
 {
+    /** @var non-empty-string */
     private string $name;
 
+    /**
+     * @param non-empty-string $name
+     */
     private function __construct(string $name)
     {
-        if (Str::of($name)->empty()) {
-            throw new DomainException;
-        }
-
         $this->name = $name;
     }
 
@@ -62,6 +58,8 @@ final class Element
 
     /**
      * @psalm-pure
+     *
+     * @param non-empty-string $name
      */
     public static function of(string $name): self
     {

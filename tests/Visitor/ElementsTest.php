@@ -6,7 +6,6 @@ namespace Tests\Innmind\Html\Visitor;
 use Innmind\Html\{
     Visitor\Elements,
     Reader\Reader,
-    Exception\DomainException,
 };
 use Innmind\Xml\{
     Element as ElementInterface,
@@ -24,13 +23,6 @@ class ElementsTest extends TestCase
     public function setUp(): void
     {
         $this->read = Reader::default();
-    }
-
-    public function testThrowWhenEmptyTagName()
-    {
-        $this->expectException(DomainException::class);
-
-        Elements::of('');
     }
 
     public function testExtractElement()

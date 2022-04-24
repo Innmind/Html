@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Html\Element;
 
-use Innmind\Html\{
-    Element\Link,
-    Exception\DomainException,
-};
+use Innmind\Html\Element\Link;
 use Innmind\Xml\{
     Element,
     Attribute,
@@ -39,16 +36,6 @@ class LinkTest extends TestCase
                 Url::of('http://example.com'),
                 'foo',
             )->attributes()->empty(),
-        );
-    }
-
-    public function testThrowWhenEmptyRelationship()
-    {
-        $this->expectException(DomainException::class);
-
-        Link::of(
-            Url::of('http://example.com'),
-            '',
         );
     }
 }

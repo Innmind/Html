@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Html\Element;
 
-use Innmind\Html\Exception\DomainException;
 use Innmind\Xml\{
     Element\SelfClosingElement,
     Element,
@@ -13,7 +12,6 @@ use Innmind\Xml\{
 use Innmind\Url\Url;
 use Innmind\Immutable\{
     Set,
-    Str,
     Sequence,
     Maybe,
     Map,
@@ -26,17 +24,17 @@ final class Link implements Element
 {
     private SelfClosingElement $element;
     private Url $href;
+    /** @var non-empty-string */
     private string $relationship;
 
+    /**
+     * @param non-empty-string $relationship
+     */
     private function __construct(
         Url $href,
         string $relationship,
         SelfClosingElement $element,
     ) {
-        if (Str::of($relationship)->empty()) {
-            throw new DomainException;
-        }
-
         $this->element = $element;
         $this->href = $href;
         $this->relationship = $relationship;
@@ -45,6 +43,7 @@ final class Link implements Element
     /**
      * @psalm-pure
      *
+     * @param non-empty-string $relationship
      * @param Set<Attribute>|null $attributes
      */
     public static function of(
@@ -64,6 +63,9 @@ final class Link implements Element
         return $this->href;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function relationship(): string
     {
         return $this->relationship;

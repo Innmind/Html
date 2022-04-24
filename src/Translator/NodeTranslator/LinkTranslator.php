@@ -59,6 +59,7 @@ final class LinkTranslator implements NodeTranslator
      */
     private function build(Set $attributes): Maybe
     {
+        /** @var non-empty-string */
         $rel = $attributes
             ->find(static fn($attribute) => $attribute->name() === 'rel')
             ->map(static fn($rel) => $rel->value())
