@@ -4,18 +4,28 @@ declare(strict_types = 1);
 namespace Innmind\Html\Element;
 
 use Innmind\Xml\{
-    Element\Element,
+    Element,
     Node,
     Attribute,
 };
 use Innmind\Url\Url;
-use Innmind\Immutable\Set;
+use Innmind\Immutable\{
+    Set,
+    Sequence,
+    Maybe,
+    Map,
+};
 
-final class A extends Element
+/**
+ * @psalm-immutable
+ */
+final class A implements Element
 {
+    private Element\Element $element;
     private Url $href;
 
     /**
+     * @no-named-arguments
      * @param Set<Attribute>|null $attributes
      */
     public function __construct(
@@ -23,12 +33,94 @@ final class A extends Element
         Set $attributes = null,
         Node ...$children,
     ) {
-        parent::__construct('a', $attributes, ...$children);
+        $this->element = Element\Element::of(
+            'a',
+            $attributes,
+            Sequence::of(...$children),
+        );
         $this->href = $href;
     }
 
     public function href(): Url
     {
         return $this->href;
+    }
+
+    public function name(): string
+    {
+        return 'a';
+    }
+
+    public function attributes(): Map
+    {
+        return $this->element->attributes();
+    }
+
+    public function attribute(string $name): Maybe
+    {
+        return $this->element->attribute($name);
+    }
+
+    public function removeAttribute(string $name): self
+    {
+        $self = clone $this;
+        $self->element = $this->element->removeAttribute($name);
+
+        return $self;
+    }
+
+    public function addAttribute(Attribute $attribute): self
+    {
+        $self = clone $this;
+        $self->element = $this->element->addAttribute($attribute);
+
+        return $self;
+    }
+
+    public function children(): Sequence
+    {
+        return $this->element->children();
+    }
+
+    public function filterChild(callable $filter): self
+    {
+        $self = clone $this;
+        $self->element = $this->element->filterChild($filter);
+
+        return $self;
+    }
+
+    public function mapChild(callable $map): self
+    {
+        $self = clone $this;
+        $self->element = $this->element->mapChild($map);
+
+        return $self;
+    }
+
+    public function prependChild(Node $child): self
+    {
+        $self = clone $this;
+        $self->element = $this->element->prependChild($child);
+
+        return $self;
+    }
+
+    public function appendChild(Node $child): self
+    {
+        $self = clone $this;
+        $self->element = $this->element->appendChild($child);
+
+        return $self;
+    }
+
+    public function content(): string
+    {
+        return $this->element->content();
+    }
+
+    public function toString(): string
+    {
+        return $this->element->toString();
     }
 }

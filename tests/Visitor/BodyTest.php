@@ -12,6 +12,7 @@ use Innmind\Xml\{
     Element as ElementInterface,
     Element\Element,
 };
+use Innmind\Filesystem\File\Content;
 use Innmind\Stream\Readable\Stream;
 use PHPUnit\Framework\TestCase;
 
@@ -27,14 +28,17 @@ class BodyTest extends TestCase
     public function testExtractBody()
     {
         $node = ($this->read)(
-            new Stream(\fopen('fixtures/lemonde.html', 'r'))
+            Content\OfStream::of(Stream::of(\fopen('fixtures/lemonde.html', 'r'))),
+        )->match(
+            static fn($node) => $node,
+            static fn() => null,
         );
 
         $body = Visitor\Element::body()($node);
 
         $this->assertInstanceOf(ElementInterface::class, $body);
         $this->assertSame('body', $body->name());
-        $this->assertTrue($body->hasChildren());
+        $this->assertFalse($body->children()->empty());
         $this->assertFalse($body->attributes()->empty());
     }
 
@@ -42,6 +46,6 @@ class BodyTest extends TestCase
     {
         $this->expectException(ElementNotFound::class);
 
-        Visitor\Element::body()(new Element('head'));
+        Visitor\Element::body()(Element::of('head'));
     }
 }

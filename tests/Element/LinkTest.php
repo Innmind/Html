@@ -8,7 +8,7 @@ use Innmind\Html\{
     Exception\DomainException,
 };
 use Innmind\Xml\{
-    Element\SelfClosingElement,
+    Element,
     Attribute,
 };
 use Innmind\Url\Url;
@@ -20,11 +20,11 @@ class LinkTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            SelfClosingElement::class,
+            Element::class,
             $link = new Link(
                 $href = Url::of('http://example.com'),
                 'rel',
-                Set::of(Attribute::class),
+                Set::of(),
             ),
         );
         $this->assertSame('link', $link->name());

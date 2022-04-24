@@ -32,7 +32,7 @@ final class Elements
     public function __invoke(Node $node): Set
     {
         /** @var Set<Element> */
-        $elements = Set::of(Element::class);
+        $elements = Set::of();
 
         if (
             $node instanceof Element &&

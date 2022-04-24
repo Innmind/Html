@@ -3,12 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Html\Translator\NodeTranslator;
 
-use Innmind\Html\{
-    Exception\InvalidArgumentException,
-    Exception\MissingHrefAttribute,
-    Exception\InvalidLink,
-    Element\Link,
-};
+use Innmind\Html\Element\Link;
 use Innmind\Xml\{
     Translator\NodeTranslator,
     Translator\Translator,
@@ -16,46 +11,58 @@ use Innmind\Xml\{
     Attribute,
     Translator\NodeTranslator\Visitor\Attributes,
 };
-use Innmind\Url\{
-    Url,
-    Exception\Exception,
+use Innmind\Url\Url;
+use Innmind\Immutable\{
+    Set,
+    Maybe,
 };
 
+/**
+ * @psalm-immutable
+ */
 final class LinkTranslator implements NodeTranslator
 {
     public function __invoke(
         \DOMNode $node,
         Translator $translate,
-    ): Node {
-        if (
-            !$node instanceof \DOMElement ||
-            $node->tagName !== 'link'
-        ) {
-            throw new InvalidArgumentException;
-        }
-
-        $attributes = (new Attributes)($node);
-        $map = $attributes->toMapOf(
-            'string',
-            Attribute::class,
-            static function(Attribute $attribute): \Generator {
-                yield $attribute->name() => $attribute;
-            },
-        );
-
-        if (!$map->contains('href')) {
-            throw new MissingHrefAttribute;
-        }
-
-        try {
-            return new Link(
-                Url::of($map->get('href')->value()),
-                $map->contains('rel') ?
-                    $map->get('rel')->value() : 'related',
-                $attributes,
+    ): Maybe {
+        /**
+         * @psalm-suppress ArgumentTypeCoercion
+         * @var Maybe<Node>
+         */
+        return Maybe::just($node)
+            ->filter(static fn($node) => $node instanceof \DOMElement)
+            ->filter(static fn(\DOMElement $node) => $node->tagName === 'link')
+            ->flatMap(
+                fn(\DOMElement $node) => Attributes::of()($node)->flatMap(
+                    $this->build(...),
+                ),
             );
-        } catch (Exception $e) {
-            throw new InvalidLink;
-        }
+    }
+
+    /**
+     * @param Set<Attribute> $attributes
+     *
+     * @return Maybe<Link>
+     */
+    private function build(Set $attributes): Maybe
+    {
+        $rel = $attributes
+            ->find(static fn($attribute) => $attribute->name() === 'rel')
+            ->map(static fn($rel) => $rel->value())
+            ->filter(static fn($rel) => $rel !== '')
+            ->match(
+                static fn($rel) => $rel,
+                static fn() => 'related',
+            );
+
+        return $attributes
+            ->find(static fn($attribute) => $attribute->name() === 'href')
+            ->flatMap(static fn($href) => Url::maybe($href->value()))
+            ->map(static fn($href) => new Link(
+                $href,
+                $rel,
+                $attributes,
+            ));
     }
 }

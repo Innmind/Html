@@ -3,11 +3,7 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Html\Translator\NodeTranslator;
 
-use Innmind\Html\{
-    Translator\NodeTranslator\ElementTranslator,
-    Exception\Exception,
-    Exception\InvalidArgumentException,
-};
+use Innmind\Html\Translator\NodeTranslator\ElementTranslator;
 use Innmind\Xml\{
     Element\SelfClosingElement,
     Translator\Translator,
@@ -16,7 +12,10 @@ use Innmind\Xml\{
     Translator\NodeTranslator,
     Node,
 };
-use Innmind\Immutable\Map;
+use Innmind\Immutable\{
+    Map,
+    Maybe,
+};
 use PHPUnit\Framework\TestCase;
 
 class ElementTranslatorTest extends TestCase
@@ -28,10 +27,11 @@ class ElementTranslatorTest extends TestCase
     public function setUp(): void
     {
         $this->translate = new ElementTranslator(
-            new GenericTranslator,
-            Map::of('string', NodeTranslator::class)
-                ('bar', $this->bar = $this->createMock(NodeTranslator::class))
-                ('baz', $this->baz = $this->createMock(NodeTranslator::class)),
+            GenericTranslator::of(),
+            Map::of(
+                ['bar', $this->bar = $this->createMock(NodeTranslator::class)],
+                ['baz', $this->baz = $this->createMock(NodeTranslator::class)],
+            ),
         );
     }
 
@@ -43,30 +43,22 @@ class ElementTranslatorTest extends TestCase
         );
     }
 
-    public function testThrowWhenInvalidTranslators()
+    public function testReturnNothingWhenInvalidNode()
     {
-        $this->expectException(\TypeError::class);
-        $this->expectExceptionMessage('Argument 2 must be of type Map<string, Innmind\Xml\Translator\NodeTranslator>');
-
-        new ElementTranslator(
-            new GenericTranslator,
-            Map::of('int', NodeTranslator::class),
-        );
-    }
-
-    public function testThrowWhenInvalidNode()
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        (new ElementTranslator(
-            new GenericTranslator,
-            Map::of('string', NodeTranslator::class),
+        $result = (new ElementTranslator(
+            GenericTranslator::of(),
+            Map::of(),
         ))(
             new \DOMNode,
-            new Translator(
+            Translator::of(
                 NodeTranslators::defaults(),
             )
         );
+
+        $this->assertNull($result->match(
+            static fn($node) => $node,
+            static fn() => null,
+        ));
     }
 
     public function testTranslateToGenericWhenNoSubTranslatorFound()
@@ -76,15 +68,18 @@ class ElementTranslatorTest extends TestCase
 
         $node = ($this->translate)(
             $dom->childNodes->item(0),
-            new Translator(
+            Translator::of(
                 NodeTranslators::defaults(),
             )
+        )->match(
+            static fn($node) => $node,
+            static fn() => null,
         );
 
         $this->assertInstanceOf(SelfClosingElement::class, $node);
     }
 
-    public function testTranslateToGenericWhenSubTranslatorThrowsAnException()
+    public function testTranslateToGenericWhenSubTranslatorReturnsNothing()
     {
         $dom = new \DOMDocument;
         $dom->loadXML('<bar/>');
@@ -93,18 +88,16 @@ class ElementTranslatorTest extends TestCase
             ->expects($this->once())
             ->method('__invoke')
             ->with($dom->childNodes->item(0))
-            ->will(
-                $this->throwException(
-                    new class extends \Exception implements Exception {
-                    },
-                ),
-            );
+            ->willReturn(Maybe::nothing());
 
         $node = ($this->translate)(
             $dom->childNodes->item(0),
-            new Translator(
+            Translator::of(
                 NodeTranslators::defaults(),
             )
+        )->match(
+            static fn($node) => $node,
+            static fn() => null,
         );
 
         $this->assertInstanceOf(SelfClosingElement::class, $node);
@@ -119,13 +112,16 @@ class ElementTranslatorTest extends TestCase
             ->expects($this->once())
             ->method('__invoke')
             ->with($dom->childNodes->item(0))
-            ->willReturn($expected = $this->createMock(Node::class));
+            ->willReturn(Maybe::just($expected = $this->createMock(Node::class)));
 
         $node = ($this->translate)(
             $dom->childNodes->item(0),
-            new Translator(
+            Translator::of(
                 NodeTranslators::defaults(),
             )
+        )->match(
+            static fn($node) => $node,
+            static fn() => null,
         );
 
         $this->assertSame($expected, $node);

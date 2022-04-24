@@ -12,6 +12,7 @@ use Innmind\Xml\{
     Element as ElementInterface,
     Element\Element,
 };
+use Innmind\Filesystem\File\Content;
 use Innmind\Stream\Readable\Stream;
 use Innmind\Immutable\Set;
 use PHPUnit\Framework\TestCase;
@@ -35,22 +36,23 @@ class ElementsTest extends TestCase
     public function testExtractElement()
     {
         $node = ($this->read)(
-            new Stream(\fopen('fixtures/lemonde.html', 'r'))
+            Content\OfStream::of(Stream::of(\fopen('fixtures/lemonde.html', 'r'))),
+        )->match(
+            static fn($node) => $node,
+            static fn() => null,
         );
 
         $h1s = (new Elements('h1'))($node);
 
         $this->assertInstanceOf(Set::class, $h1s);
-        $this->assertSame(ElementInterface::class, $h1s->type());
         $this->assertCount(26, $h1s);
     }
 
     public function testEmptySetWhenNoElementFound()
     {
-        $elements = (new Elements('foo'))(new Element('whatever'));
+        $elements = (new Elements('foo'))(Element::of('whatever'));
 
         $this->assertInstanceOf(Set::class, $elements);
-        $this->assertSame(ElementInterface::class, $elements->type());
         $this->assertCount(0, $elements);
     }
 }

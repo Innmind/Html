@@ -3,52 +3,48 @@ declare(strict_types = 1);
 
 namespace Innmind\Html\Translator\NodeTranslator;
 
-use Innmind\Html\{
-    Exception\InvalidArgumentException,
-    Exception\MissingHrefAttribute,
-    Element\A,
-};
+use Innmind\Html\Element\A;
 use Innmind\Xml\{
     Translator\NodeTranslator,
     Translator\Translator,
     Node,
-    Attribute,
     Translator\NodeTranslator\Visitor\Attributes,
     Translator\NodeTranslator\Visitor\Children,
 };
 use Innmind\Url\Url;
-use function Innmind\Immutable\unwrap;
+use Innmind\Immutable\Maybe;
 
+/**
+ * @psalm-immutable
+ */
 final class ATranslator implements NodeTranslator
 {
     public function __invoke(
         \DOMNode $node,
         Translator $translate,
-    ): Node {
-        if (
-            !$node instanceof \DOMElement ||
-            $node->tagName !== 'a'
-        ) {
-            throw new InvalidArgumentException;
-        }
-
-        $attributes = (new Attributes)($node);
-        $map = $attributes->toMapOf(
-            'string',
-            Attribute::class,
-            static function(Attribute $attribute): \Generator {
-                yield $attribute->name() => $attribute;
-            },
-        );
-
-        if (!$map->contains('href')) {
-            throw new MissingHrefAttribute;
-        }
-
-        return new A(
-            Url::of($map->get('href')->value()),
-            $attributes,
-            ...unwrap((new Children($translate))($node)),
-        );
+    ): Maybe {
+        /**
+         * @psalm-suppress ArgumentTypeCoercion
+         * @var Maybe<Node>
+         */
+        return Maybe::just($node)
+            ->filter(static fn($node) => $node instanceof \DOMElement)
+            ->filter(static fn(\DOMElement $node) => $node->tagName === 'a')
+            ->flatMap(
+                static fn(\DOMElement $node) => Attributes::of()($node)->flatMap(
+                    static fn($attributes) => $attributes
+                        ->find(static fn($attribute) => $attribute->name() === 'href')
+                        ->flatMap(static fn($href) => Url::maybe($href->value()))
+                        ->flatMap(
+                            static fn($href) => Children::of($translate)($node)->map(
+                                static fn($children) => new A(
+                                    $href,
+                                    $attributes,
+                                    ...$children->toList(),
+                                ),
+                            ),
+                        ),
+                ),
+            );
     }
 }

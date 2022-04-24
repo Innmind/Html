@@ -3,10 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Html\Translator\NodeTranslator;
 
-use Innmind\Html\Exception\{
-    InvalidArgumentException,
-    Exception,
-};
 use Innmind\Xml\{
     Translator\NodeTranslator,
     Translator\Translator,
@@ -15,10 +11,12 @@ use Innmind\Xml\{
 };
 use Innmind\Immutable\{
     Map,
-    Exception\ElementNotFound,
+    Maybe,
 };
-use function Innmind\Immutable\assertMap;
 
+/**
+ * @psalm-immutable
+ */
 final class ElementTranslator implements NodeTranslator
 {
     private GenericTranslator $genericTranslator;
@@ -32,8 +30,6 @@ final class ElementTranslator implements NodeTranslator
         GenericTranslator $genericTranslator,
         Map $translators,
     ) {
-        assertMap('string', NodeTranslator::class, $translators, 2);
-
         $this->genericTranslator = $genericTranslator;
         $this->translators = $translators;
     }
@@ -41,21 +37,12 @@ final class ElementTranslator implements NodeTranslator
     public function __invoke(
         \DOMNode $node,
         Translator $translate,
-    ): Node {
-        if (!$node instanceof \DOMElement) {
-            throw new InvalidArgumentException;
-        }
-
-        try {
-            return $this
-                ->translators
-                ->get($node->tagName)($node, $translate);
-        } catch (ElementNotFound $e) {
-            //pass
-        } catch (Exception $e) {
-            //pass
-        }
-
-        return ($this->genericTranslator)($node, $translate);
+    ): Maybe {
+        /** @psalm-suppress ArgumentTypeCoercion */
+        return Maybe::just($node)
+            ->filter(static fn($node) => $node instanceof \DOMElement)
+            ->flatMap(fn(\DOMElement $node) => $this->translators->get($node->tagName))
+            ->flatMap(static fn($translator) => $translator($node, $translate))
+            ->otherwise(fn() => ($this->genericTranslator)($node, $translate));
     }
 }

@@ -6,12 +6,12 @@ namespace Tests\Innmind\Html\Reader;
 use Innmind\Html\{
     Reader\Reader,
     Node\Document,
-    Exception\RuntimeException,
 };
 use Innmind\Xml\{
     Reader as ReaderInterface,
     Node\Document as XmlDocument,
 };
+use Innmind\Filesystem\File\Content;
 use Innmind\Stream\Readable\Stream;
 use PHPUnit\Framework\TestCase;
 
@@ -44,7 +44,10 @@ class ReaderTest extends TestCase
 </html>
 HTML;
         $node = ($this->read)(
-            Stream::ofContent($html),
+            Content\OfStream::of(Stream::ofContent($html)),
+        )->match(
+            static fn($node) => $node,
+            static fn() => null,
         );
         $expected = <<<HTML
 <!DOCTYPE html>
@@ -73,9 +76,12 @@ HTML;
     public function testReadFullPage()
     {
         $node = ($this->read)(
-            new Stream(
+            Content\OfStream::of(Stream::of(
                 \fopen('fixtures/lemonde.html', 'r'),
-            )
+            )),
+        )->match(
+            static fn($node) => $node,
+            static fn() => null,
         );
 
         $this->assertInstanceOf(Document::class, $node);
@@ -83,19 +89,24 @@ HTML;
 
     public function testReadScreenOnline()
     {
-        $node = ($this->read)(new Stream(\fopen(
+        $node = ($this->read)(Content\OfStream::of(Stream::of(\fopen(
             'fixtures/www.screenonline.org.uk_tv_id_560180_.html',
             'r',
-        )));
+        ))))->match(
+            static fn($node) => $node,
+            static fn() => null,
+        );
 
         $this->assertInstanceOf(XmlDocument::class, $node);
     }
 
-    public function testThrowWhenEmptyStream()
+    public function testReturnNothingWhenEmptyStream()
     {
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('No html found');
-
-        ($this->read)(Stream::ofContent(''));
+        $this->assertNull(
+            ($this->read)(Content\OfStream::of(Stream::ofContent('')))->match(
+                static fn($node) => $node,
+                static fn() => null,
+            ),
+        );
     }
 }

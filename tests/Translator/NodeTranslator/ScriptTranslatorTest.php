@@ -6,7 +6,6 @@ namespace Tests\Innmind\Html\Translator\NodeTranslator;
 use Innmind\Html\{
     Translator\NodeTranslator\ScriptTranslator,
     Element\Script,
-    Exception\InvalidArgumentException,
 };
 use Innmind\Xml\Translator\{
     Translator,
@@ -25,19 +24,22 @@ class ScriptTranslatorTest extends TestCase
         );
     }
 
-    public function testThrowWhenNotExpectedElement()
+    public function testReturnNothingWhenNotExpectedElement()
     {
         $dom = new \DOMDocument;
         $dom->loadHTML('<body></body>');
 
-        $this->expectException(InvalidArgumentException::class);
-
-        (new ScriptTranslator)(
+        $result = (new ScriptTranslator)(
             $dom->childNodes->item(1),
-            new Translator(
+            Translator::of(
                 NodeTranslators::defaults(),
             )
         );
+
+        $this->assertNull($result->match(
+            static fn($node) => $node,
+            static fn() => null,
+        ));
     }
 
     public function testTranslate()
@@ -47,9 +49,12 @@ class ScriptTranslatorTest extends TestCase
 
         $script = (new ScriptTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new Translator(
+            Translator::of(
                 NodeTranslators::defaults(),
             )
+        )->match(
+            static fn($script) => $script,
+            static fn() => null,
         );
 
         $this->assertInstanceOf(Script::class, $script);
@@ -57,7 +62,10 @@ class ScriptTranslatorTest extends TestCase
         $this->assertCount(1, $script->attributes());
         $this->assertSame(
             'text/javascript',
-            $script->attributes()->get('type')->value(),
+            $script->attributes()->get('type')->match(
+                static fn($attribute) => $attribute->value(),
+                static fn() => null,
+            ),
         );
         $this->assertCount(1, $script->children());
     }
@@ -69,9 +77,12 @@ class ScriptTranslatorTest extends TestCase
 
         $script = (new ScriptTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new Translator(
+            Translator::of(
                 NodeTranslators::defaults(),
             )
+        )->match(
+            static fn($script) => $script,
+            static fn() => null,
         );
 
         $this->assertInstanceOf(Script::class, $script);

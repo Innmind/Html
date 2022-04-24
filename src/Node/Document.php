@@ -3,27 +3,31 @@ declare(strict_types = 1);
 
 namespace Innmind\Html\Node;
 
-use Innmind\Html\Exception\OutOfBoundsException;
 use Innmind\Xml\{
     Node,
     Node\Document\Type,
 };
-use Innmind\Immutable\Sequence;
-use function Innmind\Immutable\{
-    unwrap,
-    join,
+use Innmind\Immutable\{
+    Sequence,
+    Str,
 };
 
+/**
+ * @psalm-immutable
+ */
 final class Document implements Node
 {
     private Type $type;
     /** @var Sequence<Node> */
     private Sequence $children;
 
+    /**
+     * @no-named-arguments
+     */
     public function __construct(Type $type, Node ...$children)
     {
         $this->type = $type;
-        $this->children = Sequence::of(Node::class, ...$children);
+        $this->children = Sequence::of(...$children);
     }
 
     public function type(): Type
@@ -41,33 +45,18 @@ final class Document implements Node
         return !$this->children->empty();
     }
 
-    public function removeChild(int $position): Node
+    public function filterChild(callable $filter): self
     {
-        if (!$this->children->indices()->contains($position)) {
-            throw new OutOfBoundsException((string) $position);
-        }
-
         $document = clone $this;
-        $document->children = $this
-            ->children
-            ->take($position)
-            ->append($this->children->drop($position + 1));
+        $document->children = $this->children->filter($filter);
 
         return $document;
     }
 
-    public function replaceChild(int $position, Node $child): Node
+    public function mapChild(callable $map): self
     {
-        if (!$this->children->indices()->contains($position)) {
-            throw new OutOfBoundsException((string) $position);
-        }
-
         $document = clone $this;
-        $document->children = $this
-            ->children
-            ->take($position)
-            ->add($child)
-            ->append($this->children->drop($position + 1));
+        $document->children = $this->children->map($map);
 
         return $document;
     }
@@ -76,9 +65,8 @@ final class Document implements Node
     {
         $document = clone $this;
         $document->children = Sequence::of(
-            Node::class,
             $child,
-            ...unwrap($this->children),
+            ...$this->children->toList(),
         );
 
         return $document;
@@ -94,12 +82,11 @@ final class Document implements Node
 
     public function content(): string
     {
-        $children = $this->children->mapTo(
-            'string',
+        $children = $this->children->map(
             static fn(Node $child): string => $child->toString(),
         );
 
-        return join('', $children)->toString();
+        return Str::of('')->join($children)->toString();
     }
 
     public function toString(): string

@@ -12,6 +12,7 @@ use Innmind\Xml\{
     Element as ElementInterface,
     Element\Element,
 };
+use Innmind\Filesystem\File\Content;
 use Innmind\Stream\Readable\Stream;
 use PHPUnit\Framework\TestCase;
 
@@ -27,14 +28,17 @@ class HeadTest extends TestCase
     public function testExtractHead()
     {
         $node = ($this->read)(
-            new Stream(\fopen('fixtures/lemonde.html', 'r'))
+            Content\OfStream::of(Stream::of(\fopen('fixtures/lemonde.html', 'r'))),
+        )->match(
+            static fn($node) => $node,
+            static fn() => null,
         );
 
         $head = Visitor\Element::head()($node);
 
         $this->assertInstanceOf(ElementInterface::class, $head);
         $this->assertSame('head', $head->name());
-        $this->assertTrue($head->hasChildren());
+        $this->assertFalse($head->children()->empty());
         $this->assertTrue($head->attributes()->empty());
     }
 
@@ -42,6 +46,6 @@ class HeadTest extends TestCase
     {
         $this->expectException(ElementNotFound::class);
 
-        Visitor\Element::head()(new Element('body'));
+        Visitor\Element::head()(Element::of('body'));
     }
 }

@@ -6,7 +6,6 @@ namespace Tests\Innmind\Html\Translator\NodeTranslator;
 use Innmind\Html\{
     Translator\NodeTranslator\DocumentTranslator,
     Node\Document,
-    Exception\InvalidArgumentException,
 };
 use Innmind\Xml\{
     Translator\NodeTranslator,
@@ -32,7 +31,10 @@ class DocumentTranslatorTest extends TestCase
 
         $node = (new DocumentTranslator)(
             $document,
-            new Translator(NodeTranslators::defaults())
+            Translator::of(NodeTranslators::defaults())
+        )->match(
+            static fn($node) => $node,
+            static fn() => null,
         );
 
         $this->assertInstanceOf(Document::class, $node);
@@ -48,7 +50,10 @@ class DocumentTranslatorTest extends TestCase
 
         $node = (new DocumentTranslator)(
             $document,
-            new Translator(NodeTranslators::defaults())
+            Translator::of(NodeTranslators::defaults())
+        )->match(
+            static fn($node) => $node,
+            static fn() => null,
         );
 
         $this->assertSame(
@@ -64,22 +69,28 @@ class DocumentTranslatorTest extends TestCase
 
         $node = (new DocumentTranslator)(
             $document,
-            new Translator(NodeTranslators::defaults())
+            Translator::of(NodeTranslators::defaults())
+        )->match(
+            static fn($node) => $node,
+            static fn() => null,
         );
 
-        $this->assertFalse($node->hasChildren());
+        $this->assertTrue($node->children()->empty());
     }
 
-    public function testThrowWhenInvalidNode()
+    public function testReturnNothingWhenInvalidNode()
     {
         $document = new \DOMDocument;
         $document->loadXML('<foo></foo>');
 
-        $this->expectException(InvalidArgumentException::class);
-
-        (new DocumentTranslator)(
+        $result = (new DocumentTranslator)(
             $document->childNodes->item(0),
-            new Translator(NodeTranslators::defaults())
+            Translator::of(NodeTranslators::defaults())
         );
+
+        $this->assertNull($result->match(
+            static fn($node) => $node,
+            static fn() => null,
+        ));
     }
 }

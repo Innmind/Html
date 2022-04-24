@@ -6,18 +6,108 @@ namespace Innmind\Html\Element;
 use Innmind\Xml\{
     Node,
     Attribute,
-    Element\Element,
+    Element,
     Node\Text,
 };
-use Innmind\Immutable\Set;
+use Innmind\Immutable\{
+    Set,
+    Sequence,
+    Maybe,
+    Map,
+};
 
-final class Script extends Element
+/**
+ * @psalm-immutable
+ */
+final class Script implements Element
 {
+    private Element\Element $element;
+
     /**
      * @param Set<Attribute>|null $attributes
      */
     public function __construct(Text $text, Set $attributes = null)
     {
-        parent::__construct('script', $attributes, $text);
+        /** @var Sequence<Node> */
+        $children = Sequence::of($text);
+        $this->element = Element\Element::of('script', $attributes, $children);
+    }
+
+    public function name(): string
+    {
+        return 'script';
+    }
+
+    public function attributes(): Map
+    {
+        return $this->element->attributes();
+    }
+
+    public function attribute(string $name): Maybe
+    {
+        return $this->element->attribute($name);
+    }
+
+    public function removeAttribute(string $name): self
+    {
+        $self = clone $this;
+        $self->element = $this->element->removeAttribute($name);
+
+        return $self;
+    }
+
+    public function addAttribute(Attribute $attribute): self
+    {
+        $self = clone $this;
+        $self->element = $this->element->addAttribute($attribute);
+
+        return $self;
+    }
+
+    public function children(): Sequence
+    {
+        return $this->element->children();
+    }
+
+    public function filterChild(callable $filter): self
+    {
+        $self = clone $this;
+        $self->element = $this->element->filterChild($filter);
+
+        return $self;
+    }
+
+    public function mapChild(callable $map): self
+    {
+        $self = clone $this;
+        $self->element = $this->element->mapChild($map);
+
+        return $self;
+    }
+
+    public function prependChild(Node $child): self
+    {
+        $self = clone $this;
+        $self->element = $this->element->prependChild($child);
+
+        return $self;
+    }
+
+    public function appendChild(Node $child): self
+    {
+        $self = clone $this;
+        $self->element = $this->element->appendChild($child);
+
+        return $self;
+    }
+
+    public function content(): string
+    {
+        return $this->element->content();
+    }
+
+    public function toString(): string
+    {
+        return $this->element->toString();
     }
 }

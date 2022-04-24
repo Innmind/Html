@@ -6,8 +6,6 @@ namespace Tests\Innmind\Html\Translator\NodeTranslator;
 use Innmind\Html\{
     Translator\NodeTranslator\LinkTranslator,
     Element\Link,
-    Exception\InvalidArgumentException,
-    Exception\MissingHrefAttribute,
 };
 use Innmind\Xml\Translator\{
     Translator,
@@ -26,19 +24,22 @@ class LinkTranslatorTest extends TestCase
         );
     }
 
-    public function testThrowWhenNotExpectedElement()
+    public function testReturnNothingWhenNotExpectedElement()
     {
         $dom = new \DOMDocument;
         $dom->loadHTML('<body></body>');
 
-        $this->expectException(InvalidArgumentException::class);
-
-        (new LinkTranslator)(
+        $result = (new LinkTranslator)(
             $dom->childNodes->item(1),
-            new Translator(
+            Translator::of(
                 NodeTranslators::defaults(),
             )
         );
+
+        $this->assertNull($result->match(
+            static fn($node) => $node,
+            static fn() => null,
+        ));
     }
 
     public function testTranslate()
@@ -48,16 +49,22 @@ class LinkTranslatorTest extends TestCase
 
         $link = (new LinkTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new Translator(
+            Translator::of(
                 NodeTranslators::defaults(),
             )
+        )->match(
+            static fn($link) => $link,
+            static fn() => null,
         );
 
         $this->assertInstanceOf(Link::class, $link);
         $this->assertSame('/', $link->href()->toString());
         $this->assertSame('next', $link->relationship());
         $this->assertCount(3, $link->attributes());
-        $this->assertSame('fr', $link->attributes()->get('hreflang')->value());
+        $this->assertSame('fr', $link->attributes()->get('hreflang')->match(
+            static fn($attribute) => $attribute->value(),
+            static fn() => null,
+        ));
     }
 
     public function testTranslateWithoutRelationship()
@@ -67,30 +74,39 @@ class LinkTranslatorTest extends TestCase
 
         $link = (new LinkTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new Translator(
+            Translator::of(
                 NodeTranslators::defaults(),
             )
+        )->match(
+            static fn($link) => $link,
+            static fn() => null,
         );
 
         $this->assertInstanceOf(Link::class, $link);
         $this->assertSame('/', $link->href()->toString());
         $this->assertSame('related', $link->relationship());
         $this->assertCount(2, $link->attributes());
-        $this->assertSame('fr', $link->attributes()->get('hreflang')->value());
+        $this->assertSame('fr', $link->attributes()->get('hreflang')->match(
+            static fn($attribute) => $attribute->value(),
+            static fn() => null,
+        ));
     }
 
-    public function testThrowWhenMissingHrefAttribute()
+    public function testReturnNothingWhenMissingHrefAttribute()
     {
         $dom = new \DOMDocument;
         $dom->loadHTML('<link/>');
 
-        $this->expectException(MissingHrefAttribute::class);
-
-        (new LinkTranslator)(
+        $result = (new LinkTranslator)(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new Translator(
+            Translator::of(
                 NodeTranslators::defaults(),
             )
         );
+
+        $this->assertNull($result->match(
+            static fn($node) => $node,
+            static fn() => null,
+        ));
     }
 }

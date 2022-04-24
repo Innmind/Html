@@ -13,6 +13,7 @@ use Innmind\Xml\{
     Element as ElementInterface,
     Element\Element,
 };
+use Innmind\Filesystem\File\Content;
 use Innmind\Stream\Readable\Stream;
 use PHPUnit\Framework\TestCase;
 
@@ -35,14 +36,17 @@ class ElementTest extends TestCase
     public function testExtractElement()
     {
         $node = ($this->read)(
-            new Stream(\fopen('fixtures/lemonde.html', 'r'))
+            Content\OfStream::of(Stream::of(\fopen('fixtures/lemonde.html', 'r'))),
+        )->match(
+            static fn($node) => $node,
+            static fn() => null,
         );
 
         $h1 = (new ElementFinder('h1'))($node);
 
         $this->assertInstanceOf(ElementInterface::class, $h1);
         $this->assertSame('h1', $h1->name());
-        $this->assertTrue($h1->hasChildren());
+        $this->assertFalse($h1->children()->empty());
         $this->assertFalse($h1->attributes()->empty());
     }
 
@@ -50,6 +54,6 @@ class ElementTest extends TestCase
     {
         $this->expectException(ElementNotFound::class);
 
-        (new ElementFinder('foo'))(new Element('whatever'));
+        (new ElementFinder('foo'))(Element::of('whatever'));
     }
 }

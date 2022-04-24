@@ -3,11 +3,7 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Html\Node;
 
-use Innmind\Html\{
-    Node\Document,
-    Exception\InvalidArgumentException,
-    Exception\OutOfBoundsException,
-};
+use Innmind\Html\Node\Document;
 use Innmind\Xml\{
     Node,
     Node\Document\Type,
@@ -23,13 +19,13 @@ class DocumentTest extends TestCase
     {
         $this->assertInstanceOf(
             Node::class,
-            new Document(new Type('html')),
+            new Document(Type::of('html')),
         );
     }
 
     public function testType()
     {
-        $type = new Type('html');
+        $type = Type::of('html');
 
         $this->assertSame(
             $type,
@@ -39,32 +35,34 @@ class DocumentTest extends TestCase
 
     public function testWithoutChildren()
     {
-        $document = new Document(new Type('html'));
+        $document = new Document(Type::of('html'));
 
         $this->assertInstanceOf(Sequence::class, $document->children());
-        $this->assertSame(Node::class, $document->children()->type());
-        $this->assertFalse($document->hasChildren());
+        $this->assertTrue($document->children()->empty());
     }
 
     public function testWithChildren()
     {
         $document = new Document(
-            new Type('html'),
+            Type::of('html'),
             $child = $this->createMock(Node::class),
         );
 
-        $this->assertSame($child, $document->children()->first());
-        $this->assertTrue($document->hasChildren());
+        $this->assertSame($child, $document->children()->first()->match(
+            static fn($node) => $node,
+            static fn() => null,
+        ));
+        $this->assertFalse($document->children()->empty());
     }
 
     public function testContent()
     {
         $document = new Document(
-            new Type('html'),
-            new Element(
+            Type::of('html'),
+            Element::of(
                 'html',
                 null,
-                new Text('wat'),
+                Sequence::of(Text::of('wat')),
             ),
         );
 
@@ -74,11 +72,11 @@ class DocumentTest extends TestCase
     public function testCast()
     {
         $document = new Document(
-            new Type('html'),
-            new Element(
+            Type::of('html'),
+            Element::of(
                 'html',
                 null,
-                new Text('wat'),
+                Sequence::of(Text::of('wat')),
             ),
         );
 
@@ -88,100 +86,13 @@ class DocumentTest extends TestCase
         );
     }
 
-    public function testRemoveChild()
-    {
-        $document = new Document(
-            new Type('html'),
-            new Element('foo'),
-            new Element('bar'),
-            new Element('baz'),
-        );
-
-        $document2 = $document->removeChild(1);
-
-        $this->assertNotSame($document, $document2);
-        $this->assertInstanceOf(Document::class, $document2);
-        $this->assertSame($document->type(), $document2->type());
-        $this->assertCount(3, $document->children());
-        $this->assertCount(2, $document2->children());
-        $this->assertSame(
-            $document->children()->get(0),
-            $document2->children()->get(0),
-        );
-        $this->assertSame(
-            $document->children()->get(2),
-            $document2->children()->get(1),
-        );
-    }
-
-    public function testThrowWhenRemovingUnknownChild()
-    {
-        $this->expectException(OutOfBoundsException::class);
-
-        (new Document(
-            new Type('html'),
-            new Element('foo'),
-            new Element('bar'),
-            new Element('baz'),
-        ))->removeChild(3);
-    }
-
-    public function testReplaceChild()
-    {
-        $document = new Document(
-            new Type('html'),
-            new Element('foo'),
-            new Element('bar'),
-            new Element('baz'),
-        );
-
-        $document2 = $document->replaceChild(
-            1,
-            $node = $this->createMock(Node::class),
-        );
-
-        $this->assertNotSame($document, $document2);
-        $this->assertInstanceOf(Document::class, $document2);
-        $this->assertSame($document->type(), $document2->type());
-        $this->assertCount(3, $document->children());
-        $this->assertCount(3, $document2->children());
-        $this->assertSame(
-            $document->children()->get(0),
-            $document2->children()->get(0),
-        );
-        $this->assertNotSame(
-            $document->children()->get(1),
-            $document2->children()->get(1),
-        );
-        $this->assertSame($node, $document2->children()->get(1));
-        $this->assertSame(
-            $document->children()->get(2),
-            $document2->children()->get(2),
-        );
-    }
-
-    public function testThrowWhenReplacingUnknownChild()
-    {
-        $this->expectException(OutOfBoundsException::class);
-
-        (new Document(
-            new Type('html'),
-            new Element('foo'),
-            new Element('bar'),
-            new Element('baz'),
-        ))->replaceChild(
-            3,
-            $this->createMock(Node::class),
-        );
-    }
-
     public function testPrependChild()
     {
         $document = new Document(
-            new Type('html'),
-            new Element('foo'),
-            new Element('bar'),
-            new Element('baz'),
+            Type::of('html'),
+            Element::of('foo'),
+            Element::of('bar'),
+            Element::of('baz'),
         );
 
         $document2 = $document->prependChild(
@@ -196,17 +107,20 @@ class DocumentTest extends TestCase
         $this->assertCount(4, $document2->children());
         $this->assertSame(
             $node,
-            $document2->children()->get(0),
+            $document2->children()->get(0)->match(
+                static fn($node) => $node,
+                static fn() => null,
+            ),
         );
-        $this->assertSame(
+        $this->assertEquals(
             $document->children()->get(0),
             $document2->children()->get(1),
         );
-        $this->assertSame(
+        $this->assertEquals(
             $document->children()->get(1),
             $document2->children()->get(2),
         );
-        $this->assertSame(
+        $this->assertEquals(
             $document->children()->get(2),
             $document2->children()->get(3),
         );
@@ -215,10 +129,10 @@ class DocumentTest extends TestCase
     public function testAopendChild()
     {
         $document = new Document(
-            new Type('html'),
-            new Element('foo'),
-            new Element('bar'),
-            new Element('baz'),
+            Type::of('html'),
+            Element::of('foo'),
+            Element::of('bar'),
+            Element::of('baz'),
         );
 
         $document2 = $document->appendChild(
@@ -231,21 +145,24 @@ class DocumentTest extends TestCase
         $this->assertNotSame($document->children(), $document2->children());
         $this->assertCount(3, $document->children());
         $this->assertCount(4, $document2->children());
-        $this->assertSame(
+        $this->assertEquals(
             $document->children()->get(0),
             $document2->children()->get(0),
         );
-        $this->assertSame(
+        $this->assertEquals(
             $document->children()->get(1),
             $document2->children()->get(1),
         );
-        $this->assertSame(
+        $this->assertEquals(
             $document->children()->get(2),
             $document2->children()->get(2),
         );
         $this->assertSame(
             $node,
-            $document2->children()->get(3),
+            $document2->children()->get(3)->match(
+                static fn($node) => $node,
+                static fn() => null,
+            ),
         );
     }
 }

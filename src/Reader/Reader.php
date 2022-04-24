@@ -3,19 +3,20 @@ declare(strict_types = 1);
 
 namespace Innmind\Html\Reader;
 
-use Innmind\Html\{
-    Translator\NodeTranslators as HtmlNodeTranslators,
-    Exception\RuntimeException
-};
+use Innmind\Html\Translator\NodeTranslators as HtmlNodeTranslators;
 use Innmind\Xml\{
     Reader as ReaderInterface,
     Node,
     Translator\Translator,
     Translator\NodeTranslators,
 };
-use Innmind\Stream\Readable;
+use Innmind\Filesystem\File\Content;
+use Innmind\Immutable\Maybe;
 use Symfony\Component\DomCrawler\Crawler;
 
+/**
+ * @psalm-immutable
+ */
 final class Reader implements ReaderInterface
 {
     private Translator $translate;
@@ -25,12 +26,14 @@ final class Reader implements ReaderInterface
         $this->translate = $translate;
     }
 
-    public function __invoke(Readable $html): Node
+    public function __invoke(Content $html): Maybe
     {
+        /** @psalm-suppress ImpureMethodCall */
         $firstNode = (new Crawler($html->toString()))->getNode(0);
 
         if (!$firstNode instanceof \DOMNode) {
-            throw new RuntimeException('No html found');
+            /** @var Maybe<Node> */
+            return Maybe::nothing();
         }
 
         /** @psalm-suppress RedundantCondition */
@@ -49,7 +52,7 @@ final class Reader implements ReaderInterface
     public static function default(): self
     {
         return new self(
-            new Translator(
+            Translator::of(
                 NodeTranslators::defaults()->merge(
                     HtmlNodeTranslators::defaults(),
                 ),

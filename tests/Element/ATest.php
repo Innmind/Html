@@ -5,7 +5,7 @@ namespace Tests\Innmind\Html\Element;
 
 use Innmind\Html\Element\A;
 use Innmind\Xml\{
-    Element\Element,
+    Element,
     Attribute,
     Node,
 };
@@ -21,13 +21,16 @@ class ATest extends TestCase
             Element::class,
             $a = new A(
                 $href = Url::of('http://example.com'),
-                Set::of(Attribute::class),
+                Set::of(),
                 $child = $this->createMock(Node::class),
             ),
         );
         $this->assertSame('a', $a->name());
         $this->assertSame($href, $a->href());
-        $this->assertSame($child, $a->children()->first());
+        $this->assertSame($child, $a->children()->first()->match(
+            static fn($node) => $node,
+            static fn() => null,
+        ));
     }
 
     public function testWithoutAttributes()
@@ -39,8 +42,8 @@ class ATest extends TestCase
 
     public function testWithoutChildren()
     {
-        $this->assertFalse(
-            (new A(Url::of('http://example.com')))->hasChildren(),
+        $this->assertTrue(
+            (new A(Url::of('http://example.com')))->children()->empty(),
         );
     }
 }
