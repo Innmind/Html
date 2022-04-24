@@ -28,19 +28,16 @@ final class Link implements Element
     private Url $href;
     private string $relationship;
 
-    /**
-     * @param Set<Attribute>|null $attributes
-     */
     private function __construct(
         Url $href,
         string $relationship,
-        Set $attributes = null,
+        SelfClosingElement $element,
     ) {
         if (Str::of($relationship)->empty()) {
             throw new DomainException;
         }
 
-        $this->element = SelfClosingElement::of('link', $attributes);
+        $this->element = $element;
         $this->href = $href;
         $this->relationship = $relationship;
     }
@@ -55,7 +52,11 @@ final class Link implements Element
         string $relationship,
         Set $attributes = null,
     ): self {
-        return new self($href, $relationship, $attributes);
+        return new self(
+            $href,
+            $relationship,
+            SelfClosingElement::of('link', $attributes),
+        );
     }
 
     public function href(): Url
@@ -85,18 +86,20 @@ final class Link implements Element
 
     public function removeAttribute(string $name): self
     {
-        $self = clone $this;
-        $self->element = $this->element->removeAttribute($name);
-
-        return $self;
+        return new self(
+            $this->href,
+            $this->relationship,
+            $this->element->removeAttribute($name),
+        );
     }
 
     public function addAttribute(Attribute $attribute): self
     {
-        $self = clone $this;
-        $self->element = $this->element->addAttribute($attribute);
-
-        return $self;
+        return new self(
+            $this->href,
+            $this->relationship,
+            $this->element->addAttribute($attribute),
+        );
     }
 
     public function children(): Sequence
@@ -106,34 +109,38 @@ final class Link implements Element
 
     public function filterChild(callable $filter): self
     {
-        $self = clone $this;
-        $self->element = $this->element->filterChild($filter);
-
-        return $self;
+        return new self(
+            $this->href,
+            $this->relationship,
+            $this->element->filterChild($filter),
+        );
     }
 
     public function mapChild(callable $map): self
     {
-        $self = clone $this;
-        $self->element = $this->element->mapChild($map);
-
-        return $self;
+        return new self(
+            $this->href,
+            $this->relationship,
+            $this->element->mapChild($map),
+        );
     }
 
     public function prependChild(Node $child): self
     {
-        $self = clone $this;
-        $self->element = $this->element->prependChild($child);
-
-        return $self;
+        return new self(
+            $this->href,
+            $this->relationship,
+            $this->element->prependChild($child),
+        );
     }
 
     public function appendChild(Node $child): self
     {
-        $self = clone $this;
-        $self->element = $this->element->appendChild($child);
-
-        return $self;
+        return new self(
+            $this->href,
+            $this->relationship,
+            $this->element->appendChild($child),
+        );
     }
 
     public function content(): string

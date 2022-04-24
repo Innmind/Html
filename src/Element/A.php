@@ -24,20 +24,9 @@ final class A implements Element
     private Element\Element $element;
     private Url $href;
 
-    /**
-     * @param Set<Attribute>|null $attributes
-     * @param Sequence<Node>|null $children
-     */
-    private function __construct(
-        Url $href,
-        Set $attributes = null,
-        Sequence $children = null,
-    ) {
-        $this->element = Element\Element::of(
-            'a',
-            $attributes,
-            $children,
-        );
+    private function __construct(Url $href, Element\Element $element)
+    {
+        $this->element = $element;
         $this->href = $href;
     }
 
@@ -52,7 +41,14 @@ final class A implements Element
         Set $attributes = null,
         Sequence $children = null,
     ): self {
-        return new self($href, $attributes, $children);
+        return new self(
+            $href,
+            Element\Element::of(
+                'a',
+                $attributes,
+                $children,
+            ),
+        );
     }
 
     public function href(): Url
@@ -77,18 +73,18 @@ final class A implements Element
 
     public function removeAttribute(string $name): self
     {
-        $self = clone $this;
-        $self->element = $this->element->removeAttribute($name);
-
-        return $self;
+        return new self(
+            $this->href,
+            $this->element->removeAttribute($name),
+        );
     }
 
     public function addAttribute(Attribute $attribute): self
     {
-        $self = clone $this;
-        $self->element = $this->element->addAttribute($attribute);
-
-        return $self;
+        return new self(
+            $this->href,
+            $this->element->addAttribute($attribute),
+        );
     }
 
     public function children(): Sequence
@@ -98,34 +94,34 @@ final class A implements Element
 
     public function filterChild(callable $filter): self
     {
-        $self = clone $this;
-        $self->element = $this->element->filterChild($filter);
-
-        return $self;
+        return new self(
+            $this->href,
+            $this->element->filterChild($filter),
+        );
     }
 
     public function mapChild(callable $map): self
     {
-        $self = clone $this;
-        $self->element = $this->element->mapChild($map);
-
-        return $self;
+        return new self(
+            $this->href,
+            $this->element->mapChild($map),
+        );
     }
 
     public function prependChild(Node $child): self
     {
-        $self = clone $this;
-        $self->element = $this->element->prependChild($child);
-
-        return $self;
+        return new self(
+            $this->href,
+            $this->element->prependChild($child),
+        );
     }
 
     public function appendChild(Node $child): self
     {
-        $self = clone $this;
-        $self->element = $this->element->appendChild($child);
-
-        return $self;
+        return new self(
+            $this->href,
+            $this->element->appendChild($child),
+        );
     }
 
     public function content(): string

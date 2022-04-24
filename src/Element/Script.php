@@ -23,14 +23,9 @@ final class Script implements Element
 {
     private Element\Element $element;
 
-    /**
-     * @param Set<Attribute>|null $attributes
-     */
-    private function __construct(Text $text, Set $attributes = null)
+    private function __construct(Element\Element $element)
     {
-        /** @var Sequence<Node> */
-        $children = Sequence::of($text);
-        $this->element = Element\Element::of('script', $attributes, $children);
+        $this->element = $element;
     }
 
     /**
@@ -40,7 +35,10 @@ final class Script implements Element
      */
     public static function of(Text $text, Set $attributes = null): self
     {
-        return new self($text, $attributes);
+        /** @var Sequence<Node> */
+        $children = Sequence::of($text);
+
+        return new self(Element\Element::of('script', $attributes, $children));
     }
 
     public function name(): string
@@ -60,18 +58,12 @@ final class Script implements Element
 
     public function removeAttribute(string $name): self
     {
-        $self = clone $this;
-        $self->element = $this->element->removeAttribute($name);
-
-        return $self;
+        return new self($this->element->removeAttribute($name));
     }
 
     public function addAttribute(Attribute $attribute): self
     {
-        $self = clone $this;
-        $self->element = $this->element->addAttribute($attribute);
-
-        return $self;
+        return new self($this->element->addAttribute($attribute));
     }
 
     public function children(): Sequence
@@ -81,34 +73,22 @@ final class Script implements Element
 
     public function filterChild(callable $filter): self
     {
-        $self = clone $this;
-        $self->element = $this->element->filterChild($filter);
-
-        return $self;
+        return new self($this->element->filterChild($filter));
     }
 
     public function mapChild(callable $map): self
     {
-        $self = clone $this;
-        $self->element = $this->element->mapChild($map);
-
-        return $self;
+        return new self($this->element->mapChild($map));
     }
 
     public function prependChild(Node $child): self
     {
-        $self = clone $this;
-        $self->element = $this->element->prependChild($child);
-
-        return $self;
+        return new self($this->element->prependChild($child));
     }
 
     public function appendChild(Node $child): self
     {
-        $self = clone $this;
-        $self->element = $this->element->appendChild($child);
-
-        return $self;
+        return new self($this->element->appendChild($child));
     }
 
     public function content(): string

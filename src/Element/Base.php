@@ -25,12 +25,9 @@ final class Base implements Element
     private SelfClosingElement $element;
     private Url $href;
 
-    /**
-     * @param Set<Attribute>|null $attributes
-     */
-    private function __construct(Url $href, Set $attributes = null)
+    private function __construct(Url $href, SelfClosingElement $element)
     {
-        $this->element = SelfClosingElement::of('base', $attributes);
+        $this->element = $element;
         $this->href = $href;
     }
 
@@ -41,7 +38,7 @@ final class Base implements Element
      */
     public static function of(Url $href, Set $attributes = null): self
     {
-        return new self($href, $attributes);
+        return new self($href, SelfClosingElement::of('base', $attributes));
     }
 
     public function href(): Url
@@ -66,18 +63,18 @@ final class Base implements Element
 
     public function removeAttribute(string $name): self
     {
-        $self = clone $this;
-        $self->element = $this->element->removeAttribute($name);
-
-        return $self;
+        return new self(
+            $this->href,
+            $this->element->removeAttribute($name),
+        );
     }
 
     public function addAttribute(Attribute $attribute): self
     {
-        $self = clone $this;
-        $self->element = $this->element->addAttribute($attribute);
-
-        return $self;
+        return new self(
+            $this->href,
+            $this->element->addAttribute($attribute),
+        );
     }
 
     public function children(): Sequence
@@ -87,34 +84,34 @@ final class Base implements Element
 
     public function filterChild(callable $filter): self
     {
-        $self = clone $this;
-        $self->element = $this->element->filterChild($filter);
-
-        return $self;
+        return new self(
+            $this->href,
+            $this->element->filterChild($filter),
+        );
     }
 
     public function mapChild(callable $map): self
     {
-        $self = clone $this;
-        $self->element = $this->element->mapChild($map);
-
-        return $self;
+        return new self(
+            $this->href,
+            $this->element->mapChild($map),
+        );
     }
 
     public function prependChild(Node $child): self
     {
-        $self = clone $this;
-        $self->element = $this->element->prependChild($child);
-
-        return $self;
+        return new self(
+            $this->href,
+            $this->element->prependChild($child),
+        );
     }
 
     public function appendChild(Node $child): self
     {
-        $self = clone $this;
-        $self->element = $this->element->appendChild($child);
-
-        return $self;
+        return new self(
+            $this->href,
+            $this->element->appendChild($child),
+        );
     }
 
     public function content(): string
