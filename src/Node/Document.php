@@ -57,37 +57,37 @@ final class Document implements Node
 
     public function filterChild(callable $filter): self
     {
-        $document = clone $this;
-        $document->children = $this->children->filter($filter);
-
-        return $document;
+        return new self(
+            $this->type,
+            $this->children->filter($filter),
+        );
     }
 
     public function mapChild(callable $map): self
     {
-        $document = clone $this;
-        $document->children = $this->children->map($map);
-
-        return $document;
+        return new self(
+            $this->type,
+            $this->children->map($map),
+        );
     }
 
     public function prependChild(Node $child): Node
     {
-        $document = clone $this;
-        $document->children = Sequence::of(
-            $child,
-            ...$this->children->toList(),
+        return new self(
+            $this->type,
+            Sequence::of(
+                $child,
+                ...$this->children->toList(),
+            ),
         );
-
-        return $document;
     }
 
     public function appendChild(Node $child): Node
     {
-        $document = clone $this;
-        $document->children = ($this->children)($child);
-
-        return $document;
+        return new self(
+            $this->type,
+            ($this->children)($child),
+        );
     }
 
     public function content(): string
