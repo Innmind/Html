@@ -25,18 +25,18 @@ final class A implements Element
     private Url $href;
 
     /**
-     * @no-named-arguments
      * @param Set<Attribute>|null $attributes
+     * @param Sequence<Node>|null $children
      */
     public function __construct(
         Url $href,
         Set $attributes = null,
-        Node ...$children,
+        Sequence $children = null,
     ) {
         $this->element = Element\Element::of(
             'a',
             $attributes,
-            Sequence::of(...$children),
+            $children,
         );
         $this->href = $href;
     }

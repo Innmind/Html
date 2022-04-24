@@ -40,7 +40,7 @@ final class DocumentTranslator implements NodeTranslator
                                 static fn($type) => $type,
                                 static fn() => Type::of('html'),
                             ),
-                        ...$children->toList(),
+                        $children,
                     )),
             );
     }

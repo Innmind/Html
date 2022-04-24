@@ -10,7 +10,10 @@ use Innmind\Xml\{
     Node,
 };
 use Innmind\Url\Url;
-use Innmind\Immutable\Set;
+use Innmind\Immutable\{
+    Set,
+    Sequence,
+};
 use PHPUnit\Framework\TestCase;
 
 class ATest extends TestCase
@@ -22,7 +25,7 @@ class ATest extends TestCase
             $a = new A(
                 $href = Url::of('http://example.com'),
                 Set::of(),
-                $child = $this->createMock(Node::class),
+                Sequence::of($child = $this->createMock(Node::class)),
             ),
         );
         $this->assertSame('a', $a->name());

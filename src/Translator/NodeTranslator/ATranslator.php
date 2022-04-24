@@ -40,7 +40,7 @@ final class ATranslator implements NodeTranslator
                                 static fn($children) => new A(
                                     $href,
                                     $attributes,
-                                    ...$children->toList(),
+                                    $children,
                                 ),
                             ),
                         ),

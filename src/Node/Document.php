@@ -22,12 +22,12 @@ final class Document implements Node
     private Sequence $children;
 
     /**
-     * @no-named-arguments
+     * @param Sequence<Node>|null $children
      */
-    public function __construct(Type $type, Node ...$children)
+    public function __construct(Type $type, Sequence $children = null)
     {
         $this->type = $type;
-        $this->children = Sequence::of(...$children);
+        $this->children = $children ?? Sequence::of();
     }
 
     public function type(): Type

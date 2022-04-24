@@ -45,7 +45,7 @@ class DocumentTest extends TestCase
     {
         $document = new Document(
             Type::of('html'),
-            $child = $this->createMock(Node::class),
+            Sequence::of($child = $this->createMock(Node::class)),
         );
 
         $this->assertSame($child, $document->children()->first()->match(
@@ -59,10 +59,12 @@ class DocumentTest extends TestCase
     {
         $document = new Document(
             Type::of('html'),
-            Element::of(
-                'html',
-                null,
-                Sequence::of(Text::of('wat')),
+            Sequence::of(
+                Element::of(
+                    'html',
+                    null,
+                    Sequence::of(Text::of('wat')),
+                ),
             ),
         );
 
@@ -73,10 +75,12 @@ class DocumentTest extends TestCase
     {
         $document = new Document(
             Type::of('html'),
-            Element::of(
-                'html',
-                null,
-                Sequence::of(Text::of('wat')),
+            Sequence::of(
+                Element::of(
+                    'html',
+                    null,
+                    Sequence::of(Text::of('wat')),
+                ),
             ),
         );
 
@@ -90,9 +94,11 @@ class DocumentTest extends TestCase
     {
         $document = new Document(
             Type::of('html'),
-            Element::of('foo'),
-            Element::of('bar'),
-            Element::of('baz'),
+            Sequence::of(
+                Element::of('foo'),
+                Element::of('bar'),
+                Element::of('baz'),
+            ),
         );
 
         $document2 = $document->prependChild(
@@ -130,9 +136,11 @@ class DocumentTest extends TestCase
     {
         $document = new Document(
             Type::of('html'),
-            Element::of('foo'),
-            Element::of('bar'),
-            Element::of('baz'),
+            Sequence::of(
+                Element::of('foo'),
+                Element::of('bar'),
+                Element::of('baz'),
+            ),
         );
 
         $document2 = $document->appendChild(
