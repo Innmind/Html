@@ -3,11 +3,11 @@ declare(strict_types = 1);
 
 namespace Innmind\Html\Visitor;
 
-use Innmind\Html\Exception\ElementNotFound;
 use Innmind\Xml\{
     Node,
     Element as ElementInterface,
 };
+use Innmind\Immutable\Maybe;
 
 /**
  * @psalm-immutable
@@ -25,35 +25,25 @@ final class Element
         $this->name = $name;
     }
 
-    public function __invoke(Node $node): ElementInterface
+    /**
+     * @return Maybe<ElementInterface>
+     */
+    public function __invoke(Node $node): Maybe
     {
         if (
             $node instanceof ElementInterface &&
             $node->name() === $this->name
         ) {
-            return $node;
+            return Maybe::just($node);
         }
 
-        $element = $node->children()->reduce(
-            null,
-            function(?ElementInterface $element, Node $child): ?ElementInterface {
-                if ($element instanceof ElementInterface) {
-                    return $element;
-                }
-
-                try {
-                    return $this($child);
-                } catch (ElementNotFound $e) {
-                    return null;
-                }
+        /** @var Maybe<ElementInterface> */
+        return $node->children()->reduce(
+            Maybe::nothing(),
+            function(Maybe $element, Node $child): Maybe {
+                return $element->otherwise(fn() => $this($child));
             },
         );
-
-        if ($element instanceof ElementInterface) {
-            return $element;
-        }
-
-        throw new ElementNotFound;
     }
 
     /**

@@ -6,7 +6,6 @@ namespace Tests\Innmind\Html\Visitor;
 use Innmind\Html\{
     Visitor,
     Reader\Reader,
-    Exception\ElementNotFound,
 };
 use Innmind\Xml\{
     Element as ElementInterface,
@@ -34,7 +33,10 @@ class HeadTest extends TestCase
             static fn() => null,
         );
 
-        $head = Visitor\Element::head()($node);
+        $head = Visitor\Element::head()($node)->match(
+            static fn($head) => $head,
+            static fn() => null,
+        );
 
         $this->assertInstanceOf(ElementInterface::class, $head);
         $this->assertSame('head', $head->name());
@@ -42,10 +44,11 @@ class HeadTest extends TestCase
         $this->assertTrue($head->attributes()->empty());
     }
 
-    public function testThrowWhenHeadNotFound()
+    public function testReturnNothingWhenHeadNotFound()
     {
-        $this->expectException(ElementNotFound::class);
-
-        Visitor\Element::head()(Element::of('body'));
+        $this->assertNull(Visitor\Element::head()(Element::of('body'))->match(
+            static fn($node) => $node,
+            static fn() => null,
+        ));
     }
 }
