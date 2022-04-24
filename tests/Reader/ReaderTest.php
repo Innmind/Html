@@ -5,16 +5,13 @@ namespace Tests\Innmind\Html\Reader;
 
 use Innmind\Html\{
     Reader\Reader,
-    Translator\NodeTranslators as HtmlTranslators,
     Node\Document,
-    Exception\RuntimeException,
 };
 use Innmind\Xml\{
     Reader as ReaderInterface,
-    Translator\Translator,
-    Translator\NodeTranslators,
     Node\Document as XmlDocument,
 };
+use Innmind\Filesystem\File\Content;
 use Innmind\Stream\Readable\Stream;
 use PHPUnit\Framework\TestCase;
 
@@ -24,20 +21,14 @@ class ReaderTest extends TestCase
 
     public function setUp(): void
     {
-        $this->read = new Reader(
-            new Translator(
-                NodeTranslators::defaults()->merge(
-                    HtmlTranslators::defaults()
-                )
-            )
-        );
+        $this->read = Reader::default();
     }
 
     public function testInterface()
     {
         $this->assertInstanceOf(
             ReaderInterface::class,
-            $this->read
+            $this->read,
         );
     }
 
@@ -53,27 +44,20 @@ class ReaderTest extends TestCase
 </html>
 HTML;
         $node = ($this->read)(
-            Stream::ofContent($html),
+            Content\OfStream::of(Stream::ofContent($html)),
+        )->match(
+            static fn($node) => $node,
+            static fn() => null,
         );
         $expected = <<<HTML
-<!DOCTYPE html>
-<html><head/><body>
-        foo
-    </body></html>
-HTML;
-
-        if (\PHP_OS === 'Darwin') {
-            // don't know why there is a difference between linux and macOS
-            $expected = <<<HTML
-            <!DOCTYPE html>
-            <html>
-                <head/>
-                <body>
-                    foo
-                </body>
-            </html>
-            HTML;
-        }
+        <!DOCTYPE html>
+        <html>
+            <head/>
+            <body>
+                foo
+            </body>
+        </html>
+        HTML;
 
         $this->assertInstanceOf(Document::class, $node);
         $this->assertSame($expected, $node->toString());
@@ -82,9 +66,12 @@ HTML;
     public function testReadFullPage()
     {
         $node = ($this->read)(
-            new Stream(
-                \fopen('fixtures/lemonde.html', 'r')
-            )
+            Content\OfStream::of(Stream::of(
+                \fopen('fixtures/lemonde.html', 'r'),
+            )),
+        )->match(
+            static fn($node) => $node,
+            static fn() => null,
         );
 
         $this->assertInstanceOf(Document::class, $node);
@@ -92,19 +79,24 @@ HTML;
 
     public function testReadScreenOnline()
     {
-        $node = ($this->read)(new Stream(\fopen(
+        $node = ($this->read)(Content\OfStream::of(Stream::of(\fopen(
             'fixtures/www.screenonline.org.uk_tv_id_560180_.html',
-            'r'
-        )));
+            'r',
+        ))))->match(
+            static fn($node) => $node,
+            static fn() => null,
+        );
 
         $this->assertInstanceOf(XmlDocument::class, $node);
     }
 
-    public function testThrowWhenEmptyStream()
+    public function testReturnNothingWhenEmptyStream()
     {
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('No html found');
-
-        ($this->read)(Stream::ofContent(''));
+        $this->assertNull(
+            ($this->read)(Content\OfStream::of(Stream::ofContent('')))->match(
+                static fn($node) => $node,
+                static fn() => null,
+            ),
+        );
     }
 }

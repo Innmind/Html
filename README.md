@@ -6,6 +6,8 @@
 
 This library is an extension of [`innmind/xml`](https://packagist.org/packages/innmind/xml) to support working properly with html as a node tree.
 
+**Important**: you must use [`vimeo/psalm`](https://packagist.org/packages/vimeo/psalm) to make sure you use this library correctly.
+
 ## Installation
 
 ```sh
@@ -15,17 +17,18 @@ composer require innmind/html
 ## Usage
 
 ```php
-use function Innmind\Html\bootstrap;
+use Innmind\Html\Reader\Reader;
+use Innmind\Xml\Node;
+use Innmind\Filesystem\File\Content;
 use Innmind\Stream\Readable\Stream;
+use Innmind\Immutable\Maybe;
 
-$read = bootstrap();
+$read = Reader::default();
 
 $html = $read(
-    new Stream(fopen('https://github.com/', 'r'))
-);
+    Content\OfStream::of(Stream::of(\fopen('https://github.com/', 'r'))),
+); // Maybe<Node>
 ```
-
-Here `$html` is an instance of [`Document`](src/Node/Document.php).
 
 ## Extract some elements of the tree
 
@@ -34,7 +37,7 @@ This library provides some visitors to extract elements out of the dom tree, the
 ```php
 use Innmind\Html\Visitor\Elements;
 
-$h1s = (new Elements('h1'))($html);
+$h1s = Elements::of('h1')($html);
 ```
 
 Here `$h1s` is a set of `Element` which are all `h1` elements.

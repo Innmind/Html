@@ -3,28 +3,41 @@ declare(strict_types = 1);
 
 namespace Innmind\Html\Node;
 
-use Innmind\Html\Exception\OutOfBoundsException;
 use Innmind\Xml\{
     Node,
     Node\Document\Type,
 };
-use Innmind\Immutable\Sequence;
-use function Innmind\Immutable\{
-    unwrap,
-    join,
+use Innmind\Immutable\{
+    Sequence,
+    Str,
 };
 
+/**
+ * @psalm-immutable
+ */
 final class Document implements Node
 {
     private Type $type;
     /** @var Sequence<Node> */
     private Sequence $children;
 
-    public function __construct(Type $type, Node ...$children)
+    /**
+     * @param Sequence<Node>|null $children
+     */
+    private function __construct(Type $type, Sequence $children = null)
     {
         $this->type = $type;
-        /** @var Sequence<Node> */
-        $this->children = Sequence::of(Node::class, ...$children);
+        $this->children = $children ?? Sequence::of();
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @param Sequence<Node>|null $children
+     */
+    public static function of(Type $type, Sequence $children = null): self
+    {
+        return new self($type, $children);
     }
 
     public function type(): Type
@@ -42,66 +55,48 @@ final class Document implements Node
         return !$this->children->empty();
     }
 
-    public function removeChild(int $position): Node
+    public function filterChild(callable $filter): self
     {
-        if (!$this->children->indices()->contains($position)) {
-            throw new OutOfBoundsException((string) $position);
-        }
-
-        $document = clone $this;
-        $document->children = $this
-            ->children
-            ->take($position)
-            ->append($this->children->drop($position + 1));
-
-        return $document;
+        return new self(
+            $this->type,
+            $this->children->filter($filter),
+        );
     }
 
-    public function replaceChild(int $position, Node $child): Node
+    public function mapChild(callable $map): self
     {
-        if (!$this->children->indices()->contains($position)) {
-            throw new OutOfBoundsException((string) $position);
-        }
-
-        $document = clone $this;
-        $document->children = $this
-            ->children
-            ->take($position)
-            ->add($child)
-            ->append($this->children->drop($position + 1));
-
-        return $document;
+        return new self(
+            $this->type,
+            $this->children->map($map),
+        );
     }
 
     public function prependChild(Node $child): Node
     {
-        $document = clone $this;
-        /** @var Sequence<Node> */
-        $document->children = Sequence::of(
-            Node::class,
-            $child,
-            ...unwrap($this->children),
+        return new self(
+            $this->type,
+            Sequence::of(
+                $child,
+                ...$this->children->toList(),
+            ),
         );
-
-        return $document;
     }
 
     public function appendChild(Node $child): Node
     {
-        $document = clone $this;
-        $document->children = ($this->children)($child);
-
-        return $document;
+        return new self(
+            $this->type,
+            ($this->children)($child),
+        );
     }
 
     public function content(): string
     {
-        $children = $this->children->mapTo(
-            'string',
+        $children = $this->children->map(
             static fn(Node $child): string => $child->toString(),
         );
 
-        return join('', $children)->toString();
+        return Str::of('')->join($children)->toString();
     }
 
     public function toString(): string

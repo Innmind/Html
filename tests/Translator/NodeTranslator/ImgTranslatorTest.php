@@ -6,8 +6,6 @@ namespace Tests\Innmind\Html\Translator\NodeTranslator;
 use Innmind\Html\{
     Translator\NodeTranslator\ImgTranslator,
     Element\Img,
-    Exception\InvalidArgumentException,
-    Exception\MissingSrcAttribute,
 };
 use Innmind\Xml\Translator\{
     Translator,
@@ -22,23 +20,26 @@ class ImgTranslatorTest extends TestCase
     {
         $this->assertInstanceOf(
             NodeTranslator::class,
-            new ImgTranslator
+            ImgTranslator::of(),
         );
     }
 
-    public function testThrowWhenNotExpectedElement()
+    public function testReturnNothingWhenNotExpectedElement()
     {
         $dom = new \DOMDocument;
         $dom->loadHTML('<body></body>');
 
-        $this->expectException(InvalidArgumentException::class);
-
-        (new ImgTranslator)(
+        $result = ImgTranslator::of()(
             $dom->childNodes->item(1),
-            new Translator(
-                NodeTranslators::defaults()
+            Translator::of(
+                NodeTranslators::defaults(),
             )
         );
+
+        $this->assertNull($result->match(
+            static fn($node) => $node,
+            static fn() => null,
+        ));
     }
 
     public function testTranslate()
@@ -46,31 +47,40 @@ class ImgTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<img src="foo.png" alt="bar"/>');
 
-        $img = (new ImgTranslator)(
+        $img = ImgTranslator::of()(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new Translator(
-                NodeTranslators::defaults()
+            Translator::of(
+                NodeTranslators::defaults(),
             )
+        )->match(
+            static fn($img) => $img,
+            static fn() => null,
         );
 
         $this->assertInstanceOf(Img::class, $img);
         $this->assertSame('foo.png', $img->src()->toString());
         $this->assertCount(2, $img->attributes());
-        $this->assertSame('bar', $img->attributes()->get('alt')->value());
+        $this->assertSame('bar', $img->attributes()->get('alt')->match(
+            static fn($attribute) => $attribute->value(),
+            static fn() => null,
+        ));
     }
 
-    public function testThrowWhenMissingHrefAttribute()
+    public function testReturnNothingWhenMissingHrefAttribute()
     {
         $dom = new \DOMDocument;
         $dom->loadHTML('<img/>');
 
-        $this->expectException(MissingSrcAttribute::class);
-
-        (new ImgTranslator)(
+        $result = ImgTranslator::of()(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new Translator(
-                NodeTranslators::defaults()
+            Translator::of(
+                NodeTranslators::defaults(),
             )
         );
+
+        $this->assertNull($result->match(
+            static fn($node) => $node,
+            static fn() => null,
+        ));
     }
 }

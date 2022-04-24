@@ -5,7 +5,7 @@ namespace Tests\Innmind\Html\Element;
 
 use Innmind\Html\Element\Base;
 use Innmind\Xml\{
-    Element\SelfClosingElement,
+    Element,
     Attribute,
 };
 use Innmind\Url\Url;
@@ -17,11 +17,11 @@ class BaseTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            SelfClosingElement::class,
-            $base = new Base(
+            Element::class,
+            $base = Base::of(
                 $href = Url::of('http://example.com'),
-                Set::of(Attribute::class),
-            )
+                Set::of(),
+            ),
         );
         $this->assertSame('base', $base->name());
         $this->assertSame($href, $base->href());
@@ -30,7 +30,7 @@ class BaseTest extends TestCase
     public function testWithoutAttributes()
     {
         $this->assertTrue(
-            (new Base(Url::of('http://example.com')))->attributes()->empty(),
+            Base::of(Url::of('http://example.com'))->attributes()->empty(),
         );
     }
 }

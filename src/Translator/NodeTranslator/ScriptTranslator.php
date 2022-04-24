@@ -3,41 +3,57 @@ declare(strict_types = 1);
 
 namespace Innmind\Html\Translator\NodeTranslator;
 
-use Innmind\Html\{
-    Exception\InvalidArgumentException,
-    Element\Script,
-};
+use Innmind\Html\Element\Script;
 use Innmind\Xml\{
     Translator\NodeTranslator,
     Translator\Translator,
     Node,
     Translator\NodeTranslator\Visitor\Attributes,
-    Translator\NodeTranslator\Visitor\Children,
     Node\Text,
 };
+use Innmind\Immutable\Maybe;
 
+/**
+ * @psalm-immutable
+ */
 final class ScriptTranslator implements NodeTranslator
 {
+    private function __construct()
+    {
+    }
+
     public function __invoke(
         \DOMNode $node,
-        Translator $translate
-    ): Node {
-        if (
-            !$node instanceof \DOMElement ||
-            $node->tagName !== 'script'
-        ) {
-            throw new InvalidArgumentException;
-        }
+        Translator $translate,
+    ): Maybe {
+        /**
+         * @psalm-suppress ArgumentTypeCoercion
+         * @var Maybe<Node>
+         */
+        return Maybe::just($node)
+            ->filter(static fn($node) => $node instanceof \DOMElement)
+            ->filter(static fn(\DOMElement $node) => $node->tagName === 'script')
+            ->flatMap(static fn(\DOMElement $node) => Attributes::of()($node)->map(
+                static fn($attributes) => Script::of(
+                    Text::of(
+                        Maybe::of($node->firstChild)
+                            ->flatMap(static fn($node) => $translate($node))
+                            ->map(static fn($node) => $node->content())
+                            ->match(
+                                static fn($content) => $content,
+                                static fn() => '',
+                            ),
+                    ),
+                    $attributes,
+                ),
+            ));
+    }
 
-        $text = '';
-
-        if ($node->firstChild) {
-            $text = $translate($node->firstChild)->content();
-        }
-
-        return new Script(
-            new Text($text),
-            (new Attributes)($node),
-        );
+    /**
+     * @psalm-pure
+     */
+    public static function of(): self
+    {
+        return new self;
     }
 }

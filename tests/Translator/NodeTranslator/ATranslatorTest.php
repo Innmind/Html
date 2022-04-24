@@ -6,8 +6,6 @@ namespace Tests\Innmind\Html\Translator\NodeTranslator;
 use Innmind\Html\{
     Translator\NodeTranslator\ATranslator,
     Element\A,
-    Exception\InvalidArgumentException,
-    Exception\MissingHrefAttribute,
 };
 use Innmind\Xml\Translator\{
     Translator,
@@ -22,23 +20,26 @@ class ATranslatorTest extends TestCase
     {
         $this->assertInstanceOf(
             NodeTranslator::class,
-            new ATranslator
+            ATranslator::of(),
         );
     }
 
-    public function testThrowWhenNotExpectedElement()
+    public function testReturnNothingWhenNotExpectedElement()
     {
         $dom = new \DOMDocument;
         $dom->loadHTML('<body></body>');
 
-        $this->expectException(InvalidArgumentException::class);
-
-        (new ATranslator)(
+        $result = ATranslator::of()(
             $dom->childNodes->item(1),
-            new Translator(
-                NodeTranslators::defaults()
+            Translator::of(
+                NodeTranslators::defaults(),
             )
         );
+
+        $this->assertNull($result->match(
+            static fn($node) => $node,
+            static fn() => null,
+        ));
     }
 
     public function testTranslate()
@@ -46,32 +47,41 @@ class ATranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<a href="/" class="whatever">foo</a>');
 
-        $a = (new ATranslator)(
+        $a = ATranslator::of()(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new Translator(
-                NodeTranslators::defaults()
+            Translator::of(
+                NodeTranslators::defaults(),
             )
+        )->match(
+            static fn($a) => $a,
+            static fn() => null,
         );
 
         $this->assertInstanceOf(A::class, $a);
         $this->assertSame('/', $a->href()->toString());
         $this->assertCount(2, $a->attributes());
-        $this->assertSame('whatever', $a->attributes()->get('class')->value());
+        $this->assertSame('whatever', $a->attributes()->get('class')->match(
+            static fn($attribute) => $attribute->value(),
+            static fn() => null,
+        ));
         $this->assertCount(1, $a->children());
     }
 
-    public function testThrowWhenMissingHrefAttribute()
+    public function testReturnNothingWhenMissingHrefAttribute()
     {
         $dom = new \DOMDocument;
         $dom->loadHTML('<a class="whatever">foo</a>');
 
-        $this->expectException(MissingHrefAttribute::class);
-
-        (new ATranslator)(
+        $result = ATranslator::of()(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            new Translator(
-                NodeTranslators::defaults()
+            Translator::of(
+                NodeTranslators::defaults(),
             )
         );
+
+        $this->assertNull($result->match(
+            static fn($node) => $node,
+            static fn() => null,
+        ));
     }
 }

@@ -20,32 +20,30 @@ use Innmind\Immutable\Map;
 
 final class NodeTranslators
 {
-    /** @var Map<int, NodeTranslator>|null */
-    private static ?Map $defaults = null;
-
     /**
      * @return Map<int, NodeTranslator>
      */
     public static function defaults(): Map
     {
         /**
-         * @psalm-suppress MixedArgumentTypeCoercion
          * @psalm-suppress InvalidArgument
          * @var Map<int, NodeTranslator>
          */
-        return self::$defaults ??= Map::of('int', NodeTranslator::class)
-            (\XML_HTML_DOCUMENT_NODE, new DocumentTranslator)
-            (
+        return Map::of(
+            [\XML_HTML_DOCUMENT_NODE, DocumentTranslator::of()],
+            [
                 \XML_ELEMENT_NODE,
-                new ElementTranslator(
-                    new GenericTranslator,
-                    Map::of('string', NodeTranslator::class)
-                        ('a', new ATranslator)
-                        ('base', new BaseTranslator)
-                        ('img', new ImgTranslator)
-                        ('link', new LinkTranslator)
-                        ('script', new ScriptTranslator),
+                ElementTranslator::of(
+                    GenericTranslator::of(),
+                    Map::of(
+                        ['a', ATranslator::of()],
+                        ['base', BaseTranslator::of()],
+                        ['img', ImgTranslator::of()],
+                        ['link', LinkTranslator::of()],
+                        ['script', ScriptTranslator::of()],
+                    ),
                 ),
-            );
+            ],
+        );
     }
 }

@@ -3,12 +3,9 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Html\Element;
 
-use Innmind\Html\{
-    Element\Link,
-    Exception\DomainException,
-};
+use Innmind\Html\Element\Link;
 use Innmind\Xml\{
-    Element\SelfClosingElement,
+    Element,
     Attribute,
 };
 use Innmind\Url\Url;
@@ -20,12 +17,12 @@ class LinkTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            SelfClosingElement::class,
-            $link = new Link(
+            Element::class,
+            $link = Link::of(
                 $href = Url::of('http://example.com'),
                 'rel',
-                Set::of(Attribute::class)
-            )
+                Set::of(),
+            ),
         );
         $this->assertSame('link', $link->name());
         $this->assertSame($href, $link->href());
@@ -35,20 +32,10 @@ class LinkTest extends TestCase
     public function testWithoutAttributes()
     {
         $this->assertTrue(
-            (new Link(
+            Link::of(
                 Url::of('http://example.com'),
-                'foo'
-            ))->attributes()->empty(),
-        );
-    }
-
-    public function testThrowWhenEmptyRelationship()
-    {
-        $this->expectException(DomainException::class);
-
-        new Link(
-            Url::of('http://example.com'),
-            ''
+                'foo',
+            )->attributes()->empty(),
         );
     }
 }

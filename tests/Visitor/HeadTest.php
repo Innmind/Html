@@ -6,15 +6,12 @@ namespace Tests\Innmind\Html\Visitor;
 use Innmind\Html\{
     Visitor,
     Reader\Reader,
-    Translator\NodeTranslators as HtmlTranslators,
-    Exception\ElementNotFound,
 };
 use Innmind\Xml\{
     Element as ElementInterface,
     Element\Element,
-    Translator\Translator,
-    Translator\NodeTranslators,
 };
+use Innmind\Filesystem\File\Content;
 use Innmind\Stream\Readable\Stream;
 use PHPUnit\Framework\TestCase;
 
@@ -24,33 +21,34 @@ class HeadTest extends TestCase
 
     public function setUp(): void
     {
-        $this->read = new Reader(
-            new Translator(
-                NodeTranslators::defaults()->merge(
-                    HtmlTranslators::defaults()
-                )
-            )
-        );
+        $this->read = Reader::default();
     }
 
     public function testExtractHead()
     {
         $node = ($this->read)(
-            new Stream(\fopen('fixtures/lemonde.html', 'r'))
+            Content\OfStream::of(Stream::of(\fopen('fixtures/lemonde.html', 'r'))),
+        )->match(
+            static fn($node) => $node,
+            static fn() => null,
         );
 
-        $head = Visitor\Element::head()($node);
+        $head = Visitor\Element::head()($node)->match(
+            static fn($head) => $head,
+            static fn() => null,
+        );
 
         $this->assertInstanceOf(ElementInterface::class, $head);
         $this->assertSame('head', $head->name());
-        $this->assertTrue($head->hasChildren());
+        $this->assertFalse($head->children()->empty());
         $this->assertTrue($head->attributes()->empty());
     }
 
-    public function testThrowWhenHeadNotFound()
+    public function testReturnNothingWhenHeadNotFound()
     {
-        $this->expectException(ElementNotFound::class);
-
-        Visitor\Element::head()(new Element('body'));
+        $this->assertNull(Visitor\Element::head()(Element::of('body'))->match(
+            static fn($node) => $node,
+            static fn() => null,
+        ));
     }
 }
