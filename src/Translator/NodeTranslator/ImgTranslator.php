@@ -3,51 +3,51 @@ declare(strict_types = 1);
 
 namespace Innmind\Html\Translator\NodeTranslator;
 
-use Innmind\Html\{
-    Exception\InvalidArgumentException,
-    Exception\MissingSrcAttribute,
-    Element\Img,
-};
+use Innmind\Html\Element\Img;
 use Innmind\Xml\{
     Translator\NodeTranslator,
     Translator\Translator,
     Node,
-    Attribute,
     Translator\NodeTranslator\Visitor\Attributes,
 };
 use Innmind\Url\Url;
-use Innmind\Immutable\Map;
+use Innmind\Immutable\Maybe;
 
+/**
+ * @psalm-immutable
+ */
 final class ImgTranslator implements NodeTranslator
 {
+    private function __construct()
+    {
+    }
+
     public function __invoke(
         \DOMNode $node,
-        Translator $translate
-    ): Node {
-        if (
-            !$node instanceof \DOMElement ||
-            $node->tagName !== 'img'
-        ) {
-            throw new InvalidArgumentException;
-        }
+        Translator $translate,
+    ): Maybe {
+        /**
+         * @psalm-suppress ArgumentTypeCoercion
+         * @var Maybe<Node>
+         */
+        return Maybe::just($node)
+            ->filter(static fn($node) => $node instanceof \DOMElement)
+            ->filter(static fn(\DOMElement $node) => $node->tagName === 'img')
+            ->flatMap(
+                static fn(\DOMElement $node) => Attributes::of()($node)->flatMap(
+                    static fn($attributes) => $attributes
+                        ->find(static fn($attribute) => $attribute->name() === 'src')
+                        ->flatMap(static fn($src) => Url::maybe($src->value()))
+                        ->map(static fn($src) => Img::of($src, $attributes)),
+                ),
+            );
+    }
 
-        $attributes = (new Attributes)($node);
-        /** @var Map<string, Attribute> */
-        $map = $attributes->toMapOf(
-            'string',
-            Attribute::class,
-            static function(Attribute $attribute): \Generator {
-                yield $attribute->name() => $attribute;
-            },
-        );
-
-        if (!$map->contains('src')) {
-            throw new MissingSrcAttribute;
-        }
-
-        return new Img(
-            Url::of($map->get('src')->value()),
-            $attributes,
-        );
+    /**
+     * @psalm-pure
+     */
+    public static function of(): self
+    {
+        return new self;
     }
 }

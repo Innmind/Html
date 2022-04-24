@@ -5,7 +5,7 @@ namespace Tests\Innmind\Html\Element;
 
 use Innmind\Html\Element\Script;
 use Innmind\Xml\{
-    Element\Element,
+    Element,
     Node\Text,
     Attribute,
 };
@@ -16,8 +16,8 @@ class ScriptTest extends TestCase
 {
     public function testInterface()
     {
-        $script = new Script(
-            new Text('foo')
+        $script = Script::of(
+            Text::of('foo'),
         );
 
         $this->assertInstanceOf(Element::class, $script);
@@ -27,14 +27,16 @@ class ScriptTest extends TestCase
 
     public function testWithAttributes()
     {
-        $script = new Script(
-            new Text('foo'),
+        $script = Script::of(
+            Text::of('foo'),
             Set::of(
-                Attribute::class,
-                $attribute = new Attribute('foo', 'bar'),
+                $attribute = Attribute::of('foo', 'bar'),
             ),
         );
 
-        $this->assertSame($attribute, $script->attributes()->get('foo'));
+        $this->assertSame($attribute, $script->attributes()->get('foo')->match(
+            static fn($attribute) => $attribute,
+            static fn() => null,
+        ));
     }
 }

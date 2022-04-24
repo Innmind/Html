@@ -19,20 +19,21 @@ class NodeTranslatorsTest extends TestCase
         $defaults = NodeTranslators::defaults();
 
         $this->assertInstanceOf(Map::class, $defaults);
-        $this->assertSame('int', $defaults->keyType());
-        $this->assertSame(
-            NodeTranslator::class,
-            $defaults->valueType()
-        );
         $this->assertCount(2, $defaults);
         $this->assertInstanceOf(
             DocumentTranslator::class,
-            $defaults->get(\XML_HTML_DOCUMENT_NODE)
+            $defaults->get(\XML_HTML_DOCUMENT_NODE)->match(
+                static fn($translator) => $translator,
+                static fn() => null,
+            ),
         );
         $this->assertInstanceOf(
             ElementTranslator::class,
-            $defaults->get(\XML_ELEMENT_NODE)
+            $defaults->get(\XML_ELEMENT_NODE)->match(
+                static fn($translator) => $translator,
+                static fn() => null,
+            ),
         );
-        $this->assertSame($defaults, NodeTranslators::defaults());
+        $this->assertEquals($defaults, NodeTranslators::defaults());
     }
 }

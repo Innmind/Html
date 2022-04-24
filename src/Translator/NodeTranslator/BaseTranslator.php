@@ -3,51 +3,54 @@ declare(strict_types = 1);
 
 namespace Innmind\Html\Translator\NodeTranslator;
 
-use Innmind\Html\{
-    Exception\InvalidArgumentException,
-    Exception\MissingHrefAttribute,
-    Element\Base,
-};
+use Innmind\Html\Element\Base;
 use Innmind\Xml\{
     Translator\NodeTranslator,
     Translator\Translator,
     Node,
-    Attribute,
     Translator\NodeTranslator\Visitor\Attributes,
 };
 use Innmind\Url\Url;
-use Innmind\Immutable\Map;
+use Innmind\Immutable\Maybe;
 
+/**
+ * @psalm-immutable
+ */
 final class BaseTranslator implements NodeTranslator
 {
+    private function __construct()
+    {
+    }
+
     public function __invoke(
         \DOMNode $node,
-        Translator $translate
-    ): Node {
-        if (
-            !$node instanceof \DOMElement ||
-            $node->tagName !== 'base'
-        ) {
-            throw new InvalidArgumentException;
-        }
+        Translator $translate,
+    ): Maybe {
+        /**
+         * @psalm-suppress ArgumentTypeCoercion
+         * @var Maybe<Node>
+         */
+        return Maybe::just($node)
+            ->filter(static fn($node) => $node instanceof \DOMElement)
+            ->filter(static fn(\DOMElement $node) => $node->tagName === 'base')
+            ->flatMap(
+                static fn(\DOMElement $node) => Attributes::of()($node)->flatMap(
+                    static fn($attributes) => $attributes
+                        ->find(static fn($attribute) => $attribute->name() === 'href')
+                        ->flatMap(static fn($href) => Url::maybe($href->value()))
+                        ->map(static fn($href) => Base::of(
+                            $href,
+                            $attributes,
+                        )),
+                ),
+            );
+    }
 
-        $attributes = (new Attributes)($node);
-        /** @var Map<string, Attribute> */
-        $map = $attributes->toMapOf(
-            'string',
-            Attribute::class,
-            static function(Attribute $attribute): \Generator {
-                yield $attribute->name() => $attribute;
-            },
-        );
-
-        if (!$map->contains('href')) {
-            throw new MissingHrefAttribute;
-        }
-
-        return new Base(
-            Url::of($map->get('href')->value()),
-            $attributes,
-        );
+    /**
+     * @psalm-pure
+     */
+    public static function of(): self
+    {
+        return new self;
     }
 }

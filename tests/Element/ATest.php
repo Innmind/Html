@@ -5,12 +5,15 @@ namespace Tests\Innmind\Html\Element;
 
 use Innmind\Html\Element\A;
 use Innmind\Xml\{
-    Element\Element,
+    Element,
     Attribute,
     Node,
 };
 use Innmind\Url\Url;
-use Innmind\Immutable\Set;
+use Innmind\Immutable\{
+    Set,
+    Sequence,
+};
 use PHPUnit\Framework\TestCase;
 
 class ATest extends TestCase
@@ -19,28 +22,31 @@ class ATest extends TestCase
     {
         $this->assertInstanceOf(
             Element::class,
-            $a = new A(
+            $a = A::of(
                 $href = Url::of('http://example.com'),
-                Set::of(Attribute::class),
-                $child = $this->createMock(Node::class),
-            )
+                Set::of(),
+                Sequence::of($child = $this->createMock(Node::class)),
+            ),
         );
         $this->assertSame('a', $a->name());
         $this->assertSame($href, $a->href());
-        $this->assertSame($child, $a->children()->first());
+        $this->assertSame($child, $a->children()->first()->match(
+            static fn($node) => $node,
+            static fn() => null,
+        ));
     }
 
     public function testWithoutAttributes()
     {
         $this->assertTrue(
-            (new A(Url::of('http://example.com')))->attributes()->empty()
+            A::of(Url::of('http://example.com'))->attributes()->empty(),
         );
     }
 
     public function testWithoutChildren()
     {
-        $this->assertFalse(
-            (new A(Url::of('http://example.com')))->hasChildren()
+        $this->assertTrue(
+            A::of(Url::of('http://example.com'))->children()->empty(),
         );
     }
 }

@@ -6,16 +6,12 @@ namespace Tests\Innmind\Html\Visitor;
 use Innmind\Html\{
     Visitor\Element as ElementFinder,
     Reader\Reader,
-    Translator\NodeTranslators as HtmlTranslators,
-    Exception\DomainException,
-    Exception\ElementNotFound,
 };
 use Innmind\Xml\{
     Element as ElementInterface,
     Element\Element,
-    Translator\Translator,
-    Translator\NodeTranslators,
 };
+use Innmind\Filesystem\File\Content;
 use Innmind\Stream\Readable\Stream;
 use PHPUnit\Framework\TestCase;
 
@@ -25,40 +21,34 @@ class ElementTest extends TestCase
 
     public function setUp(): void
     {
-        $this->read = new Reader(
-            new Translator(
-                NodeTranslators::defaults()->merge(
-                    HtmlTranslators::defaults()
-                )
-            )
-        );
-    }
-
-    public function testThrowWhenEmptyTagName()
-    {
-        $this->expectException(DomainException::class);
-
-        new ElementFinder('');
+        $this->read = Reader::default();
     }
 
     public function testExtractElement()
     {
         $node = ($this->read)(
-            new Stream(\fopen('fixtures/lemonde.html', 'r'))
+            Content\OfStream::of(Stream::of(\fopen('fixtures/lemonde.html', 'r'))),
+        )->match(
+            static fn($node) => $node,
+            static fn() => null,
         );
 
-        $h1 = (new ElementFinder('h1'))($node);
+        $h1 = ElementFinder::of('h1')($node)->match(
+            static fn($node) => $node,
+            static fn() => null,
+        );
 
         $this->assertInstanceOf(ElementInterface::class, $h1);
         $this->assertSame('h1', $h1->name());
-        $this->assertTrue($h1->hasChildren());
+        $this->assertFalse($h1->children()->empty());
         $this->assertFalse($h1->attributes()->empty());
     }
 
-    public function testThrowWhenElementNotFound()
+    public function testReturnNothingWhenElementNotFound()
     {
-        $this->expectException(ElementNotFound::class);
-
-        (new ElementFinder('foo'))(new Element('whatever'));
+        $this->assertNull(ElementFinder::of('foo')(Element::of('whatever'))->match(
+            static fn($node) => $node,
+            static fn() => null,
+        ));
     }
 }

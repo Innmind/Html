@@ -5,7 +5,7 @@ namespace Tests\Innmind\Html\Element;
 
 use Innmind\Html\Element\Img;
 use Innmind\Xml\{
-    Element\SelfClosingElement,
+    Element,
     Attribute,
 };
 use Innmind\Url\Url;
@@ -17,11 +17,11 @@ class ImgTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            SelfClosingElement::class,
-            $img = new Img(
+            Element::class,
+            $img = Img::of(
                 $src = Url::of('http://example.com'),
-                Set::of(Attribute::class)
-            )
+                Set::of(),
+            ),
         );
         $this->assertSame('img', $img->name());
         $this->assertSame($src, $img->src());
@@ -30,7 +30,7 @@ class ImgTest extends TestCase
     public function testWithoutAttributes()
     {
         $this->assertTrue(
-            (new Img(Url::of('http://example.com')))->attributes()->empty(),
+            Img::of(Url::of('http://example.com'))->attributes()->empty(),
         );
     }
 }
