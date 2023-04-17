@@ -132,7 +132,7 @@ class DocumentTest extends TestCase
         );
     }
 
-    public function testAopendChild()
+    public function testAppendChild()
     {
         $document = Document::of(
             Type::of('html'),
@@ -171,6 +171,30 @@ class DocumentTest extends TestCase
                 static fn($node) => $node,
                 static fn() => null,
             ),
+        );
+    }
+
+    public function testAsContent()
+    {
+        $document = Document::of(
+            Type::of('html'),
+            Sequence::of(
+                Element::of(
+                    'html',
+                    null,
+                    Sequence::of(Text::of('wat')),
+                ),
+            ),
+        );
+
+        $this->assertSame(
+            <<<HTML
+            <!DOCTYPE html>
+            <html>
+                wat
+            </html>
+            HTML,
+            $document->asContent()->toString(),
         );
     }
 }
