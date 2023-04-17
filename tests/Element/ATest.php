@@ -49,4 +49,12 @@ class ATest extends TestCase
             A::of(Url::of('http://example.com'))->children()->empty(),
         );
     }
+
+    public function testToString()
+    {
+        $this->assertSame(
+            '<a href="http://example.com/"></a>',
+            A::of(Url::of('http://example.com/'))->toString(),
+        );
+    }
 }

@@ -33,4 +33,12 @@ class ImgTest extends TestCase
             Img::of(Url::of('http://example.com'))->attributes()->empty(),
         );
     }
+
+    public function testToString()
+    {
+        $this->assertSame(
+            '<img src="http://example.com/"/>',
+            Img::of(Url::of('http://example.com/'))->toString(),
+        );
+    }
 }

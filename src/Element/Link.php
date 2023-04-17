@@ -152,6 +152,10 @@ final class Link implements Element
 
     public function toString(): string
     {
-        return $this->element->toString();
+        return $this
+            ->element
+            ->addAttribute(Attribute::of('rel', $this->relationship))
+            ->addAttribute(Attribute::of('href', $this->href->toString()))
+            ->toString();
     }
 }
