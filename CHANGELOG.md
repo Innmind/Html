@@ -5,3 +5,7 @@
 ### Added
 
 - `Innmind\Html\Node\Document` now implements `Innmind\Xml\AsContent`
+
+### Changed
+
+- `symfony/dom-crawler:~6.1` is now longer supported as it has invalid behaviour with html5
