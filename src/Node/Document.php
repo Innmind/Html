@@ -6,6 +6,11 @@ namespace Innmind\Html\Node;
 use Innmind\Xml\{
     Node,
     Node\Document\Type,
+    AsContent,
+};
+use Innmind\Filesystem\File\{
+    Content,
+    Content\Line,
 };
 use Innmind\Immutable\{
     Sequence,
@@ -15,7 +20,7 @@ use Innmind\Immutable\{
 /**
  * @psalm-immutable
  */
-final class Document implements Node
+final class Document implements Node, AsContent
 {
     private Type $type;
     /** @var Sequence<Node> */
@@ -102,5 +107,19 @@ final class Document implements Node
     public function toString(): string
     {
         return $this->type->toString()."\n".$this->content();
+    }
+
+    public function asContent(): Content
+    {
+        return Content\Lines::of(
+            Sequence::lazyStartingWith(Line::of(Str::of($this->type->toString())))->append(
+                $this->children->flatMap(
+                    static fn($child) => match ($child instanceof AsContent) {
+                        true => $child->asContent()->lines(),
+                        false => Content\Lines::ofContent($child->toString())->lines(),
+                    },
+                ),
+            ),
+        );
     }
 }

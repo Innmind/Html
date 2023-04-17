@@ -173,4 +173,28 @@ class DocumentTest extends TestCase
             ),
         );
     }
+
+    public function testAsContent()
+    {
+        $document = Document::of(
+            Type::of('html'),
+            Sequence::of(
+                Element::of(
+                    'html',
+                    null,
+                    Sequence::of(Text::of('wat')),
+                ),
+            ),
+        );
+
+        $this->assertSame(
+            <<<HTML
+            <!DOCTYPE html>
+            <html>
+                wat
+            </html>
+            HTML,
+            $document->asContent()->toString(),
+        );
+    }
 }
