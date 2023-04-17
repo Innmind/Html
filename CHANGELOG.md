@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- Fix the `toString()` of `A`, `Base`, `Img` and `Link` that where missing attributes
+
 ## 6.1.0 - 2023-04-17
 
 ### Added

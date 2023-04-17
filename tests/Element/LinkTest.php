@@ -38,4 +38,12 @@ class LinkTest extends TestCase
             )->attributes()->empty(),
         );
     }
+
+    public function testToString()
+    {
+        $this->assertSame(
+            '<link rel="foo" href="http://example.com/"/>',
+            Link::of(Url::of('http://example.com'), 'foo')->toString(),
+        );
+    }
 }

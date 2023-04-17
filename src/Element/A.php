@@ -131,6 +131,9 @@ final class A implements Element
 
     public function toString(): string
     {
-        return $this->element->toString();
+        return $this
+            ->element
+            ->addAttribute(Attribute::of('href', $this->href->toString()))
+            ->toString();
     }
 }

@@ -33,4 +33,12 @@ class BaseTest extends TestCase
             Base::of(Url::of('http://example.com'))->attributes()->empty(),
         );
     }
+
+    public function testToString()
+    {
+        $this->assertSame(
+            '<base href="http://example.com/"/>',
+            Base::of(Url::of('http://example.com/'))->toString(),
+        );
+    }
 }

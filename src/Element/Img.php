@@ -121,6 +121,9 @@ final class Img implements Element
 
     public function toString(): string
     {
-        return $this->element->toString();
+        return $this
+            ->element
+            ->addAttribute(Attribute::of('src', $this->src->toString()))
+            ->toString();
     }
 }
