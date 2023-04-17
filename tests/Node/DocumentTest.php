@@ -132,7 +132,7 @@ class DocumentTest extends TestCase
         );
     }
 
-    public function testAopendChild()
+    public function testAppendChild()
     {
         $document = Document::of(
             Type::of('html'),
