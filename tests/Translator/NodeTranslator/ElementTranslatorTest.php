@@ -50,9 +50,9 @@ class ElementTranslatorTest extends TestCase
             Map::of(),
         )(
             new \DOMNode,
-            Translator::of(
-                NodeTranslators::defaults(),
-            )
+        Translator::of(
+            NodeTranslators::defaults(),
+        ),
         );
 
         $this->assertNull($result->match(
