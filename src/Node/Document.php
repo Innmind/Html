@@ -111,12 +111,12 @@ final class Document implements Node, AsContent
 
     public function asContent(): Content
     {
-        return Content\Lines::of(
+        return Content::ofLines(
             Sequence::lazyStartingWith(Line::of(Str::of($this->type->toString())))->append(
                 $this->children->flatMap(
                     static fn($child) => match ($child instanceof AsContent) {
                         true => $child->asContent()->lines(),
-                        false => Content\Lines::ofContent($child->toString())->lines(),
+                        false => Content::ofString($child->toString())->lines(),
                     },
                 ),
             ),

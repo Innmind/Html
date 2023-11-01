@@ -12,7 +12,6 @@ use Innmind\Xml\{
     Node\Document as XmlDocument,
 };
 use Innmind\Filesystem\File\Content;
-use Innmind\Stream\Readable\Stream;
 use PHPUnit\Framework\TestCase;
 
 class ReaderTest extends TestCase
@@ -44,7 +43,7 @@ class ReaderTest extends TestCase
 </html>
 HTML;
         $node = ($this->read)(
-            Content\OfStream::of(Stream::ofContent($html)),
+            Content::ofString($html),
         )->match(
             static fn($node) => $node,
             static fn() => null,
@@ -66,9 +65,7 @@ HTML;
     public function testReadFullPage()
     {
         $node = ($this->read)(
-            Content\OfStream::of(Stream::of(
-                \fopen('fixtures/lemonde.html', 'r'),
-            )),
+            Content::ofString(\file_get_contents('fixtures/lemonde.html')),
         )->match(
             static fn($node) => $node,
             static fn() => null,
@@ -79,10 +76,9 @@ HTML;
 
     public function testReadScreenOnline()
     {
-        $node = ($this->read)(Content\OfStream::of(Stream::of(\fopen(
+        $node = ($this->read)(Content::ofString(\file_get_contents(
             'fixtures/www.screenonline.org.uk_tv_id_560180_.html',
-            'r',
-        ))))->match(
+        )))->match(
             static fn($node) => $node,
             static fn() => null,
         );
@@ -93,7 +89,7 @@ HTML;
     public function testReturnNothingWhenEmptyStream()
     {
         $this->assertNull(
-            ($this->read)(Content\OfStream::of(Stream::ofContent('')))->match(
+            ($this->read)(Content::ofString(''))->match(
                 static fn($node) => $node,
                 static fn() => null,
             ),

@@ -12,7 +12,6 @@ use Innmind\Xml\{
     Element\Element,
 };
 use Innmind\Filesystem\File\Content;
-use Innmind\Stream\Readable\Stream;
 use PHPUnit\Framework\TestCase;
 
 class ElementTest extends TestCase
@@ -27,7 +26,7 @@ class ElementTest extends TestCase
     public function testExtractElement()
     {
         $node = ($this->read)(
-            Content\OfStream::of(Stream::of(\fopen('fixtures/lemonde.html', 'r'))),
+            Content::ofString(\file_get_contents('fixtures/lemonde.html')),
         )->match(
             static fn($node) => $node,
             static fn() => null,

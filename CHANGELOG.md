@@ -1,5 +1,12 @@
 # Changelog
 
+## 6.2.0 - 2023-11-01
+
+### Changed
+
+- Requires `innmind/xml:~7.6`
+- Requires `innmind/filesystem:~7.1`
+
 ## 6.1.1 - 2023-04-17
 
 ### Fixed
