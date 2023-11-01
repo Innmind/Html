@@ -20,13 +20,12 @@ composer require innmind/html
 use Innmind\Html\Reader\Reader;
 use Innmind\Xml\Node;
 use Innmind\Filesystem\File\Content;
-use Innmind\Stream\Readable\Stream;
 use Innmind\Immutable\Maybe;
 
 $read = Reader::default();
 
 $html = $read(
-    Content\OfStream::of(Stream::of(\fopen('https://github.com/', 'r'))),
+    Content::ofString(\file_get_contents('https://github.com/')),
 ); // Maybe<Node>
 ```
 
