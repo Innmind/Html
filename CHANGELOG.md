@@ -7,6 +7,10 @@
 - Requires `innmind/xml:~7.6`
 - Requires `innmind/filesystem:~7.1`
 
+### Removed
+
+- Support for PHP `8.1`
+
 ## 6.1.1 - 2023-04-17
 
 ### Fixed
