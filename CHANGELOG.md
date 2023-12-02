@@ -1,5 +1,15 @@
 # Changelog
 
+## 6.3.0 - 2023-12-02
+
+### Added
+
+- Support for `symfony/dom-crawler:~7.0`
+
+### Changed
+
+- Requires `symfony/dom-crawler:~6.3`
+
 ## 6.2.0 - 2023-11-01
 
 ### Changed
