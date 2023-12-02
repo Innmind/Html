@@ -29,7 +29,7 @@ final class Reader implements ReaderInterface
     public function __invoke(Content $html): Maybe
     {
         /** @psalm-suppress ImpureMethodCall */
-        $firstNode = (new Crawler($html->toString()))->getNode(0);
+        $firstNode = (new Crawler($html->toString(), useHtml5Parser: false))->getNode(0);
 
         if (!$firstNode instanceof \DOMNode) {
             /** @var Maybe<Node> */
