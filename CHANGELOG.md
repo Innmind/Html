@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Support for `symfony/dom-crawler:~7.0`
+
 ### Changed
 
 - Requires `symfony/dom-crawler:~6.3`
