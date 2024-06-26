@@ -80,10 +80,7 @@ final class Document implements Node, AsContent
     {
         return new self(
             $this->type,
-            Sequence::of(
-                $child,
-                ...$this->children->toList(),
-            ),
+            $this->children->prepend(Sequence::of($child)),
         );
     }
 
@@ -112,14 +109,17 @@ final class Document implements Node, AsContent
     public function asContent(): Content
     {
         return Content::ofLines(
-            Sequence::lazyStartingWith(Line::of(Str::of($this->type->toString())))->append(
-                $this->children->flatMap(
+            $this
+                ->children
+                ->flatMap(
                     static fn($child) => match ($child instanceof AsContent) {
                         true => $child->asContent()->lines(),
                         false => Content::ofString($child->toString())->lines(),
                     },
+                )
+                ->prepend(
+                    Sequence::of(Line::of(Str::of($this->type->toString()))),
                 ),
-            ),
         );
     }
 }
