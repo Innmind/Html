@@ -7,10 +7,7 @@ use Innmind\Html\{
     Visitor\Elements,
     Reader\Reader,
 };
-use Innmind\Xml\{
-    Element as ElementInterface,
-    Element\Element,
-};
+use Innmind\Xml\Element\Element;
 use Innmind\Filesystem\File\Content;
 use Innmind\Immutable\Set;
 use PHPUnit\Framework\TestCase;

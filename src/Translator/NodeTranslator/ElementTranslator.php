@@ -7,7 +7,6 @@ use Innmind\Xml\{
     Translator\NodeTranslator,
     Translator\Translator,
     Translator\NodeTranslator\ElementTranslator as GenericTranslator,
-    Node,
 };
 use Innmind\Immutable\{
     Map,
