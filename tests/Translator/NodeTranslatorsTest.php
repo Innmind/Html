@@ -8,7 +8,6 @@ use Innmind\Html\Translator\{
     NodeTranslator\DocumentTranslator,
     NodeTranslator\ElementTranslator,
 };
-use Innmind\Xml\Translator\NodeTranslator;
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 

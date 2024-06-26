@@ -6,7 +6,6 @@ namespace Tests\Innmind\Html\Element;
 use Innmind\Html\Element\A;
 use Innmind\Xml\{
     Element,
-    Attribute,
     Node,
 };
 use Innmind\Url\Url;

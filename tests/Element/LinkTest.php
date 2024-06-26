@@ -4,10 +4,7 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Html\Element;
 
 use Innmind\Html\Element\Link;
-use Innmind\Xml\{
-    Element,
-    Attribute,
-};
+use Innmind\Xml\Element;
 use Innmind\Url\Url;
 use Innmind\Immutable\Set;
 use PHPUnit\Framework\TestCase;
