@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- Requires `innmind/xml:~7.7`
+- `Document` children Sequence is no longer forced to be lazy, it depends on the kind of Sequence you use when building it
+
 ## 6.3.0 - 2023-12-02
 
 ### Added
