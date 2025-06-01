@@ -36,7 +36,7 @@ final class Img implements Element
      *
      * @param Set<Attribute>|null $attributes
      */
-    public static function of(Url $src, Set $attributes = null): self
+    public static function of(Url $src, ?Set $attributes = null): self
     {
         return new self($src, SelfClosingElement::of('img', $attributes));
     }

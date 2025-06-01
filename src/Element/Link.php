@@ -49,7 +49,7 @@ final class Link implements Element
     public static function of(
         Url $href,
         string $relationship,
-        Set $attributes = null,
+        ?Set $attributes = null,
     ): self {
         return new self(
             $href,

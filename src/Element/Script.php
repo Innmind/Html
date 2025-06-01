@@ -33,7 +33,7 @@ final class Script implements Element
      *
      * @param Set<Attribute>|null $attributes
      */
-    public static function of(Text $text, Set $attributes = null): self
+    public static function of(Text $text, ?Set $attributes = null): self
     {
         /** @var Sequence<Node> */
         $children = Sequence::of($text);

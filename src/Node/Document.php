@@ -29,7 +29,7 @@ final class Document implements Node, AsContent
     /**
      * @param Sequence<Node>|null $children
      */
-    private function __construct(Type $type, Sequence $children = null)
+    private function __construct(Type $type, ?Sequence $children = null)
     {
         $this->type = $type;
         $this->children = $children ?? Sequence::of();
@@ -40,7 +40,7 @@ final class Document implements Node, AsContent
      *
      * @param Sequence<Node>|null $children
      */
-    public static function of(Type $type, Sequence $children = null): self
+    public static function of(Type $type, ?Sequence $children = null): self
     {
         return new self($type, $children);
     }
