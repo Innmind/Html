@@ -50,6 +50,7 @@ final class Document implements Node, AsContent
         return $this->type;
     }
 
+    #[\Override]
     public function children(): Sequence
     {
         return $this->children;
@@ -60,6 +61,7 @@ final class Document implements Node, AsContent
         return !$this->children->empty();
     }
 
+    #[\Override]
     public function filterChild(callable $filter): self
     {
         return new self(
@@ -68,6 +70,7 @@ final class Document implements Node, AsContent
         );
     }
 
+    #[\Override]
     public function mapChild(callable $map): self
     {
         return new self(
@@ -76,6 +79,7 @@ final class Document implements Node, AsContent
         );
     }
 
+    #[\Override]
     public function prependChild(Node $child): Node
     {
         return new self(
@@ -84,6 +88,7 @@ final class Document implements Node, AsContent
         );
     }
 
+    #[\Override]
     public function appendChild(Node $child): Node
     {
         return new self(
@@ -92,6 +97,7 @@ final class Document implements Node, AsContent
         );
     }
 
+    #[\Override]
     public function content(): string
     {
         $children = $this->children->map(
@@ -101,13 +107,20 @@ final class Document implements Node, AsContent
         return Str::of('')->join($children)->toString();
     }
 
+    #[\Override]
     public function toString(): string
     {
         return $this->type->toString()."\n".$this->content();
     }
 
+    #[\Override]
     public function asContent(): Content
     {
+        /**
+         * @psalm-suppress MixedArgumentTypeCoercion
+         * @psalm-suppress UndefinedInterfaceMethod
+         * @psalm-suppress MixedMethodCall
+         */
         return Content::ofLines(
             $this
                 ->children

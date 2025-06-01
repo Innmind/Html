@@ -22,6 +22,7 @@ final class BaseTranslator implements NodeTranslator
     {
     }
 
+    #[\Override]
     public function __invoke(
         \DOMNode $node,
         Translator $translate,

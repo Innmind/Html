@@ -71,21 +71,25 @@ final class Link implements Element
         return $this->relationship;
     }
 
+    #[\Override]
     public function name(): string
     {
         return 'link';
     }
 
+    #[\Override]
     public function attributes(): Map
     {
         return $this->element->attributes();
     }
 
+    #[\Override]
     public function attribute(string $name): Maybe
     {
         return $this->element->attribute($name);
     }
 
+    #[\Override]
     public function removeAttribute(string $name): self
     {
         return new self(
@@ -95,6 +99,7 @@ final class Link implements Element
         );
     }
 
+    #[\Override]
     public function addAttribute(Attribute $attribute): self
     {
         return new self(
@@ -104,11 +109,13 @@ final class Link implements Element
         );
     }
 
+    #[\Override]
     public function children(): Sequence
     {
         return $this->element->children();
     }
 
+    #[\Override]
     public function filterChild(callable $filter): self
     {
         return new self(
@@ -118,6 +125,7 @@ final class Link implements Element
         );
     }
 
+    #[\Override]
     public function mapChild(callable $map): self
     {
         return new self(
@@ -127,6 +135,7 @@ final class Link implements Element
         );
     }
 
+    #[\Override]
     public function prependChild(Node $child): self
     {
         return new self(
@@ -136,6 +145,7 @@ final class Link implements Element
         );
     }
 
+    #[\Override]
     public function appendChild(Node $child): self
     {
         return new self(
@@ -145,11 +155,13 @@ final class Link implements Element
         );
     }
 
+    #[\Override]
     public function content(): string
     {
         return $this->element->content();
     }
 
+    #[\Override]
     public function toString(): string
     {
         return $this

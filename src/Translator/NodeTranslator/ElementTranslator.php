@@ -33,6 +33,7 @@ final class ElementTranslator implements NodeTranslator
         $this->translators = $translators;
     }
 
+    #[\Override]
     public function __invoke(
         \DOMNode $node,
         Translator $translate,
