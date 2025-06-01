@@ -26,6 +26,7 @@ final class Reader implements ReaderInterface
         $this->translate = $translate;
     }
 
+    #[\Override]
     public function __invoke(Content $html): Maybe
     {
         /** @psalm-suppress ImpureMethodCall */

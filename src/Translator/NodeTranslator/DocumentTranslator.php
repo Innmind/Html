@@ -24,6 +24,7 @@ final class DocumentTranslator implements NodeTranslator
     {
     }
 
+    #[\Override]
     public function __invoke(
         \DOMNode $node,
         Translator $translate,
@@ -62,6 +63,7 @@ final class DocumentTranslator implements NodeTranslator
      */
     private function buildDoctype(\DOMDocumentType $type): Maybe
     {
+        /** @psalm-suppress MixedArgument */
         return Type::maybe(
             $type->name,
             $type->publicId,
@@ -79,6 +81,10 @@ final class DocumentTranslator implements NodeTranslator
         /** @var Maybe<Sequence<Node>> */
         $children = Maybe::just(Sequence::of());
 
+        /**
+         * @psalm-suppress ImpureMethodCall
+         * @var \DOMNode $child
+         */
         foreach ($nodes as $child) {
             if ($child->nodeType === \XML_DOCUMENT_TYPE_NODE) {
                 continue;
