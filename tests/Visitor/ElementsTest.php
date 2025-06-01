@@ -10,7 +10,7 @@ use Innmind\Html\{
 use Innmind\Xml\Element\Element;
 use Innmind\Filesystem\File\Content;
 use Innmind\Immutable\Set;
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class ElementsTest extends TestCase
 {

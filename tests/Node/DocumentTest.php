@@ -11,7 +11,7 @@ use Innmind\Xml\{
     Element\Element,
 };
 use Innmind\Immutable\Sequence;
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class DocumentTest extends TestCase
 {

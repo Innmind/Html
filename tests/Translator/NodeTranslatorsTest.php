@@ -9,7 +9,7 @@ use Innmind\Html\Translator\{
     NodeTranslator\ElementTranslator,
 };
 use Innmind\Immutable\Map;
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class NodeTranslatorsTest extends TestCase
 {
