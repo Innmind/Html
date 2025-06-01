@@ -36,7 +36,7 @@ final class Base implements Element
      *
      * @param Set<Attribute>|null $attributes
      */
-    public static function of(Url $href, Set $attributes = null): self
+    public static function of(Url $href, ?Set $attributes = null): self
     {
         return new self($href, SelfClosingElement::of('base', $attributes));
     }

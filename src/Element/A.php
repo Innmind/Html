@@ -38,8 +38,8 @@ final class A implements Element
      */
     public static function of(
         Url $href,
-        Set $attributes = null,
-        Sequence $children = null,
+        ?Set $attributes = null,
+        ?Sequence $children = null,
     ): self {
         return new self(
             $href,
