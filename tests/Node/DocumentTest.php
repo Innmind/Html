@@ -11,7 +11,7 @@ use Innmind\Xml\{
     Element\Element,
 };
 use Innmind\Immutable\Sequence;
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class DocumentTest extends TestCase
 {
@@ -45,7 +45,7 @@ class DocumentTest extends TestCase
     {
         $document = Document::of(
             Type::of('html'),
-            Sequence::of($child = $this->createMock(Node::class)),
+            Sequence::of($child = Text::of('')),
         );
 
         $this->assertSame($child, $document->children()->first()->match(
@@ -102,7 +102,7 @@ class DocumentTest extends TestCase
         );
 
         $document2 = $document->prependChild(
-            $node = $this->createMock(Node::class),
+            $node = Text::of(''),
         );
 
         $this->assertNotSame($document, $document2);
@@ -144,7 +144,7 @@ class DocumentTest extends TestCase
         );
 
         $document2 = $document->appendChild(
-            $node = $this->createMock(Node::class),
+            $node = Text::of(''),
         );
 
         $this->assertNotSame($document, $document2);

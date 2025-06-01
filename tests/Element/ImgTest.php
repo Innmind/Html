@@ -7,7 +7,7 @@ use Innmind\Html\Element\Img;
 use Innmind\Xml\Element;
 use Innmind\Url\Url;
 use Innmind\Immutable\Set;
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class ImgTest extends TestCase
 {

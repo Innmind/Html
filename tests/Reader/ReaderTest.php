@@ -12,7 +12,7 @@ use Innmind\Xml\{
     Node\Document as XmlDocument,
 };
 use Innmind\Filesystem\File\Content;
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class ReaderTest extends TestCase
 {

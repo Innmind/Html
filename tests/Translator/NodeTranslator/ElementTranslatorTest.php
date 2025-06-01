@@ -16,21 +16,46 @@ use Innmind\Immutable\{
     Map,
     Maybe,
 };
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class ElementTranslatorTest extends TestCase
 {
     private $translate;
-    private $bar;
-    private $baz;
+    private $expected;
 
     public function setUp(): void
     {
+        $this->expected = Node\Text::of('');
         $this->translate = ElementTranslator::of(
             GenericTranslator::of(),
             Map::of(
-                ['bar', $this->bar = $this->createMock(NodeTranslator::class)],
-                ['baz', $this->baz = $this->createMock(NodeTranslator::class)],
+                [
+                    'bar',
+                    new class implements NodeTranslator {
+                        public function __invoke(\DOMNode $node, Translator $translate): Maybe
+                        {
+                            return Maybe::nothing();
+                        }
+                    },
+                ],
+                [
+                    'baz',
+                    new class($this->expected) implements NodeTranslator {
+                        public function __construct(
+                            private $expected,
+                        ) {
+                        }
+
+                        public function __invoke(\DOMNode $node, Translator $translate): Maybe
+                        {
+                            if ($node instanceof \DOMElement && $node->nodeName === 'baz') {
+                                return Maybe::just($this->expected);
+                            }
+
+                            return Maybe::nothing();
+                        }
+                    },
+                ],
             ),
         );
     }
@@ -84,12 +109,6 @@ class ElementTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadXML('<bar/>');
 
-        $this->bar
-            ->expects($this->once())
-            ->method('__invoke')
-            ->with($dom->childNodes->item(0))
-            ->willReturn(Maybe::nothing());
-
         $node = ($this->translate)(
             $dom->childNodes->item(0),
             Translator::of(
@@ -108,12 +127,6 @@ class ElementTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadXML('<baz/>');
 
-        $this->baz
-            ->expects($this->once())
-            ->method('__invoke')
-            ->with($dom->childNodes->item(0))
-            ->willReturn(Maybe::just($expected = $this->createMock(Node::class)));
-
         $node = ($this->translate)(
             $dom->childNodes->item(0),
             Translator::of(
@@ -124,6 +137,6 @@ class ElementTranslatorTest extends TestCase
             static fn() => null,
         );
 
-        $this->assertSame($expected, $node);
+        $this->assertSame($this->expected, $node);
     }
 }

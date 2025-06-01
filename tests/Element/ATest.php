@@ -13,7 +13,7 @@ use Innmind\Immutable\{
     Set,
     Sequence,
 };
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class ATest extends TestCase
 {
@@ -24,7 +24,7 @@ class ATest extends TestCase
             $a = A::of(
                 $href = Url::of('http://example.com'),
                 Set::of(),
-                Sequence::of($child = $this->createMock(Node::class)),
+                Sequence::of($child = Node\Text::of('')),
             ),
         );
         $this->assertSame('a', $a->name());
