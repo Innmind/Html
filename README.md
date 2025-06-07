@@ -46,7 +46,7 @@ use Innmind\Html\Visitor\Elements;
 $h1s = Elements::of('h1')($html);
 ```
 
-Here `$h1s` is a set of `Element` which are all `h1` elements.
+Here `$h1s` is a sequence of `Element` which are all `h1` elements.
 
 Here's the full list of visitors you have access to:
 

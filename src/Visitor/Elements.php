@@ -9,7 +9,7 @@ use Innmind\Xml\{
     Element,
     Element\Custom,
 };
-use Innmind\Immutable\Set;
+use Innmind\Immutable\Sequence;
 
 /**
  * @psalm-immutable
@@ -28,9 +28,9 @@ final class Elements
     }
 
     /**
-     * @return Set<Element|Custom>
+     * @return Sequence<Element|Custom>
      */
-    public function __invoke(Document|Node|Element|Custom $node): Set
+    public function __invoke(Document|Node|Element|Custom $node): Sequence
     {
         return match (true) {
             $node instanceof Document => $this->visitDocument($node),
@@ -51,62 +51,57 @@ final class Elements
     }
 
     /**
-     * @return Set<Element|Custom>
+     * @return Sequence<Element|Custom>
      */
-    private function visitDocument(Document $document): Set
+    private function visitDocument(Document $document): Sequence
     {
         return $document
             ->children()
-            ->flatMap(fn($child) => $this($child)->unsorted())
-            ->toSet();
+            ->flatMap(fn($child) => $this($child));
     }
 
     /**
-     * @return Set<Element|Custom>
+     * @return Sequence<Element|Custom>
      */
-    private function visitNode(Node $node): Set
+    private function visitNode(Node $node): Sequence
     {
-        return Set::of();
+        return Sequence::of();
     }
 
     /**
-     * @return Set<Element|Custom>
+     * @return Sequence<Element|Custom>
      */
-    private function visitElement(Element $element): Set
+    private function visitElement(Element $element): Sequence
     {
-        /** @var Set<Element|Custom>  */
-        $elements = Set::of();
+        /** @var Sequence<Element|Custom>  */
+        $elements = Sequence::of();
 
         if ($element->name()->toString() === $this->name) {
             $elements = ($elements)($element);
         }
 
-        return $elements->merge(
-            $element
-                ->children()
-                ->flatMap(fn($child) => $this($child)->unsorted())
-                ->toSet(),
-        );
+        return $element
+            ->children()
+            ->flatMap(fn($child) => $this($child))
+            ->prepend($elements);
     }
 
     /**
-     * @return Set<Element|Custom>
+     * @return Sequence<Element|Custom>
      */
-    private function visitCustom(Custom $element): Set
+    private function visitCustom(Custom $element): Sequence
     {
-        /** @var Set<Element|Custom>  */
-        $elements = Set::of();
+        /** @var Sequence<Element|Custom>  */
+        $elements = Sequence::of();
         $normalized = $element->normalize();
 
         if ($normalized->name()->toString() === $this->name) {
             $elements = ($elements)($element);
         }
 
-        return $elements->merge(
-            $normalized
-                ->children()
-                ->flatMap(fn($child) => $this($child)->unsorted())
-                ->toSet(),
-        );
+        return $normalized
+            ->children()
+            ->flatMap(fn($child) => $this($child))
+            ->prepend($elements);
     }
 }

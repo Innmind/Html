@@ -12,7 +12,7 @@ use Innmind\Xml\{
     Element\Name,
 };
 use Innmind\Filesystem\File\Content;
-use Innmind\Immutable\Set;
+use Innmind\Immutable\Sequence;
 use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class ElementsTest extends TestCase
@@ -35,7 +35,7 @@ class ElementsTest extends TestCase
 
         $h1s = Elements::of('h1')($node);
 
-        $this->assertInstanceOf(Set::class, $h1s);
+        $this->assertInstanceOf(Sequence::class, $h1s);
         $this->assertCount(26, $h1s);
     }
 
@@ -43,7 +43,7 @@ class ElementsTest extends TestCase
     {
         $elements = Elements::of('foo')(Element::of(Name::of('whatever')));
 
-        $this->assertInstanceOf(Set::class, $elements);
+        $this->assertInstanceOf(Sequence::class, $elements);
         $this->assertCount(0, $elements);
     }
 }

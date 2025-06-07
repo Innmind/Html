@@ -14,6 +14,7 @@
 - `Innmind\Html\Element\*` classes now implement `Innmind\Xml\Element\Custom`
 - `Innmind\Html\Node\Document` no longer implement any interface
 - `Innmind\Html\Reader\Reader` now return an `Innmind\Immutable\Attempt`
+- `Innmind\Html\Visitor\Elements` now return a `Innmind\Immutable\Sequence`
 
 ### Removed
 
