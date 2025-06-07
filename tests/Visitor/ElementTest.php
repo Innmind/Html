@@ -5,7 +5,7 @@ namespace Tests\Innmind\Html\Visitor;
 
 use Innmind\Html\{
     Visitor\Element as ElementFinder,
-    Reader\Reader,
+    Reader,
 };
 use Innmind\Xml\{
     Element,

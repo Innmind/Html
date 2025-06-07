@@ -1,12 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Html\Reader;
+namespace Innmind\Html;
 
-use Innmind\Html\{
-    Node\Document,
-    Translator,
-};
+use Innmind\Html\Node\Document;
 use Innmind\Xml\{
     Node,
     Element,

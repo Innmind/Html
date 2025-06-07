@@ -1,10 +1,10 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Innmind\Html\Reader;
+namespace Tests\Innmind\Html;
 
 use Innmind\Html\{
-    Reader\Reader,
+    Reader,
     Node\Document,
 };
 use Innmind\Xml\Format;

@@ -18,7 +18,7 @@ composer require innmind/html
 
 ```php
 use Innmind\Html\{
-    Reader\Reader,
+    Reader,
     Node\Document,
 };
 use Innmind\Xml\{
