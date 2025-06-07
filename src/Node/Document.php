@@ -5,29 +5,29 @@ namespace Innmind\Html\Node;
 
 use Innmind\Xml\{
     Node,
-    Node\Document\Type,
-    AsContent,
+    Element,
+    Element\Custom,
+    Document\Type,
+    Format,
+    Document as XMLDocument,
 };
-use Innmind\Filesystem\File\{
-    Content,
-    Content\Line,
-};
+use Innmind\Filesystem\File\Content;
 use Innmind\Immutable\{
     Sequence,
-    Str,
+    Maybe,
 };
 
 /**
  * @psalm-immutable
  */
-final class Document implements Node, AsContent
+final class Document
 {
     private Type $type;
-    /** @var Sequence<Node> */
+    /** @var Sequence<Node|Element|Custom> */
     private Sequence $children;
 
     /**
-     * @param Sequence<Node>|null $children
+     * @param Sequence<Node|Element|Custom>|null $children
      */
     private function __construct(Type $type, ?Sequence $children = null)
     {
@@ -38,7 +38,7 @@ final class Document implements Node, AsContent
     /**
      * @psalm-pure
      *
-     * @param Sequence<Node>|null $children
+     * @param Sequence<Node|Element|Custom>|null $children
      */
     public static function of(Type $type, ?Sequence $children = null): self
     {
@@ -50,7 +50,9 @@ final class Document implements Node, AsContent
         return $this->type;
     }
 
-    #[\Override]
+    /**
+     * @return Sequence<Node|Element|Custom>
+     */
     public function children(): Sequence
     {
         return $this->children;
@@ -61,7 +63,9 @@ final class Document implements Node, AsContent
         return !$this->children->empty();
     }
 
-    #[\Override]
+    /**
+     * @param callable(Node|Element|Custom): bool $filter
+     */
     public function filterChild(callable $filter): self
     {
         return new self(
@@ -70,7 +74,9 @@ final class Document implements Node, AsContent
         );
     }
 
-    #[\Override]
+    /**
+     * @param callable(Node|Element|Custom): (Node|Element|Custom) $map
+     */
     public function mapChild(callable $map): self
     {
         return new self(
@@ -79,8 +85,7 @@ final class Document implements Node, AsContent
         );
     }
 
-    #[\Override]
-    public function prependChild(Node $child): Node
+    public function prependChild(Node|Element|Custom $child): self
     {
         return new self(
             $this->type,
@@ -88,8 +93,7 @@ final class Document implements Node, AsContent
         );
     }
 
-    #[\Override]
-    public function appendChild(Node $child): Node
+    public function appendChild(Node|Element|Custom $child): self
     {
         return new self(
             $this->type,
@@ -97,42 +101,23 @@ final class Document implements Node, AsContent
         );
     }
 
-    #[\Override]
-    public function content(): string
+    public function asContent(Format $format = Format::pretty): Content
     {
-        $children = $this->children->map(
-            static fn(Node $child): string => $child->toString(),
-        );
+        /** @var Maybe<XMLDocument\Encoding> */
+        $encoding = Maybe::nothing();
+        $chunks = XMLDocument::of(
+            XMLDocument\Version::of(1, 0),
+            Maybe::just($this->type),
+            $encoding,
+            $this->children,
+        )
+            ->asContent($format)
+            ->chunks()
+            ->map(static fn($chunk) => match ($chunk->startsWith('<?xml version="1.0"?>')) {
+                true => $chunk->drop(22),
+                false => $chunk,
+            });
 
-        return Str::of('')->join($children)->toString();
-    }
-
-    #[\Override]
-    public function toString(): string
-    {
-        return $this->type->toString()."\n".$this->content();
-    }
-
-    #[\Override]
-    public function asContent(): Content
-    {
-        /**
-         * @psalm-suppress MixedArgumentTypeCoercion
-         * @psalm-suppress UndefinedInterfaceMethod
-         * @psalm-suppress MixedMethodCall
-         */
-        return Content::ofLines(
-            $this
-                ->children
-                ->flatMap(
-                    static fn($child) => match ($child instanceof AsContent) {
-                        true => $child->asContent()->lines(),
-                        false => Content::ofString($child->toString())->lines(),
-                    },
-                )
-                ->prepend(
-                    Sequence::of(Line::of(Str::of($this->type->toString()))),
-                ),
-        );
+        return Content::ofChunks($chunks);
     }
 }

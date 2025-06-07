@@ -17,16 +17,23 @@ composer require innmind/html
 ## Usage
 
 ```php
-use Innmind\Html\Reader\Reader;
-use Innmind\Xml\Node;
+use Innmind\Html\{
+    Reader\Reader,
+    Node\Document,
+};
+use Innmind\Xml\{
+    Node,
+    Element,
+    Element\Custom,
+};
 use Innmind\Filesystem\File\Content;
 use Innmind\Immutable\Maybe;
 
-$read = Reader::default();
+$read = Reader::new();
 
 $html = $read(
     Content::ofString(\file_get_contents('https://github.com/')),
-); // Maybe<Node>
+); // Maybe<Document|Element|Custom|Node>
 ```
 
 ## Extract some elements of the tree

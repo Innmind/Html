@@ -6,10 +6,10 @@ namespace Tests\Innmind\Html\Element;
 use Innmind\Html\Element\Script;
 use Innmind\Xml\{
     Element,
-    Node\Text,
+    Node,
     Attribute,
 };
-use Innmind\Immutable\Set;
+use Innmind\Immutable\Sequence;
 use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class ScriptTest extends TestCase
@@ -17,24 +17,28 @@ class ScriptTest extends TestCase
     public function testInterface()
     {
         $script = Script::of(
-            Text::of('foo'),
+            Node::text('foo'),
         );
 
-        $this->assertInstanceOf(Element::class, $script);
-        $this->assertSame('<script>foo</script>', $script->toString());
+        $this->assertInstanceOf(Element\Custom::class, $script);
+        $script = $script->normalize();
+        $this->assertSame(
+            '<script>foo</script>'."\n",
+            $script->asContent()->toString(),
+        );
         $this->assertCount(1, $script->children());
     }
 
     public function testWithAttributes()
     {
         $script = Script::of(
-            Text::of('foo'),
-            Set::of(
+            Node::text('foo'),
+            Sequence::of(
                 $attribute = Attribute::of('foo', 'bar'),
             ),
         );
 
-        $this->assertSame($attribute, $script->attributes()->get('foo')->match(
+        $this->assertSame($attribute, $script->normalize()->attribute('foo')->match(
             static fn($attribute) => $attribute,
             static fn() => null,
         ));

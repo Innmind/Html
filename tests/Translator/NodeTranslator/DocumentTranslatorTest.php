@@ -4,34 +4,20 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Html\Translator\NodeTranslator;
 
 use Innmind\Html\{
-    Translator\NodeTranslator\DocumentTranslator,
+    Translator,
     Node\Document,
-};
-use Innmind\Xml\{
-    Translator\NodeTranslator,
-    Translator\Translator,
-    Translator\NodeTranslators,
 };
 use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class DocumentTranslatorTest extends TestCase
 {
-    public function testInterface()
-    {
-        $this->assertInstanceOf(
-            NodeTranslator::class,
-            DocumentTranslator::of(),
-        );
-    }
-
     public function testTranslate()
     {
         $document = new \DOMDocument;
         $document->loadHtml('<!DOCTYPE html><body></body>');
 
-        $node = DocumentTranslator::of()(
+        $node = Translator::new()(
             $document,
-            Translator::of(NodeTranslators::defaults())
         )->match(
             static fn($node) => $node,
             static fn() => null,
@@ -40,7 +26,16 @@ class DocumentTranslatorTest extends TestCase
         $this->assertInstanceOf(Document::class, $node);
         $this->assertSame('html', $node->type()->name());
         $this->assertCount(1, $node->children());
-        $this->assertSame('<html><body/></html>', $node->content());
+        $this->assertSame(
+            <<<HTML
+            <!DOCTYPE html>
+            <html>
+                <body/>
+            </html>
+
+            HTML,
+            $node->asContent()->toString(),
+        );
     }
 
     public function testTranslateWithoutDoctype()
@@ -48,9 +43,8 @@ class DocumentTranslatorTest extends TestCase
         $document = new \DOMDocument;
         $document->loadHtml('<!--foo-->');
 
-        $node = DocumentTranslator::of()(
+        $node = Translator::new()(
             $document,
-            Translator::of(NodeTranslators::defaults())
         )->match(
             static fn($node) => $node,
             static fn() => null,
@@ -67,30 +61,13 @@ class DocumentTranslatorTest extends TestCase
         $document = new \DOMDocument;
         $document->loadHtml('<!DOCTYPE html>');
 
-        $node = DocumentTranslator::of()(
+        $node = Translator::new()(
             $document,
-            Translator::of(NodeTranslators::defaults())
         )->match(
             static fn($node) => $node,
             static fn() => null,
         );
 
         $this->assertTrue($node->children()->empty());
-    }
-
-    public function testReturnNothingWhenInvalidNode()
-    {
-        $document = new \DOMDocument;
-        $document->loadXML('<foo></foo>');
-
-        $result = DocumentTranslator::of()(
-            $document->childNodes->item(0),
-            Translator::of(NodeTranslators::defaults())
-        );
-
-        $this->assertNull($result->match(
-            static fn($node) => $node,
-            static fn() => null,
-        ));
     }
 }

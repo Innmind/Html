@@ -16,8 +16,10 @@
     },
     "require": {
         "php": "~8.2",
-        "innmind/xml": "~7.7",
-        "innmind/filesystem": "~7.1",
+        "innmind/xml": "~8.0",
+        "innmind/filesystem": "~8.1",
+        "innmind/immutable": "~5.16",
+        "innmind/validation": "~2.0",
         "symfony/dom-crawler": ">=6.3 <7.0.7",
         "innmind/url": "~4.0"
     },

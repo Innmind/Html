@@ -5,26 +5,23 @@ namespace Innmind\Html\Element;
 
 use Innmind\Xml\{
     Element,
+    Element\Name,
+    Element\Custom,
     Node,
     Attribute,
 };
 use Innmind\Url\Url;
-use Innmind\Immutable\{
-    Set,
-    Sequence,
-    Maybe,
-    Map,
-};
+use Innmind\Immutable\Sequence;
 
 /**
  * @psalm-immutable
  */
-final class A implements Element
+final class A implements Custom
 {
-    private Element\Element $element;
+    private Element $element;
     private Url $href;
 
-    private function __construct(Url $href, Element\Element $element)
+    private function __construct(Url $href, Element $element)
     {
         $this->element = $element;
         $this->href = $href;
@@ -33,18 +30,18 @@ final class A implements Element
     /**
      * @psalm-pure
      *
-     * @param Set<Attribute>|null $attributes
-     * @param Sequence<Node>|null $children
+     * @param Sequence<Attribute>|null $attributes
+     * @param Sequence<Node|Element|Custom>|null $children
      */
     public static function of(
         Url $href,
-        ?Set $attributes = null,
+        ?Sequence $attributes = null,
         ?Sequence $children = null,
     ): self {
         return new self(
             $href,
-            Element\Element::of(
-                'a',
+            Element::of(
+                Name::of('a'),
                 $attributes,
                 $children,
             ),
@@ -57,95 +54,10 @@ final class A implements Element
     }
 
     #[\Override]
-    public function name(): string
+    public function normalize(): Element
     {
-        return 'a';
-    }
-
-    #[\Override]
-    public function attributes(): Map
-    {
-        return $this->element->attributes();
-    }
-
-    #[\Override]
-    public function attribute(string $name): Maybe
-    {
-        return $this->element->attribute($name);
-    }
-
-    #[\Override]
-    public function removeAttribute(string $name): self
-    {
-        return new self(
-            $this->href,
-            $this->element->removeAttribute($name),
+        return $this->element->addAttribute(
+            Attribute::of('href', $this->href->toString()),
         );
-    }
-
-    #[\Override]
-    public function addAttribute(Attribute $attribute): self
-    {
-        return new self(
-            $this->href,
-            $this->element->addAttribute($attribute),
-        );
-    }
-
-    #[\Override]
-    public function children(): Sequence
-    {
-        return $this->element->children();
-    }
-
-    #[\Override]
-    public function filterChild(callable $filter): self
-    {
-        return new self(
-            $this->href,
-            $this->element->filterChild($filter),
-        );
-    }
-
-    #[\Override]
-    public function mapChild(callable $map): self
-    {
-        return new self(
-            $this->href,
-            $this->element->mapChild($map),
-        );
-    }
-
-    #[\Override]
-    public function prependChild(Node $child): self
-    {
-        return new self(
-            $this->href,
-            $this->element->prependChild($child),
-        );
-    }
-
-    #[\Override]
-    public function appendChild(Node $child): self
-    {
-        return new self(
-            $this->href,
-            $this->element->appendChild($child),
-        );
-    }
-
-    #[\Override]
-    public function content(): string
-    {
-        return $this->element->content();
-    }
-
-    #[\Override]
-    public function toString(): string
-    {
-        return $this
-            ->element
-            ->addAttribute(Attribute::of('href', $this->href->toString()))
-            ->toString();
     }
 }

@@ -3,21 +3,23 @@ declare(strict_types = 1);
 
 namespace Innmind\Html\Reader;
 
-use Innmind\Html\Translator\NodeTranslators as HtmlNodeTranslators;
+use Innmind\Html\{
+    Node\Document,
+    Translator,
+};
 use Innmind\Xml\{
-    Reader as ReaderInterface,
     Node,
-    Translator\Translator,
-    Translator\NodeTranslators,
+    Element,
+    Element\Custom,
 };
 use Innmind\Filesystem\File\Content;
-use Innmind\Immutable\Maybe;
+use Innmind\Immutable\Attempt;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * @psalm-immutable
  */
-final class Reader implements ReaderInterface
+final class Reader
 {
     private Translator $translate;
 
@@ -26,15 +28,17 @@ final class Reader implements ReaderInterface
         $this->translate = $translate;
     }
 
-    #[\Override]
-    public function __invoke(Content $html): Maybe
+    /**
+     * @return Attempt<Document|Node|Element|Custom>
+     */
+    public function __invoke(Content $html): Attempt
     {
         /** @psalm-suppress ImpureMethodCall */
         $firstNode = (new Crawler($html->toString(), useHtml5Parser: false))->getNode(0);
 
         if (!$firstNode instanceof \DOMNode) {
-            /** @var Maybe<Node> */
-            return Maybe::nothing();
+            /** @var Attempt<Document|Node|Element|Custom> */
+            return Attempt::error(new \RuntimeException('Failed to parse html content'));
         }
 
         /** @psalm-suppress RedundantCondition */
@@ -45,19 +49,10 @@ final class Reader implements ReaderInterface
         return ($this->translate)($firstNode);
     }
 
-    public static function of(Translator $translate): self
-    {
-        return new self($translate);
-    }
-
-    public static function default(): self
+    public static function new(): self
     {
         return new self(
-            Translator::of(
-                NodeTranslators::defaults()->merge(
-                    HtmlNodeTranslators::defaults(),
-                ),
-            ),
+            Translator::new(),
         );
     }
 }
