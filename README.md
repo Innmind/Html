@@ -18,8 +18,8 @@ composer require innmind/html
 
 ```php
 use Innmind\Html\{
-    Reader\Reader,
-    Node\Document,
+    Reader,
+    Document,
 };
 use Innmind\Xml\{
     Node,

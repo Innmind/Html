@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Html\Visitor;
 
-use Innmind\Html\Node\Document;
+use Innmind\Html\Document;
 use Innmind\Xml\{
     Node,
     Element as Model,
@@ -20,15 +20,11 @@ use Innmind\Immutable\{
  */
 final class Element
 {
-    /** @var non-empty-string */
-    private string $name;
-
     /**
      * @param non-empty-string $name
      */
-    private function __construct(string $name)
+    private function __construct(private string $name)
     {
-        $this->name = $name;
     }
 
     /**

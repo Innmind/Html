@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Html\Node;
+namespace Innmind\Html;
 
 use Innmind\Xml\{
     Node,
@@ -22,17 +22,13 @@ use Innmind\Immutable\{
  */
 final class Document
 {
-    private Type $type;
-    /** @var Sequence<Node|Element|Custom> */
-    private Sequence $children;
-
     /**
-     * @param Sequence<Node|Element|Custom>|null $children
+     * @param Sequence<Node|Element|Custom> $children
      */
-    private function __construct(Type $type, ?Sequence $children = null)
-    {
-        $this->type = $type;
-        $this->children = $children ?? Sequence::of();
+    private function __construct(
+        private Type $type,
+        private Sequence $children,
+    ) {
     }
 
     /**
@@ -42,7 +38,7 @@ final class Document
      */
     public static function of(Type $type, ?Sequence $children = null): self
     {
-        return new self($type, $children);
+        return new self($type, $children ?? Sequence::of());
     }
 
     public function type(): Type

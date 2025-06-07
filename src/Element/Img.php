@@ -17,13 +17,10 @@ use Innmind\Immutable\Sequence;
  */
 final class Img implements Custom
 {
-    private Element $element;
-    private Url $src;
-
-    private function __construct(Url $src, Element $element)
-    {
-        $this->element = $element;
-        $this->src = $src;
+    private function __construct(
+        private Url $src,
+        private Element $element,
+    ) {
     }
 
     /**

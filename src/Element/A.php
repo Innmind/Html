@@ -18,13 +18,10 @@ use Innmind\Immutable\Sequence;
  */
 final class A implements Custom
 {
-    private Element $element;
-    private Url $href;
-
-    private function __construct(Url $href, Element $element)
-    {
-        $this->element = $element;
-        $this->href = $href;
+    private function __construct(
+        private Url $href,
+        private Element $element,
+    ) {
     }
 
     /**

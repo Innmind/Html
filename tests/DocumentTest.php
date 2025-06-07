@@ -1,9 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Innmind\Html\Node;
+namespace Tests\Innmind\Html;
 
-use Innmind\Html\Node\Document;
+use Innmind\Html\Document;
 use Innmind\Xml\{
     Node,
     Document\Type,

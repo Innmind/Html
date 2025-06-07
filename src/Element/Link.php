@@ -17,22 +17,14 @@ use Innmind\Immutable\Sequence;
  */
 final class Link implements Custom
 {
-    private Element $element;
-    private Url $href;
-    /** @var non-empty-string */
-    private string $relationship;
-
     /**
      * @param non-empty-string $relationship
      */
     private function __construct(
-        Url $href,
-        string $relationship,
-        Element $element,
+        private Url $href,
+        private string $relationship,
+        private Element $element,
     ) {
-        $this->element = $element;
-        $this->href = $href;
-        $this->relationship = $relationship;
     }
 
     /**

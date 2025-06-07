@@ -1,12 +1,8 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Html\Reader;
+namespace Innmind\Html;
 
-use Innmind\Html\{
-    Node\Document,
-    Translator,
-};
 use Innmind\Xml\{
     Node,
     Element,
@@ -21,11 +17,8 @@ use Symfony\Component\DomCrawler\Crawler;
  */
 final class Reader
 {
-    private Translator $translate;
-
-    private function __construct(Translator $translate)
+    private function __construct(private Translator $translate)
     {
-        $this->translate = $translate;
     }
 
     /**
