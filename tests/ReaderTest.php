@@ -1,18 +1,15 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Innmind\Html\Reader;
+namespace Tests\Innmind\Html;
 
 use Innmind\Html\{
-    Reader\Reader,
-    Node\Document,
+    Reader,
+    Document,
 };
-use Innmind\Xml\{
-    Reader as ReaderInterface,
-    Node\Document as XmlDocument,
-};
+use Innmind\Xml\Format;
 use Innmind\Filesystem\File\Content;
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class ReaderTest extends TestCase
 {
@@ -20,15 +17,7 @@ class ReaderTest extends TestCase
 
     public function setUp(): void
     {
-        $this->read = Reader::default();
-    }
-
-    public function testInterface()
-    {
-        $this->assertInstanceOf(
-            ReaderInterface::class,
-            $this->read,
-        );
+        $this->read = Reader::new();
     }
 
     public function testReadSimple()
@@ -59,7 +48,7 @@ HTML;
         HTML;
 
         $this->assertInstanceOf(Document::class, $node);
-        $this->assertSame($expected, $node->toString());
+        $this->assertSame($expected, $node->asContent(Format::inline)->toString());
     }
 
     public function testReadFullPage()
@@ -83,7 +72,7 @@ HTML;
             static fn() => null,
         );
 
-        $this->assertInstanceOf(XmlDocument::class, $node);
+        $this->assertInstanceOf(Document::class, $node);
     }
 
     public function testReturnNothingWhenEmptyStream()

@@ -4,54 +4,21 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Html\Translator\NodeTranslator;
 
 use Innmind\Html\{
-    Translator\NodeTranslator\LinkTranslator,
+    Translator,
     Element\Link,
 };
-use Innmind\Xml\Translator\{
-    Translator,
-    NodeTranslators,
-    NodeTranslator,
-};
-use PHPUnit\Framework\TestCase;
+use Innmind\Immutable\Predicate\Instance;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class LinkTranslatorTest extends TestCase
 {
-    public function testInterface()
-    {
-        $this->assertInstanceOf(
-            NodeTranslator::class,
-            LinkTranslator::of(),
-        );
-    }
-
-    public function testReturnNothingWhenNotExpectedElement()
-    {
-        $dom = new \DOMDocument;
-        $dom->loadHTML('<body></body>');
-
-        $result = LinkTranslator::of()(
-            $dom->childNodes->item(1),
-            Translator::of(
-                NodeTranslators::defaults(),
-            )
-        );
-
-        $this->assertNull($result->match(
-            static fn($node) => $node,
-            static fn() => null,
-        ));
-    }
-
     public function testTranslate()
     {
         $dom = new \DOMDocument;
         $dom->loadHTML('<link href="/" rel="next" hreflang="fr"/>');
 
-        $link = LinkTranslator::of()(
+        $link = Translator::new()(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            Translator::of(
-                NodeTranslators::defaults(),
-            )
         )->match(
             static fn($link) => $link,
             static fn() => null,
@@ -60,8 +27,9 @@ class LinkTranslatorTest extends TestCase
         $this->assertInstanceOf(Link::class, $link);
         $this->assertSame('/', $link->href()->toString());
         $this->assertSame('next', $link->relationship());
+        $link = $link->normalize();
         $this->assertCount(3, $link->attributes());
-        $this->assertSame('fr', $link->attributes()->get('hreflang')->match(
+        $this->assertSame('fr', $link->attribute('hreflang')->match(
             static fn($attribute) => $attribute->value(),
             static fn() => null,
         ));
@@ -72,11 +40,8 @@ class LinkTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<link href="/" hreflang="fr"/>');
 
-        $link = LinkTranslator::of()(
+        $link = Translator::new()(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            Translator::of(
-                NodeTranslators::defaults(),
-            )
         )->match(
             static fn($link) => $link,
             static fn() => null,
@@ -85,8 +50,13 @@ class LinkTranslatorTest extends TestCase
         $this->assertInstanceOf(Link::class, $link);
         $this->assertSame('/', $link->href()->toString());
         $this->assertSame('related', $link->relationship());
-        $this->assertCount(2, $link->attributes());
-        $this->assertSame('fr', $link->attributes()->get('hreflang')->match(
+        $link = $link->normalize();
+        $this->assertCount(3, $link->attributes());
+        $this->assertSame('fr', $link->attribute('hreflang')->match(
+            static fn($attribute) => $attribute->value(),
+            static fn() => null,
+        ));
+        $this->assertSame('related', $link->attribute('rel')->match(
             static fn($attribute) => $attribute->value(),
             static fn() => null,
         ));
@@ -97,12 +67,11 @@ class LinkTranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<link/>');
 
-        $result = LinkTranslator::of()(
+        $result = Translator::new()(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            Translator::of(
-                NodeTranslators::defaults(),
-            )
-        );
+        )
+            ->maybe()
+            ->keep(Instance::of(Link::class));
 
         $this->assertNull($result->match(
             static fn($node) => $node,

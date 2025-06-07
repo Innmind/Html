@@ -5,12 +5,15 @@ namespace Tests\Innmind\Html\Visitor;
 
 use Innmind\Html\{
     Visitor\Elements,
-    Reader\Reader,
+    Reader,
 };
-use Innmind\Xml\Element\Element;
+use Innmind\Xml\{
+    Element,
+    Element\Name,
+};
 use Innmind\Filesystem\File\Content;
-use Innmind\Immutable\Set;
-use PHPUnit\Framework\TestCase;
+use Innmind\Immutable\Sequence;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class ElementsTest extends TestCase
 {
@@ -18,7 +21,7 @@ class ElementsTest extends TestCase
 
     public function setUp(): void
     {
-        $this->read = Reader::default();
+        $this->read = Reader::new();
     }
 
     public function testExtractElement()
@@ -32,15 +35,15 @@ class ElementsTest extends TestCase
 
         $h1s = Elements::of('h1')($node);
 
-        $this->assertInstanceOf(Set::class, $h1s);
+        $this->assertInstanceOf(Sequence::class, $h1s);
         $this->assertCount(26, $h1s);
     }
 
     public function testEmptySetWhenNoElementFound()
     {
-        $elements = Elements::of('foo')(Element::of('whatever'));
+        $elements = Elements::of('foo')(Element::of(Name::of('whatever')));
 
-        $this->assertInstanceOf(Set::class, $elements);
+        $this->assertInstanceOf(Sequence::class, $elements);
         $this->assertCount(0, $elements);
     }
 }

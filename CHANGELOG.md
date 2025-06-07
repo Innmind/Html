@@ -1,5 +1,35 @@
 # Changelog
 
+## 7.0.0 - 2025-06-07
+
+### Added
+
+- `Innmind\Html\Translator`
+- `Innmind\Html\Reader\Reader::new()`
+
+### Changed
+
+- Requires `innmind/xml:~8.0`
+- Requires `innmind/filesystem:~8.1`
+- `Innmind\Html\Element\*` classes now implement `Innmind\Xml\Element\Custom`
+- `Innmind\Html\Node\Document` no longer implement any interface
+- `Innmind\Html\Reader\Reader` now return an `Innmind\Immutable\Attempt`
+- `Innmind\Html\Visitor\Elements` now return a `Innmind\Immutable\Sequence`
+- `Innmind\Html\Reader\Reader` has been renamed `Innmind\Html\Reader`
+- `Innmind\Html\Node\Document` has been renamed `Innmind\Html\Document`
+
+### Removed
+
+- `Innmind\Html\Translator\*`
+- `Innmind\Html\Node\Document::content()`
+- `Innmind\Html\Node\Document::toString()`
+- `Innmind\Html\Reader\Reader::default()`
+- `Innmind\Html\Reader\Reader::of()`
+
+### Fixed
+
+- PHP `8.4` deprecations
+
 ## 6.4.0 - 2024-06-26
 
 ### Changed

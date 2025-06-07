@@ -17,16 +17,23 @@ composer require innmind/html
 ## Usage
 
 ```php
-use Innmind\Html\Reader\Reader;
-use Innmind\Xml\Node;
+use Innmind\Html\{
+    Reader,
+    Document,
+};
+use Innmind\Xml\{
+    Node,
+    Element,
+    Element\Custom,
+};
 use Innmind\Filesystem\File\Content;
 use Innmind\Immutable\Maybe;
 
-$read = Reader::default();
+$read = Reader::new();
 
 $html = $read(
     Content::ofString(\file_get_contents('https://github.com/')),
-); // Maybe<Node>
+); // Maybe<Document|Element|Custom|Node>
 ```
 
 ## Extract some elements of the tree
@@ -39,7 +46,7 @@ use Innmind\Html\Visitor\Elements;
 $h1s = Elements::of('h1')($html);
 ```
 
-Here `$h1s` is a set of `Element` which are all `h1` elements.
+Here `$h1s` is a sequence of `Element` which are all `h1` elements.
 
 Here's the full list of visitors you have access to:
 

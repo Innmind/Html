@@ -4,54 +4,21 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Html\Translator\NodeTranslator;
 
 use Innmind\Html\{
-    Translator\NodeTranslator\ATranslator,
+    Translator,
     Element\A,
 };
-use Innmind\Xml\Translator\{
-    Translator,
-    NodeTranslators,
-    NodeTranslator,
-};
-use PHPUnit\Framework\TestCase;
+use Innmind\Immutable\Predicate\Instance;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class ATranslatorTest extends TestCase
 {
-    public function testInterface()
-    {
-        $this->assertInstanceOf(
-            NodeTranslator::class,
-            ATranslator::of(),
-        );
-    }
-
-    public function testReturnNothingWhenNotExpectedElement()
-    {
-        $dom = new \DOMDocument;
-        $dom->loadHTML('<body></body>');
-
-        $result = ATranslator::of()(
-            $dom->childNodes->item(1),
-            Translator::of(
-                NodeTranslators::defaults(),
-            )
-        );
-
-        $this->assertNull($result->match(
-            static fn($node) => $node,
-            static fn() => null,
-        ));
-    }
-
     public function testTranslate()
     {
         $dom = new \DOMDocument;
         $dom->loadHTML('<a href="/" class="whatever">foo</a>');
 
-        $a = ATranslator::of()(
+        $a = Translator::new()(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            Translator::of(
-                NodeTranslators::defaults(),
-            )
         )->match(
             static fn($a) => $a,
             static fn() => null,
@@ -59,8 +26,9 @@ class ATranslatorTest extends TestCase
 
         $this->assertInstanceOf(A::class, $a);
         $this->assertSame('/', $a->href()->toString());
+        $a = $a->normalize();
         $this->assertCount(2, $a->attributes());
-        $this->assertSame('whatever', $a->attributes()->get('class')->match(
+        $this->assertSame('whatever', $a->attribute('class')->match(
             static fn($attribute) => $attribute->value(),
             static fn() => null,
         ));
@@ -72,12 +40,11 @@ class ATranslatorTest extends TestCase
         $dom = new \DOMDocument;
         $dom->loadHTML('<a class="whatever">foo</a>');
 
-        $result = ATranslator::of()(
+        $result = Translator::new()(
             $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
-            Translator::of(
-                NodeTranslators::defaults(),
-            )
-        );
+        )
+            ->maybe()
+            ->keep(Instance::of(A::class));
 
         $this->assertNull($result->match(
             static fn($node) => $node,

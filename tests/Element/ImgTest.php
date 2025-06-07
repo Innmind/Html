@@ -6,36 +6,39 @@ namespace Tests\Innmind\Html\Element;
 use Innmind\Html\Element\Img;
 use Innmind\Xml\Element;
 use Innmind\Url\Url;
-use Innmind\Immutable\Set;
-use PHPUnit\Framework\TestCase;
+use Innmind\Immutable\Sequence;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class ImgTest extends TestCase
 {
     public function testInterface()
     {
         $this->assertInstanceOf(
-            Element::class,
+            Element\Custom::class,
             $img = Img::of(
                 $src = Url::of('http://example.com'),
-                Set::of(),
+                Sequence::of(),
             ),
         );
-        $this->assertSame('img', $img->name());
+        $this->assertSame('img', $img->normalize()->name()->toString());
         $this->assertSame($src, $img->src());
     }
 
     public function testWithoutAttributes()
     {
-        $this->assertTrue(
-            Img::of(Url::of('http://example.com'))->attributes()->empty(),
+        $this->assertFalse(
+            Img::of(Url::of('http://example.com'))->normalize()->attributes()->empty(),
         );
     }
 
     public function testToString()
     {
         $this->assertSame(
-            '<img src="http://example.com/"/>',
-            Img::of(Url::of('http://example.com/'))->toString(),
+            '<img src="http://example.com/"/>'."\n",
+            Img::of(Url::of('http://example.com/'))
+                ->normalize()
+                ->asContent()
+                ->toString(),
         );
     }
 }

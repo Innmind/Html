@@ -5,14 +5,14 @@ namespace Tests\Innmind\Html\Visitor;
 
 use Innmind\Html\{
     Visitor\Element as ElementFinder,
-    Reader\Reader,
+    Reader,
 };
 use Innmind\Xml\{
-    Element as ElementInterface,
-    Element\Element,
+    Element,
+    Element\Name,
 };
 use Innmind\Filesystem\File\Content;
-use PHPUnit\Framework\TestCase;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class ElementTest extends TestCase
 {
@@ -20,7 +20,7 @@ class ElementTest extends TestCase
 
     public function setUp(): void
     {
-        $this->read = Reader::default();
+        $this->read = Reader::new();
     }
 
     public function testExtractElement()
@@ -37,15 +37,15 @@ class ElementTest extends TestCase
             static fn() => null,
         );
 
-        $this->assertInstanceOf(ElementInterface::class, $h1);
-        $this->assertSame('h1', $h1->name());
+        $this->assertInstanceOf(Element::class, $h1);
+        $this->assertSame('h1', $h1->name()->toString());
         $this->assertFalse($h1->children()->empty());
         $this->assertFalse($h1->attributes()->empty());
     }
 
     public function testReturnNothingWhenElementNotFound()
     {
-        $this->assertNull(ElementFinder::of('foo')(Element::of('whatever'))->match(
+        $this->assertNull(ElementFinder::of('foo')(Element::of(Name::of('whatever')))->match(
             static fn($node) => $node,
             static fn() => null,
         ));

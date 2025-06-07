@@ -9,27 +9,24 @@ use Innmind\Xml\{
     Node,
 };
 use Innmind\Url\Url;
-use Innmind\Immutable\{
-    Set,
-    Sequence,
-};
-use PHPUnit\Framework\TestCase;
+use Innmind\Immutable\Sequence;
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class ATest extends TestCase
 {
     public function testInterface()
     {
         $this->assertInstanceOf(
-            Element::class,
+            Element\Custom::class,
             $a = A::of(
                 $href = Url::of('http://example.com'),
-                Set::of(),
-                Sequence::of($child = $this->createMock(Node::class)),
+                Sequence::of(),
+                Sequence::of($child = Node::text('')),
             ),
         );
-        $this->assertSame('a', $a->name());
+        $this->assertSame('a', $a->normalize()->name()->toString());
         $this->assertSame($href, $a->href());
-        $this->assertSame($child, $a->children()->first()->match(
+        $this->assertSame($child, $a->normalize()->children()->first()->match(
             static fn($node) => $node,
             static fn() => null,
         ));
@@ -37,23 +34,26 @@ class ATest extends TestCase
 
     public function testWithoutAttributes()
     {
-        $this->assertTrue(
-            A::of(Url::of('http://example.com'))->attributes()->empty(),
+        $this->assertFalse(
+            A::of(Url::of('http://example.com'))->normalize()->attributes()->empty(),
         );
     }
 
     public function testWithoutChildren()
     {
         $this->assertTrue(
-            A::of(Url::of('http://example.com'))->children()->empty(),
+            A::of(Url::of('http://example.com'))->normalize()->children()->empty(),
         );
     }
 
     public function testToString()
     {
         $this->assertSame(
-            '<a href="http://example.com/"></a>',
-            A::of(Url::of('http://example.com/'))->toString(),
+            '<a href="http://example.com/"></a>'."\n",
+            A::of(Url::of('http://example.com/'))
+                ->normalize()
+                ->asContent()
+                ->toString(),
         );
     }
 }
