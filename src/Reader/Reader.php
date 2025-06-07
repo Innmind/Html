@@ -21,11 +21,8 @@ use Symfony\Component\DomCrawler\Crawler;
  */
 final class Reader
 {
-    private Translator $translate;
-
-    private function __construct(Translator $translate)
+    private function __construct(private Translator $translate)
     {
-        $this->translate = $translate;
     }
 
     /**
