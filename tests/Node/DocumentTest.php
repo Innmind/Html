@@ -6,30 +6,22 @@ namespace Tests\Innmind\Html\Node;
 use Innmind\Html\Node\Document;
 use Innmind\Xml\{
     Node,
-    Node\Document\Type,
-    Node\Text,
-    Element\Element,
+    Document\Type,
+    Element,
+    Element\Name,
 };
 use Innmind\Immutable\Sequence;
 use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 
 class DocumentTest extends TestCase
 {
-    public function testInterface()
-    {
-        $this->assertInstanceOf(
-            Node::class,
-            Document::of(Type::of('html')),
-        );
-    }
-
     public function testType()
     {
         $type = Type::of('html');
 
         $this->assertSame(
             $type,
-            (Document::of($type))->type(),
+            Document::of($type)->type(),
         );
     }
 
@@ -45,7 +37,7 @@ class DocumentTest extends TestCase
     {
         $document = Document::of(
             Type::of('html'),
-            Sequence::of($child = Text::of('')),
+            Sequence::of($child = Node::text('')),
         );
 
         $this->assertSame($child, $document->children()->first()->match(
@@ -55,38 +47,22 @@ class DocumentTest extends TestCase
         $this->assertFalse($document->children()->empty());
     }
 
-    public function testContent()
-    {
-        $document = Document::of(
-            Type::of('html'),
-            Sequence::of(
-                Element::of(
-                    'html',
-                    null,
-                    Sequence::of(Text::of('wat')),
-                ),
-            ),
-        );
-
-        $this->assertSame('<html>wat</html>', $document->content());
-    }
-
     public function testCast()
     {
         $document = Document::of(
             Type::of('html'),
             Sequence::of(
                 Element::of(
-                    'html',
+                    Name::of('html'),
                     null,
-                    Sequence::of(Text::of('wat')),
+                    Sequence::of(Node::text('wat')),
                 ),
             ),
         );
 
         $this->assertSame(
-            '<!DOCTYPE html>'."\n".'<html>wat</html>',
-            $document->toString(),
+            '<!DOCTYPE html>'."\n".'<html>wat</html>'."\n",
+            $document->asContent()->toString(),
         );
     }
 
@@ -95,14 +71,14 @@ class DocumentTest extends TestCase
         $document = Document::of(
             Type::of('html'),
             Sequence::of(
-                Element::of('foo'),
-                Element::of('bar'),
-                Element::of('baz'),
+                Element::of(Name::of('foo')),
+                Element::of(Name::of('bar')),
+                Element::of(Name::of('baz')),
             ),
         );
 
         $document2 = $document->prependChild(
-            $node = Text::of(''),
+            $node = Node::text(''),
         );
 
         $this->assertNotSame($document, $document2);
@@ -137,14 +113,14 @@ class DocumentTest extends TestCase
         $document = Document::of(
             Type::of('html'),
             Sequence::of(
-                Element::of('foo'),
-                Element::of('bar'),
-                Element::of('baz'),
+                Element::of(Name::of('foo')),
+                Element::of(Name::of('bar')),
+                Element::of(Name::of('baz')),
             ),
         );
 
         $document2 = $document->appendChild(
-            $node = Text::of(''),
+            $node = Node::text(''),
         );
 
         $this->assertNotSame($document, $document2);
@@ -180,9 +156,13 @@ class DocumentTest extends TestCase
             Type::of('html'),
             Sequence::of(
                 Element::of(
-                    'html',
+                    Name::of('html'),
                     null,
-                    Sequence::of(Text::of('wat')),
+                    Sequence::of(Element::of(
+                        Name::of('body'),
+                        null,
+                        Sequence::of(Node::text('wat')),
+                    )),
                 ),
             ),
         );
@@ -191,8 +171,9 @@ class DocumentTest extends TestCase
             <<<HTML
             <!DOCTYPE html>
             <html>
-                wat
+                <body>wat</body>
             </html>
+
             HTML,
             $document->asContent()->toString(),
         );

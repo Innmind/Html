@@ -8,8 +8,8 @@ use Innmind\Html\{
     Reader\Reader,
 };
 use Innmind\Xml\{
-    Element as ElementInterface,
-    Element\Element,
+    Element,
+    Element\Name,
 };
 use Innmind\Filesystem\File\Content;
 use Innmind\BlackBox\PHPUnit\Framework\TestCase;
@@ -20,7 +20,7 @@ class BodyTest extends TestCase
 
     public function setUp(): void
     {
-        $this->read = Reader::default();
+        $this->read = Reader::new();
     }
 
     public function testExtractBody()
@@ -37,15 +37,15 @@ class BodyTest extends TestCase
             static fn() => null,
         );
 
-        $this->assertInstanceOf(ElementInterface::class, $body);
-        $this->assertSame('body', $body->name());
+        $this->assertInstanceOf(Element::class, $body);
+        $this->assertSame('body', $body->name()->toString());
         $this->assertFalse($body->children()->empty());
         $this->assertFalse($body->attributes()->empty());
     }
 
     public function testReturnNothingWhenBodyNotFound()
     {
-        $this->assertNull(Visitor\Element::body()(Element::of('head'))->match(
+        $this->assertNull(Visitor\Element::body()(Element::of(Name::of('head')))->match(
             static fn($node) => $node,
             static fn() => null,
         ));

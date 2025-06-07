@@ -4,25 +4,20 @@ declare(strict_types = 1);
 namespace Innmind\Html\Element;
 
 use Innmind\Xml\{
-    Element\SelfClosingElement,
     Element,
+    Element\Name,
+    Element\Custom,
     Attribute,
-    Node,
 };
 use Innmind\Url\Url;
-use Innmind\Immutable\{
-    Set,
-    Sequence,
-    Maybe,
-    Map,
-};
+use Innmind\Immutable\Sequence;
 
 /**
  * @psalm-immutable
  */
-final class Link implements Element
+final class Link implements Custom
 {
-    private SelfClosingElement $element;
+    private Element $element;
     private Url $href;
     /** @var non-empty-string */
     private string $relationship;
@@ -33,7 +28,7 @@ final class Link implements Element
     private function __construct(
         Url $href,
         string $relationship,
-        SelfClosingElement $element,
+        Element $element,
     ) {
         $this->element = $element;
         $this->href = $href;
@@ -44,17 +39,20 @@ final class Link implements Element
      * @psalm-pure
      *
      * @param non-empty-string $relationship
-     * @param Set<Attribute>|null $attributes
+     * @param Sequence<Attribute>|null $attributes
      */
     public static function of(
         Url $href,
         string $relationship,
-        ?Set $attributes = null,
+        ?Sequence $attributes = null,
     ): self {
         return new self(
             $href,
             $relationship,
-            SelfClosingElement::of('link', $attributes),
+            Element::selfClosing(
+                Name::of('link'),
+                $attributes,
+            ),
         );
     }
 
@@ -72,102 +70,11 @@ final class Link implements Element
     }
 
     #[\Override]
-    public function name(): string
-    {
-        return 'link';
-    }
-
-    #[\Override]
-    public function attributes(): Map
-    {
-        return $this->element->attributes();
-    }
-
-    #[\Override]
-    public function attribute(string $name): Maybe
-    {
-        return $this->element->attribute($name);
-    }
-
-    #[\Override]
-    public function removeAttribute(string $name): self
-    {
-        return new self(
-            $this->href,
-            $this->relationship,
-            $this->element->removeAttribute($name),
-        );
-    }
-
-    #[\Override]
-    public function addAttribute(Attribute $attribute): self
-    {
-        return new self(
-            $this->href,
-            $this->relationship,
-            $this->element->addAttribute($attribute),
-        );
-    }
-
-    #[\Override]
-    public function children(): Sequence
-    {
-        return $this->element->children();
-    }
-
-    #[\Override]
-    public function filterChild(callable $filter): self
-    {
-        return new self(
-            $this->href,
-            $this->relationship,
-            $this->element->filterChild($filter),
-        );
-    }
-
-    #[\Override]
-    public function mapChild(callable $map): self
-    {
-        return new self(
-            $this->href,
-            $this->relationship,
-            $this->element->mapChild($map),
-        );
-    }
-
-    #[\Override]
-    public function prependChild(Node $child): self
-    {
-        return new self(
-            $this->href,
-            $this->relationship,
-            $this->element->prependChild($child),
-        );
-    }
-
-    #[\Override]
-    public function appendChild(Node $child): self
-    {
-        return new self(
-            $this->href,
-            $this->relationship,
-            $this->element->appendChild($child),
-        );
-    }
-
-    #[\Override]
-    public function content(): string
-    {
-        return $this->element->content();
-    }
-
-    #[\Override]
-    public function toString(): string
+    public function normalize(): Element
     {
         return $this
             ->element
             ->addAttribute(Attribute::of('rel', $this->relationship))
-            ->addAttribute(Attribute::of('href', $this->href->toString()))
-            ->toString();
+            ->addAttribute(Attribute::of('href', $this->href->toString()));
     }
 }

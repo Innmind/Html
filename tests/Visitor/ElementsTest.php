@@ -7,7 +7,10 @@ use Innmind\Html\{
     Visitor\Elements,
     Reader\Reader,
 };
-use Innmind\Xml\Element\Element;
+use Innmind\Xml\{
+    Element,
+    Element\Name,
+};
 use Innmind\Filesystem\File\Content;
 use Innmind\Immutable\Set;
 use Innmind\BlackBox\PHPUnit\Framework\TestCase;
@@ -18,7 +21,7 @@ class ElementsTest extends TestCase
 
     public function setUp(): void
     {
-        $this->read = Reader::default();
+        $this->read = Reader::new();
     }
 
     public function testExtractElement()
@@ -38,7 +41,7 @@ class ElementsTest extends TestCase
 
     public function testEmptySetWhenNoElementFound()
     {
-        $elements = Elements::of('foo')(Element::of('whatever'));
+        $elements = Elements::of('foo')(Element::of(Name::of('whatever')));
 
         $this->assertInstanceOf(Set::class, $elements);
         $this->assertCount(0, $elements);
