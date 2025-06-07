@@ -5,7 +5,7 @@ namespace Tests\Innmind\Html\Translator\NodeTranslator;
 
 use Innmind\Html\{
     Translator,
-    Node\Document,
+    Document,
 };
 use Innmind\BlackBox\PHPUnit\Framework\TestCase;
 

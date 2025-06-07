@@ -5,7 +5,7 @@ namespace Tests\Innmind\Html;
 
 use Innmind\Html\{
     Reader,
-    Node\Document,
+    Document,
 };
 use Innmind\Xml\Format;
 use Innmind\Filesystem\File\Content;

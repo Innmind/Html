@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Html;
 
-use Innmind\Html\Node\Document;
 use Innmind\Xml\{
     Node,
     Element,

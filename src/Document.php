@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Html\Node;
+namespace Innmind\Html;
 
 use Innmind\Xml\{
     Node,

@@ -16,6 +16,7 @@
 - `Innmind\Html\Reader\Reader` now return an `Innmind\Immutable\Attempt`
 - `Innmind\Html\Visitor\Elements` now return a `Innmind\Immutable\Sequence`
 - `Innmind\Html\Reader\Reader` has been renamed `Innmind\Html\Reader`
+- `Innmind\Html\Node\Document` has been renamed `Innmind\Html\Document`
 
 ### Removed
 

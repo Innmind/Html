@@ -3,13 +3,12 @@ declare(strict_types = 1);
 
 namespace Innmind\Html;
 
-use Innmind\Html\{
-    Element\A,
-    Element\Base,
-    Element\Img,
-    Element\Link,
-    Element\Script,
-    Node\Document,
+use Innmind\Html\Element\{
+    A,
+    Base,
+    Img,
+    Link,
+    Script,
 };
 use Innmind\Xml\{
     Element,

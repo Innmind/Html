@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Html\Visitor;
 
-use Innmind\Html\Node\Document;
+use Innmind\Html\Document;
 use Innmind\Xml\{
     Node,
     Element,

@@ -19,7 +19,7 @@ composer require innmind/html
 ```php
 use Innmind\Html\{
     Reader,
-    Node\Document,
+    Document,
 };
 use Innmind\Xml\{
     Node,
