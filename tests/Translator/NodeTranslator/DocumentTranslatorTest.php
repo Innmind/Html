@@ -13,8 +13,7 @@ class DocumentTranslatorTest extends TestCase
 {
     public function testTranslate()
     {
-        $document = new \DOMDocument;
-        $document->loadHtml('<!DOCTYPE html><body></body>');
+        $document = \Dom\HTMLDocument::createFromString('<!DOCTYPE html><body></body>');
 
         $node = Translator::new()(
             $document,
@@ -30,6 +29,7 @@ class DocumentTranslatorTest extends TestCase
             <<<HTML
             <!DOCTYPE html>
             <html>
+                <head/>
                 <body/>
             </html>
 
@@ -40,8 +40,10 @@ class DocumentTranslatorTest extends TestCase
 
     public function testTranslateWithoutDoctype()
     {
-        $document = new \DOMDocument;
-        $document->loadHtml('<!--foo-->');
+        $document = \Dom\HTMLDocument::createFromString(
+            '<!--foo-->',
+            \LIBXML_NOERROR,
+        );
 
         $node = Translator::new()(
             $document,
@@ -51,15 +53,17 @@ class DocumentTranslatorTest extends TestCase
         );
 
         $this->assertSame(
-            '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">',
+            '<!DOCTYPE html>',
             $node->type()->toString(),
         );
     }
 
     public function testTranslateWithoutChildren()
     {
-        $document = new \DOMDocument;
-        $document->loadHtml('<!DOCTYPE html>');
+        $document = \Dom\HTMLDocument::createFromString(
+            '<!DOCTYPE html>',
+            \LIBXML_HTML_NOIMPLIED | \LIBXML_NOERROR,
+        );
 
         $node = Translator::new()(
             $document,

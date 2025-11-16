@@ -13,11 +13,13 @@ class ScriptTranslatorTest extends TestCase
 {
     public function testTranslate()
     {
-        $dom = new \DOMDocument;
-        $dom->loadHTML('<script type="text/javascript">var foo = 42;</script>');
+        $dom = \Dom\HTMLDocument::createFromString(
+            '<script type="text/javascript">var foo = 42;</script>',
+            \LIBXML_HTML_NOIMPLIED | \LIBXML_NOERROR,
+        );
 
         $script = Translator::new()(
-            $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
+            $dom->childNodes->item(0),
         )->match(
             static fn($script) => $script,
             static fn() => null,
@@ -42,11 +44,13 @@ class ScriptTranslatorTest extends TestCase
 
     public function testTranslateWithoutCode()
     {
-        $dom = new \DOMDocument;
-        $dom->loadHTML('<script></script>');
+        $dom = \Dom\HTMLDocument::createFromString(
+            '<script></script>',
+            \LIBXML_HTML_NOIMPLIED | \LIBXML_NOERROR,
+        );
 
         $script = Translator::new()(
-            $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
+            $dom->childNodes->item(0),
         )->match(
             static fn($script) => $script,
             static fn() => null,

@@ -14,11 +14,13 @@ class LinkTranslatorTest extends TestCase
 {
     public function testTranslate()
     {
-        $dom = new \DOMDocument;
-        $dom->loadHTML('<link href="/" rel="next" hreflang="fr"/>');
+        $dom = \Dom\HTMLDocument::createFromString(
+            '<link href="/" rel="next" hreflang="fr"/>',
+            \LIBXML_HTML_NOIMPLIED | \LIBXML_NOERROR,
+        );
 
         $link = Translator::new()(
-            $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
+            $dom->childNodes->item(0),
         )->match(
             static fn($link) => $link,
             static fn() => null,
@@ -37,11 +39,13 @@ class LinkTranslatorTest extends TestCase
 
     public function testTranslateWithoutRelationship()
     {
-        $dom = new \DOMDocument;
-        $dom->loadHTML('<link href="/" hreflang="fr"/>');
+        $dom = \Dom\HTMLDocument::createFromString(
+            '<link href="/" hreflang="fr"/>',
+            \LIBXML_HTML_NOIMPLIED | \LIBXML_NOERROR,
+        );
 
         $link = Translator::new()(
-            $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
+            $dom->childNodes->item(0),
         )->match(
             static fn($link) => $link,
             static fn() => null,
@@ -64,11 +68,13 @@ class LinkTranslatorTest extends TestCase
 
     public function testReturnNothingWhenMissingHrefAttribute()
     {
-        $dom = new \DOMDocument;
-        $dom->loadHTML('<link/>');
+        $dom = \Dom\HTMLDocument::createFromString(
+            '<link/>',
+            \LIBXML_HTML_NOIMPLIED | \LIBXML_NOERROR,
+        );
 
         $result = Translator::new()(
-            $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
+            $dom->childNodes->item(0),
         )
             ->maybe()
             ->keep(Instance::of(Link::class));

@@ -14,11 +14,13 @@ class BaseTranslatorTest extends TestCase
 {
     public function testTranslate()
     {
-        $dom = new \DOMDocument;
-        $dom->loadHTML('<base href="/" target="_blank"/>');
+        $dom = \Dom\HTMLDocument::createFromString(
+            '<base href="/" target="_blank"/>',
+            \LIBXML_HTML_NOIMPLIED | \LIBXML_NOERROR,
+        );
 
         $base = Translator::new()(
-            $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
+            $dom->childNodes->item(0),
         )->match(
             static fn($base) => $base,
             static fn() => null,
@@ -36,11 +38,13 @@ class BaseTranslatorTest extends TestCase
 
     public function testReturnNothingWhenMissingHrefAttribute()
     {
-        $dom = new \DOMDocument;
-        $dom->loadHTML('<base/>');
+        $dom = \Dom\HTMLDocument::createFromString(
+            '<base/>',
+            \LIBXML_HTML_NOIMPLIED | \LIBXML_NOERROR,
+        );
 
         $result = Translator::new()(
-            $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
+            $dom->childNodes->item(0),
         )
             ->maybe()
             ->keep(Instance::of(Base::class));

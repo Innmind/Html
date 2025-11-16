@@ -14,11 +14,13 @@ class ATranslatorTest extends TestCase
 {
     public function testTranslate()
     {
-        $dom = new \DOMDocument;
-        $dom->loadHTML('<a href="/" class="whatever">foo</a>');
+        $dom = \Dom\HTMLDocument::createFromString(
+            '<a href="/" class="whatever">foo</a>',
+            \LIBXML_HTML_NOIMPLIED | \LIBXML_NOERROR,
+        );
 
         $a = Translator::new()(
-            $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
+            $dom->childNodes->item(0),
         )->match(
             static fn($a) => $a,
             static fn() => null,
@@ -37,11 +39,13 @@ class ATranslatorTest extends TestCase
 
     public function testReturnNothingWhenMissingHrefAttribute()
     {
-        $dom = new \DOMDocument;
-        $dom->loadHTML('<a class="whatever">foo</a>');
+        $dom = \Dom\HTMLDocument::createFromString(
+            '<a class="whatever">foo</a>',
+            \LIBXML_HTML_NOIMPLIED | \LIBXML_NOERROR,
+        );
 
         $result = Translator::new()(
-            $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
+            $dom->childNodes->item(0),
         )
             ->maybe()
             ->keep(Instance::of(A::class));
