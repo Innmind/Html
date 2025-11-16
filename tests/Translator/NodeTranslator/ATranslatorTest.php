@@ -29,12 +29,12 @@ class ATranslatorTest extends TestCase
         $this->assertInstanceOf(A::class, $a);
         $this->assertSame('/', $a->href()->toString());
         $a = $a->normalize();
-        $this->assertCount(2, $a->attributes());
+        $this->assertSame(2, $a->attributes()->size());
         $this->assertSame('whatever', $a->attribute('class')->match(
             static fn($attribute) => $attribute->value(),
             static fn() => null,
         ));
-        $this->assertCount(1, $a->children());
+        $this->assertSame(1, $a->children()->size());
     }
 
     public function testReturnNothingWhenMissingHrefAttribute()

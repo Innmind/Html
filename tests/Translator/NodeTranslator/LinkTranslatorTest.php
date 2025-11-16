@@ -30,7 +30,7 @@ class LinkTranslatorTest extends TestCase
         $this->assertSame('/', $link->href()->toString());
         $this->assertSame('next', $link->relationship());
         $link = $link->normalize();
-        $this->assertCount(3, $link->attributes());
+        $this->assertSame(3, $link->attributes()->size());
         $this->assertSame('fr', $link->attribute('hreflang')->match(
             static fn($attribute) => $attribute->value(),
             static fn() => null,
@@ -55,7 +55,7 @@ class LinkTranslatorTest extends TestCase
         $this->assertSame('/', $link->href()->toString());
         $this->assertSame('related', $link->relationship());
         $link = $link->normalize();
-        $this->assertCount(3, $link->attributes());
+        $this->assertSame(3, $link->attributes()->size());
         $this->assertSame('fr', $link->attribute('hreflang')->match(
             static fn($attribute) => $attribute->value(),
             static fn() => null,

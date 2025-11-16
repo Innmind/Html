@@ -31,7 +31,7 @@ class ScriptTranslatorTest extends TestCase
             '<script type="text/javascript">var foo = 42;</script>'."\n",
             $script->asContent()->toString(),
         );
-        $this->assertCount(1, $script->attributes());
+        $this->assertSame(1, $script->attributes()->size());
         $this->assertSame(
             'text/javascript',
             $script->attribute('type')->match(
@@ -39,7 +39,7 @@ class ScriptTranslatorTest extends TestCase
                 static fn() => null,
             ),
         );
-        $this->assertCount(1, $script->children());
+        $this->assertSame(1, $script->children()->size());
     }
 
     public function testTranslateWithoutCode()
@@ -62,7 +62,7 @@ class ScriptTranslatorTest extends TestCase
             '<script></script>'."\n",
             $script->asContent()->toString(),
         );
-        $this->assertCount(0, $script->attributes());
-        $this->assertCount(1, $script->children());
+        $this->assertSame(0, $script->attributes()->size());
+        $this->assertSame(1, $script->children()->size());
     }
 }

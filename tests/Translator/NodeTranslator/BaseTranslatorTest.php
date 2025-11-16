@@ -29,7 +29,7 @@ class BaseTranslatorTest extends TestCase
         $this->assertInstanceOf(Base::class, $base);
         $this->assertSame('/', $base->href()->toString());
         $base = $base->normalize();
-        $this->assertCount(2, $base->attributes());
+        $this->assertSame(2, $base->attributes()->size());
         $this->assertSame('_blank', $base->attribute('target')->match(
             static fn($attribute) => $attribute->value(),
             static fn() => null,

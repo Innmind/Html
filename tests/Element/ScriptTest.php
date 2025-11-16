@@ -26,7 +26,7 @@ class ScriptTest extends TestCase
             '<script>foo</script>'."\n",
             $script->asContent()->toString(),
         );
-        $this->assertCount(1, $script->children());
+        $this->assertSame(1, $script->children()->size());
     }
 
     public function testWithAttributes()

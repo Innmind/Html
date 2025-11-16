@@ -24,7 +24,7 @@ class DocumentTranslatorTest extends TestCase
 
         $this->assertInstanceOf(Document::class, $node);
         $this->assertSame('html', $node->type()->name());
-        $this->assertCount(1, $node->children());
+        $this->assertSame(1, $node->children()->size());
         $this->assertSame(
             <<<HTML
             <!DOCTYPE html>
