@@ -70,10 +70,7 @@ final class Translator
                     ->or(Instance::of(Node::class)),
                 static fn() => new \RuntimeException('Invalid document node'),
             )
-            ->match(
-                Attempt::result(...),
-                Attempt::error(...),
-            );
+            ->attempt(static fn($e) => $e);
     }
 
     /**
