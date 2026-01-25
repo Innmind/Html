@@ -30,6 +30,7 @@ final class A implements Custom
      * @param Sequence<Attribute>|null $attributes
      * @param Sequence<Node|Element|Custom>|null $children
      */
+    #[\NoDiscard]
     public static function of(
         Url $href,
         ?Sequence $attributes = null,
@@ -45,12 +46,14 @@ final class A implements Custom
         );
     }
 
+    #[\NoDiscard]
     public function href(): Url
     {
         return $this->href;
     }
 
     #[\Override]
+    #[\NoDiscard]
     public function normalize(): Element
     {
         return $this->element->addAttribute(

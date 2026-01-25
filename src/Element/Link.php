@@ -33,6 +33,7 @@ final class Link implements Custom
      * @param non-empty-string $relationship
      * @param Sequence<Attribute>|null $attributes
      */
+    #[\NoDiscard]
     public static function of(
         Url $href,
         string $relationship,
@@ -48,6 +49,7 @@ final class Link implements Custom
         );
     }
 
+    #[\NoDiscard]
     public function href(): Url
     {
         return $this->href;
@@ -56,12 +58,14 @@ final class Link implements Custom
     /**
      * @return non-empty-string
      */
+    #[\NoDiscard]
     public function relationship(): string
     {
         return $this->relationship;
     }
 
     #[\Override]
+    #[\NoDiscard]
     public function normalize(): Element
     {
         return $this

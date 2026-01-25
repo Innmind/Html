@@ -30,6 +30,7 @@ final class Element
     /**
      * @return Maybe<Model|Custom>
      */
+    #[\NoDiscard]
     public function __invoke(Document|Node|Model|Custom $node): Maybe
     {
         return match (true) {
@@ -45,6 +46,7 @@ final class Element
      *
      * @param non-empty-string $name
      */
+    #[\NoDiscard]
     public static function of(string $name): self
     {
         return new self($name);
@@ -53,6 +55,7 @@ final class Element
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function head(): self
     {
         return new self('head');
@@ -61,6 +64,7 @@ final class Element
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function body(): self
     {
         return new self('body');
