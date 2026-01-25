@@ -26,6 +26,7 @@ final class Elements
     /**
      * @return Sequence<Element|Custom>
      */
+    #[\NoDiscard]
     public function __invoke(Document|Node|Element|Custom $node): Sequence
     {
         return match (true) {
@@ -41,6 +42,7 @@ final class Elements
      *
      * @param non-empty-string $name
      */
+    #[\NoDiscard]
     public static function of(string $name): self
     {
         return new self($name);

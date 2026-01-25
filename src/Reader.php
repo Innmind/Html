@@ -23,6 +23,7 @@ final class Reader
     /**
      * @return Attempt<Document|Node|Element|Custom>
      */
+    #[\NoDiscard]
     public function __invoke(Content $html): Attempt
     {
         $content = $html->toString();
@@ -41,6 +42,7 @@ final class Reader
         }
     }
 
+    #[\NoDiscard]
     public static function new(): self
     {
         return new self(

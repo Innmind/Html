@@ -36,11 +36,13 @@ final class Document
      *
      * @param Sequence<Node|Element|Custom>|null $children
      */
+    #[\NoDiscard]
     public static function of(Type $type, ?Sequence $children = null): self
     {
         return new self($type, $children ?? Sequence::of());
     }
 
+    #[\NoDiscard]
     public function type(): Type
     {
         return $this->type;
@@ -49,11 +51,13 @@ final class Document
     /**
      * @return Sequence<Node|Element|Custom>
      */
+    #[\NoDiscard]
     public function children(): Sequence
     {
         return $this->children;
     }
 
+    #[\NoDiscard]
     public function hasChildren(): bool
     {
         return !$this->children->empty();
@@ -62,6 +66,7 @@ final class Document
     /**
      * @param callable(Node|Element|Custom): bool $filter
      */
+    #[\NoDiscard]
     public function filterChild(callable $filter): self
     {
         return new self(
@@ -73,6 +78,7 @@ final class Document
     /**
      * @param callable(Node|Element|Custom): (Node|Element|Custom) $map
      */
+    #[\NoDiscard]
     public function mapChild(callable $map): self
     {
         return new self(
@@ -81,6 +87,7 @@ final class Document
         );
     }
 
+    #[\NoDiscard]
     public function prependChild(Node|Element|Custom $child): self
     {
         return new self(
@@ -89,6 +96,7 @@ final class Document
         );
     }
 
+    #[\NoDiscard]
     public function appendChild(Node|Element|Custom $child): self
     {
         return new self(
@@ -97,6 +105,7 @@ final class Document
         );
     }
 
+    #[\NoDiscard]
     public function asContent(Format $format = Format::pretty): Content
     {
         /** @var Maybe<XMLDocument\Encoding> */

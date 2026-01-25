@@ -39,6 +39,7 @@ final class Translator
     /**
      * @return Attempt<Document|Element|Custom|Node>
      */
+    #[\NoDiscard]
     public function __invoke(\Dom\Node $node): Attempt
     {
         return $this
@@ -49,6 +50,7 @@ final class Translator
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function new(): self
     {
         return new self(XmlTranslator::of(

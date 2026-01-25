@@ -28,6 +28,7 @@ final class Base implements Custom
      *
      * @param Sequence<Attribute>|null $attributes
      */
+    #[\NoDiscard]
     public static function of(Url $href, ?Sequence $attributes = null): self
     {
         return new self($href, Element::selfClosing(
@@ -36,12 +37,14 @@ final class Base implements Custom
         ));
     }
 
+    #[\NoDiscard]
     public function href(): Url
     {
         return $this->href;
     }
 
     #[\Override]
+    #[\NoDiscard]
     public function normalize(): Element
     {
         return $this->element->addAttribute(
