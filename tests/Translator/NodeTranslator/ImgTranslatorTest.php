@@ -14,11 +14,13 @@ class ImgTranslatorTest extends TestCase
 {
     public function testTranslate()
     {
-        $dom = new \DOMDocument;
-        $dom->loadHTML('<img src="foo.png" alt="bar"/>');
+        $dom = \Dom\HTMLDocument::createFromString(
+            '<img src="foo.png" alt="bar"/>',
+            \LIBXML_HTML_NOIMPLIED | \LIBXML_NOERROR,
+        );
 
         $img = Translator::new()(
-            $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
+            $dom->childNodes->item(0),
         )->match(
             static fn($img) => $img,
             static fn() => null,
@@ -27,7 +29,7 @@ class ImgTranslatorTest extends TestCase
         $this->assertInstanceOf(Img::class, $img);
         $this->assertSame('foo.png', $img->src()->toString());
         $img = $img->normalize();
-        $this->assertCount(2, $img->attributes());
+        $this->assertSame(2, $img->attributes()->size());
         $this->assertSame('bar', $img->attribute('alt')->match(
             static fn($attribute) => $attribute->value(),
             static fn() => null,
@@ -36,11 +38,13 @@ class ImgTranslatorTest extends TestCase
 
     public function testReturnNothingWhenMissingHrefAttribute()
     {
-        $dom = new \DOMDocument;
-        $dom->loadHTML('<img/>');
+        $dom = \Dom\HTMLDocument::createFromString(
+            '<img/>',
+            \LIBXML_HTML_NOIMPLIED | \LIBXML_NOERROR,
+        );
 
         $result = Translator::new()(
-            $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
+            $dom->childNodes->item(0),
         )
             ->maybe()
             ->keep(Instance::of(Img::class));

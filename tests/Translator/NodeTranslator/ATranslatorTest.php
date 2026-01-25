@@ -14,11 +14,13 @@ class ATranslatorTest extends TestCase
 {
     public function testTranslate()
     {
-        $dom = new \DOMDocument;
-        $dom->loadHTML('<a href="/" class="whatever">foo</a>');
+        $dom = \Dom\HTMLDocument::createFromString(
+            '<a href="/" class="whatever">foo</a>',
+            \LIBXML_HTML_NOIMPLIED | \LIBXML_NOERROR,
+        );
 
         $a = Translator::new()(
-            $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
+            $dom->childNodes->item(0),
         )->match(
             static fn($a) => $a,
             static fn() => null,
@@ -27,21 +29,23 @@ class ATranslatorTest extends TestCase
         $this->assertInstanceOf(A::class, $a);
         $this->assertSame('/', $a->href()->toString());
         $a = $a->normalize();
-        $this->assertCount(2, $a->attributes());
+        $this->assertSame(2, $a->attributes()->size());
         $this->assertSame('whatever', $a->attribute('class')->match(
             static fn($attribute) => $attribute->value(),
             static fn() => null,
         ));
-        $this->assertCount(1, $a->children());
+        $this->assertSame(1, $a->children()->size());
     }
 
     public function testReturnNothingWhenMissingHrefAttribute()
     {
-        $dom = new \DOMDocument;
-        $dom->loadHTML('<a class="whatever">foo</a>');
+        $dom = \Dom\HTMLDocument::createFromString(
+            '<a class="whatever">foo</a>',
+            \LIBXML_HTML_NOIMPLIED | \LIBXML_NOERROR,
+        );
 
         $result = Translator::new()(
-            $dom->childNodes->item(1)->childNodes->item(0)->childNodes->item(0),
+            $dom->childNodes->item(0),
         )
             ->maybe()
             ->keep(Instance::of(A::class));
