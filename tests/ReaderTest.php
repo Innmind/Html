@@ -37,14 +37,17 @@ HTML;
             static fn($node) => $node,
             static fn() => null,
         );
+
+        // For some reason the \Dom\HTMLDocument API doesn't respect the
+        // indentation of the input document.
+        $space = '    ';
         $expected = <<<HTML
         <!DOCTYPE html>
-        <html>
-            <head/>
+        <html><head/>
             <body>
                 foo
-            </body>
-        </html>
+        $space
+        </body></html>
         HTML;
 
         $this->assertInstanceOf(Document::class, $node);

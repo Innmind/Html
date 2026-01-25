@@ -37,11 +37,10 @@ final class Translator
     }
 
     /**
-     * @psalm-suppress UndefinedClass Since the package still supports PHP 8.2
-     *
      * @return Attempt<Document|Element|Custom|Node>
      */
-    public function __invoke(\DOMNode|\Dom\Node $node): Attempt
+    #[\NoDiscard]
+    public function __invoke(\Dom\Node $node): Attempt
     {
         return $this
             ->buildDocument($node)
@@ -51,6 +50,7 @@ final class Translator
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function new(): self
     {
         return new self(XmlTranslator::of(
@@ -59,11 +59,9 @@ final class Translator
     }
 
     /**
-     * @psalm-suppress UndefinedClass Since the package still supports PHP 8.2
-     *
      * @return Attempt<Element|Custom|Node>
      */
-    private function child(\DOMNode|\Dom\Node $node): Attempt
+    private function child(\Dom\Node $node): Attempt
     {
         /** @var Attempt<Element|Custom|Node> Psalm doesn't understand the filter */
         return ($this->translate)($node)
@@ -74,39 +72,27 @@ final class Translator
                     ->or(Instance::of(Node::class)),
                 static fn() => new \RuntimeException('Invalid document node'),
             )
-            ->match(
-                Attempt::result(...),
-                Attempt::error(...),
-            );
+            ->attempt(static fn($e) => $e);
     }
 
     /**
-     * @psalm-suppress UndefinedClass Since the package still supports PHP 8.2
      * @psalm-suppress MixedArgument
      * @psalm-suppress MixedMethodCall
      * @psalm-suppress UndefinedPropertyFetch
      *
      * @return Attempt<Document>
      */
-    private function buildDocument(\DOMNode|\Dom\Node $node): Attempt
+    private function buildDocument(\Dom\Node $node): Attempt
     {
         /** @var Sequence<Node|Element|Custom> */
         $children = Sequence::of();
 
         return Maybe::just($node)
-            ->keep(
-                Instance::of(\DOMDocument::class)->or(
-                    Instance::of(\Dom\Document::class),
-                ),
-            )
+            ->keep(Instance::of(\Dom\Document::class))
             ->attempt(static fn() => new \RuntimeException('Not a document'))
             ->flatMap(
                 fn($document) => Sequence::of(...\array_values(\iterator_to_array($document->childNodes)))
-                    ->keep(
-                        Instance::of(\DOMNode::class)->or(
-                            Instance::of(\Dom\Node::class),
-                        ),
-                    )
+                    ->keep(Instance::of(\Dom\Node::class))
                     ->exclude(static fn($child) => $child->nodeType === \XML_DOCUMENT_TYPE_NODE)
                     ->sink($children)
                     ->attempt(
@@ -129,11 +115,10 @@ final class Translator
     /**
      * @psalm-pure
      * @psalm-suppress ImpurePropertyFetch
-     * @psalm-suppress UndefinedClass Since the package still supports PHP 8.2
      *
      * @return Maybe<Type>
      */
-    private static function buildDoctype(\DOMDocumentType|\Dom\DocumentType $type): Maybe
+    private static function buildDoctype(\Dom\DocumentType $type): Maybe
     {
         /** @psalm-suppress MixedArgument */
         return Type::maybe(

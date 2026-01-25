@@ -28,6 +28,7 @@ final class Img implements Custom
      *
      * @param Sequence<Attribute>|null $attributes
      */
+    #[\NoDiscard]
     public static function of(Url $src, ?Sequence $attributes = null): self
     {
         return new self($src, Element::selfClosing(
@@ -36,12 +37,14 @@ final class Img implements Custom
         ));
     }
 
+    #[\NoDiscard]
     public function src(): Url
     {
         return $this->src;
     }
 
     #[\Override]
+    #[\NoDiscard]
     public function normalize(): Element
     {
         return $this->element->addAttribute(

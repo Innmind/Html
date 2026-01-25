@@ -26,6 +26,7 @@ final class Script implements Custom
      *
      * @param Sequence<Attribute>|null $attributes
      */
+    #[\NoDiscard]
     public static function of(Node $text, ?Sequence $attributes = null): self
     {
         return new self(Element::of(
@@ -36,6 +37,7 @@ final class Script implements Custom
     }
 
     #[\Override]
+    #[\NoDiscard]
     public function normalize(): Element
     {
         return $this->element;

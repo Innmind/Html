@@ -36,7 +36,7 @@ class ElementsTest extends TestCase
         $h1s = Elements::of('h1')($node);
 
         $this->assertInstanceOf(Sequence::class, $h1s);
-        $this->assertCount(26, $h1s);
+        $this->assertSame(26, $h1s->size());
     }
 
     public function testEmptySetWhenNoElementFound()
@@ -44,6 +44,6 @@ class ElementsTest extends TestCase
         $elements = Elements::of('foo')(Element::of(Name::of('whatever')));
 
         $this->assertInstanceOf(Sequence::class, $elements);
-        $this->assertCount(0, $elements);
+        $this->assertSame(0, $elements->size());
     }
 }

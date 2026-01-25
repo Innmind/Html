@@ -10,7 +10,6 @@ use Innmind\Xml\{
 };
 use Innmind\Filesystem\File\Content;
 use Innmind\Immutable\Attempt;
-use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * @psalm-immutable
@@ -24,24 +23,26 @@ final class Reader
     /**
      * @return Attempt<Document|Node|Element|Custom>
      */
+    #[\NoDiscard]
     public function __invoke(Content $html): Attempt
     {
-        /** @psalm-suppress ImpureMethodCall */
-        $firstNode = (new Crawler($html->toString(), useHtml5Parser: false))->getNode(0);
+        $content = $html->toString();
 
-        if (!$firstNode instanceof \DOMNode) {
-            /** @var Attempt<Document|Node|Element|Custom> */
-            return Attempt::error(new \RuntimeException('Failed to parse html content'));
+        if ($content === '') {
+            return Attempt::error(new \RuntimeException('Empty content'));
         }
 
-        /** @psalm-suppress RedundantCondition */
-        while ($firstNode->parentNode instanceof \DOMNode) {
-            $firstNode = $firstNode->parentNode;
+        try {
+            return ($this->translate)(\Dom\HTMLDocument::createFromString(
+                $content,
+                \LIBXML_HTML_NOIMPLIED | \LIBXML_NOERROR,
+            ));
+        } catch (\Throwable $e) {
+            return Attempt::error($e);
         }
-
-        return ($this->translate)($firstNode);
     }
 
+    #[\NoDiscard]
     public static function new(): self
     {
         return new self(
