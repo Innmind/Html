@@ -1,6 +1,6 @@
 # HTML
 
-[![Build Status](https://github.com/innmind/html/workflows/CI/badge.svg?branch=master)](https://github.com/innmind/html/actions?query=workflow%3ACI)
+[![CI](https://github.com/Innmind/Html/actions/workflows/ci.yml/badge.svg)](https://github.com/Innmind/Html/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/innmind/html/branch/develop/graph/badge.svg)](https://codecov.io/gh/innmind/html)
 [![Type Coverage](https://shepherd.dev/github/innmind/html/coverage.svg)](https://shepherd.dev/github/innmind/html)
 
